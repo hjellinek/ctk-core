@@ -29,13 +29,13 @@ import org.slf4j.LoggerFactory;
 public class SimpleOrderService implements OrderProcessingService {
 
 	private Logger log = LoggerFactory.getLogger(SimpleOrderService.class);
-
+    public static int ECT_DELAY = 5 * 1000; // delay 5 seconds
   @Override
   public Confirmation submitOrder(Order order) throws AvroRemoteException, OrderFailure {
     log.info("Received order for '{}' items from customer with id '{}'",
       new Object[] {order.getOrderItems().size(), order.getCustomerId()});
 
-    long estimatedCompletion = System.currentTimeMillis() + (5 * 60 * 60);
+    long estimatedCompletion = System.currentTimeMillis() + ECT_DELAY;
     return Confirmation.newBuilder().setCustomerId(order.getCustomerId()).setEstimatedCompletion(estimatedCompletion)
       .setOrderId(order.getOrderId()).build();
   }

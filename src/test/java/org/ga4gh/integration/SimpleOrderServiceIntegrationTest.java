@@ -20,10 +20,7 @@ package org.ga4gh.integration;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.ga4gh.service.Confirmation;
-import org.ga4gh.service.Item;
-import org.ga4gh.service.Order;
-import org.ga4gh.service.SoftAssertions;
+import org.ga4gh.service.*;
 import org.ga4gh.transport.SimpleOrderServiceClient;
 import org.ga4gh.transport.SimpleOrderServiceEndpoint;
 import org.junit.AfterClass;
@@ -36,9 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
+import static junit.framework.Assert.assertTrue;
 import static org.ga4gh.service.ConfirmationAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 /**
  * <code>SimpleOrderServiceIntegrationTest</code> runs as part of the Integration phase of the build and is
  * meant for end to end service testing.
@@ -49,62 +47,69 @@ public class SimpleOrderServiceIntegrationTest {
 	private static SimpleOrderServiceEndpoint service;
 	private static SimpleOrderServiceClient client;
 
-	private long orderTime;
 
 	@Test
 	public void simpleRoundTripTest() throws Exception {
 		Order simpleOrder = createOrder();
-		orderTime = System.currentTimeMillis();
+		long orderTime = System.currentTimeMillis();
 		Confirmation c = client.submitOrder(simpleOrder);
 
-		assertEquals(c.getOrderId(), simpleOrder.getOrderId());
-		assertEquals(c.getCustomerId(), simpleOrder.getCustomerId());
-		assertTrue(c.getEstimatedCompletion() > orderTime);
+        assertEquals(c.getOrderId(), simpleOrder.getOrderId());
+        assertEquals(c.getCustomerId(), simpleOrder.getCustomerId());
+        assertTrue(c.getEstimatedCompletion() > orderTime
+                && c.getEstimatedCompletion() <= (orderTime + 2 * SimpleOrderService.ECT_DELAY));
 	}
 
 	@Test
 	public void simpleRoundTripTestFail() throws Exception {
 		Order simpleOrder = createOrder();
-		orderTime = System.currentTimeMillis();
+		long orderTime = System.currentTimeMillis();
 		Confirmation c = client.submitOrder(simpleOrder);
 
-		// make errors in all three fields
+		// make errors in all three fields, but only see the first error
 		simpleOrder.setCustomerId(-1L);
 		simpleOrder.setOrderId(-3L);
 		c.setEstimatedCompletion(0L);
 
-		assertEquals(c.getOrderId(), simpleOrder.getOrderId());
-		assertEquals(c.getCustomerId(), simpleOrder.getCustomerId());
-		assertTrue(c.getEstimatedCompletion() > orderTime);
+        assertEquals(c.getOrderId(), simpleOrder.getOrderId());
+        assertEquals(c.getCustomerId(), simpleOrder.getCustomerId());
+        assertTrue(c.getEstimatedCompletion() > orderTime
+                && c.getEstimatedCompletion() <= (orderTime + 2 * SimpleOrderService.ECT_DELAY));
 	}
 
 	// use assertJ for better left-to-right readability
 	@Test
 	public void assertjRoundTripTest() throws Exception {
 		Order simpleOrder = createOrder();
-		orderTime = System.currentTimeMillis();
+		long orderTime = System.currentTimeMillis();
 		Confirmation c = client.submitOrder(simpleOrder);
 
 		assertThat(c).hasCustomerId(simpleOrder.getCustomerId());
 		assertThat(c).hasOrderId(simpleOrder.getOrderId());
-		assertThat(c).matches(conf -> conf.getEstimatedCompletion() > orderTime);
+		org.assertj.core.api.Assertions.assertThat(c.estimatedCompletion)
+                .isBetween(orderTime, orderTime + 2 * SimpleOrderService.ECT_DELAY);
+
+        // had to qualify this assertThat to use the core version instead of the Confirmation one
 	}
 
 	// use SoftAssertions to expose all errors at once, at a cost of 3 lines
+    // and, can't use the core assertThat().isBetween() on a ConfirmationAssert
+    // so I switch to using Java8 feature - and that means I need to
+    // add a clarifying error message, ese AssertJ just says "the given Predicate" :(
 	@Test
 	public void assertjSoftRoundTripTest() throws Exception {
 		Order simpleOrder = createOrder();
-		orderTime = System.currentTimeMillis();
+		long orderTime = System.currentTimeMillis();
 		Confirmation c = client.submitOrder(simpleOrder);
 
 		SoftAssertions softly = new SoftAssertions();
 		softly.assertThat(c)
-			.hasCustomerId(simpleOrder.getCustomerId())
+            .hasCustomerId(simpleOrder.getCustomerId())
 			.hasOrderId(simpleOrder.getOrderId())
-			.matches(conf -> conf.getEstimatedCompletion() > orderTime,
-						"estimated time is after order time");
+            .matches(conf -> conf.getEstimatedCompletion() > orderTime,
+                    "estimated time is after order time");
 		softly.assertAll();
-	}
+    }
 
 	@Test
 	public void assertjRoundTripTestFail() throws Exception {
@@ -118,12 +123,12 @@ public class SimpleOrderServiceIntegrationTest {
 		c.setEstimatedCompletion(0L);
 
 		SoftAssertions softly = new SoftAssertions();
-		softly.assertThat(c)
-				.hasCustomerId(simpleOrder.getCustomerId())
-				.hasOrderId(simpleOrder.getOrderId())
-				.matches((C) -> C.getEstimatedCompletion() > orderTime,
-						"estimated time is after order time");
-		softly.assertAll();
+        softly.assertThat(c)
+                .hasCustomerId(simpleOrder.getCustomerId())
+                .hasOrderId(simpleOrder.getOrderId())
+                .matches(conf -> conf.getEstimatedCompletion() > orderTime,
+                        "estimated time is after order time");
+        softly.assertAll();
 	}
 
 
@@ -134,19 +139,25 @@ public class SimpleOrderServiceIntegrationTest {
 		Confirmation c = client.submitOrder(simpleOrder);
 
 		SoftAssertions softly = new SoftAssertions();
-		softly.assertThat(c).hasCustomerId(simpleOrder.getCustomerId())
-				.hasOrderId(simpleOrder.getOrderId())
-				.matches(conf -> customerIdPreserved.test(conf, simpleOrder),
-						"customer ID preserved from Order to Confirmation");
-		softly.assertAll();
+		softly.assertThat(c)
+				.hasOrderId(simpleOrder.getOrderId()) // duplicate the test to compare readability
+                .matches(conf -> customerIdPreserved.test(conf,simpleOrder));
+        softly.assertAll();
+
+        org.assertj.core.api.Assertions.assertThat(c.estimatedCompletion)
+                .isBetween(orderTime, orderTime + 2 * SimpleOrderService.ECT_DELAY);
 	}
 
 	// we can push parameters from a provider that has hard-coded data
 	// of fetch it from a DB or a file, whatever ... we just have to build the Object[]
 	private Object[] parametersForParAssertjParamsRoundTripTest() {
+        boolean VALID_ECT = true;
 		return new Object[]{
-				new Object[] {createOrder(), System.currentTimeMillis(), true},
-				new Object[] {createOrder(), System.currentTimeMillis() + 1000 * 1000, false}
+				new Object[] {createOrder(), System.currentTimeMillis(), VALID_ECT},
+                new Object[] {createOrder(), System.currentTimeMillis() + SimpleOrderService.ECT_DELAY + 1, VALID_ECT},
+                new Object[] {createOrder(), System.currentTimeMillis() + SimpleOrderService.ECT_DELAY - 1, !VALID_ECT},
+                // this last one should fail since the EXT really *is* valid but we're saying it's not
+				new Object[] {createOrder(), System.currentTimeMillis() + SimpleOrderService.ECT_DELAY + 1, !VALID_ECT}
 		};
 	}
 
@@ -154,6 +165,9 @@ public class SimpleOrderServiceIntegrationTest {
 	// these would come from the DomainAssertions package
 	BiPredicate<Confirmation,Order> customerIdPreserved =
 			(Confirmation C, Order O) -> C.getCustomerId() == O.getCustomerId();
+
+    BiPredicate<Confirmation,Order> orderIdPreserved =
+            (Confirmation C, Order O) -> C.getOrderId() == O.getOrderId();
 
 	// BiPredicate is cute, but not clearer in this lightweight case(IMO)
 	@Test
@@ -173,10 +187,8 @@ public class SimpleOrderServiceIntegrationTest {
 				.hasOrderId(simpleOrder.getOrderId())
 				.matches(conf -> customerIdPreserved.test(conf, simpleOrder),
 						"customer ID preserved from Order to Confirmation");
-		softly.assertAll();
+        softly.assertAll();
 	}
-
-
 
 	@BeforeClass
 	public static void setupTransport() throws Exception {
