@@ -22,13 +22,15 @@ import org.apache.avro.AvroRemoteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.slf4j.LoggerFactory.*;
+
 /**
  * {@code SimpleOrderService} is a simple example implementation of an Avro service generated from the
  * order-service.avpr protocol definition.
  */
 public class SimpleOrderService implements OrderProcessingService {
 
-	private Logger log = LoggerFactory.getLogger(SimpleOrderService.class);
+	private org.slf4j.Logger log = getLogger(SimpleOrderService.class);
     public static int ECT_DELAY = 5 * 1000; // delay 5 seconds
   @Override
   public Confirmation submitOrder(Order order) throws AvroRemoteException, OrderFailure {

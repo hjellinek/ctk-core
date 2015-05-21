@@ -160,6 +160,7 @@
                     <packages>
                         <param>org.ga4gh.service</param>
                         <param>org.ga4gh.models</param>
+                        <param>org.ga4gh.beacon</param>
                     </packages>
                     <!--
                     <classes>

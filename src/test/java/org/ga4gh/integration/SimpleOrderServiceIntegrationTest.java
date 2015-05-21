@@ -20,6 +20,7 @@ package org.ga4gh.integration;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.ga4gh.models.SoftAssertions;
 import org.ga4gh.service.*;
 import org.ga4gh.transport.SimpleOrderServiceClient;
 import org.ga4gh.transport.SimpleOrderServiceEndpoint;
