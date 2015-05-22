@@ -113,7 +113,7 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
 
     public synchronized void start() throws IOException {
         if (log.isInfoEnabled()) {
-            log.info("Starting Simple Reads Netty client on '{}'", endpointAddress);
+            log.info("Starting Simple Reads client on '{}'", endpointAddress);
         }
         transceiver = new HttpTransceiver(new URL("http://192.168.2.115:8000")); // comms channel
         protocolProxy = SpecificRequestor.getClient(ReadMethods.class, transceiver);
@@ -122,7 +122,7 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
 
     public void stop() throws IOException {
         if (log.isInfoEnabled()) {
-            log.info("Stopping Simple Reads Netty client on '{}'", endpointAddress);
+            log.info("Stopping Simple Reads client on '{}'", endpointAddress);
         }
         if (transceiver != null && transceiver.isConnected()) {
             transceiver.close();
