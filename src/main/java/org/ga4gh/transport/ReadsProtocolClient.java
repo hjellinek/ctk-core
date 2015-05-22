@@ -1,14 +1,20 @@
 package org.ga4gh.transport;
 
 import org.apache.avro.AvroRemoteException;
+import org.apache.avro.Schema;
+import org.apache.avro.io.DatumWriter;
+import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.io.JsonEncoder;
 import org.apache.avro.ipc.HttpTransceiver;
 import org.apache.avro.ipc.Transceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
+import org.apache.avro.specific.SpecificDatumWriter;
 import org.ga4gh.methods.*;
 import org.ga4gh.models.Dataset;
 import org.ga4gh.models.ReadGroup;
 import org.ga4gh.models.ReadGroupSet;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URL;
@@ -39,6 +45,20 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public SearchReadsResponse searchReads(SearchReadsRequest request) throws AvroRemoteException, GAException {
+
+        Boolean pretty = true;
+        final DatumWriter<SearchReadsRequest> dw = new SpecificDatumWriter<SearchReadsRequest>(SearchReadsRequest.class);
+        Schema schema = SearchReadsRequest.SCHEMA$;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            JsonEncoder encoder = EncoderFactory.get().jsonEncoder(schema,out,pretty);
+            dw.setSchema(schema);
+            dw.write(request, encoder);
+            encoder.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } // WORKING HERE
         return protocolProxy.searchReads(request);
     }
     /**
@@ -90,6 +110,7 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public SearchDatasetsResponse searchDatasets(SearchDatasetsRequest request) throws AvroRemoteException, GAException {
+
         return protocolProxy.searchDatasets(request);
     }
 
@@ -115,7 +136,7 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
         if (log.isInfoEnabled()) {
             log.info("Starting Simple Reads client on '{}'", endpointAddress);
         }
-        transceiver = new HttpTransceiver(new URL("http://192.168.2.115:8000")); // comms channel
+        transceiver = new HttpTransceiver(new URL("http://127.0.0.1:8000/v0.5.1")); // comms channel
         protocolProxy = SpecificRequestor.getClient(ReadMethods.class, transceiver);
 
     }
