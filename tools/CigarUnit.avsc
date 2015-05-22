@@ -1,0 +1,25 @@
+{
+  "type" : "record",
+  "name" : "CigarUnit",
+  "namespace" : "org.ga4gh.models",
+  "doc" : "A structure for an instance of a CIGAR operation.",
+  "fields" : [ {
+    "name" : "operation",
+    "type" : {
+      "type" : "enum",
+      "name" : "CigarOperation",
+      "doc" : "An enum for the different types of CIGAR alignment operations that exist.\r\nUsed wherever CIGAR alignments are used. The different enumerated values\r\nhave the following usage:\r\n\r\n* `ALIGNMENT_MATCH`: An alignment match indicates that a sequence can be\r\n  aligned to the reference without evidence of an INDEL. Unlike the\r\n  `SEQUENCE_MATCH` and `SEQUENCE_MISMATCH` operators, the `ALIGNMENT_MATCH`\r\n  operator does not indicate whether the reference and read sequences are an\r\n  exact match. This operator is equivalent to SAM's `M`.\r\n* `INSERT`: The insert operator indicates that the read contains evidence of\r\n  bases being inserted into the reference. This operator is equivalent to\r\n  SAM's `I`.\r\n* `DELETE`: The delete operator indicates that the read contains evidence of\r\n  bases being deleted from the reference. This operator is equivalent to\r\n  SAM's `D`.\r\n* `SKIP`: The skip operator indicates that this read skips a long segment of\r\n  the reference, but the bases have not been deleted. This operator is\r\n  commonly used when working with RNA-seq data, where reads may skip long\r\n  segments of the reference between exons. This operator is equivalent to\r\n  SAM's 'N'.\r\n* `CLIP_SOFT`: The soft clip operator indicates that bases at the start/end\r\n  of a read have not been considered during alignment. This may occur if the\r\n  majority of a read maps, except for low quality bases at the start/end of\r\n  a read. This operator is equivalent to SAM's 'S'. Bases that are soft clipped\r\n  will still be stored in the read.\r\n* `CLIP_HARD`: The hard clip operator indicates that bases at the start/end of\r\n  a read have been omitted from this alignment. This may occur if this linear\r\n  alignment is part of a chimeric alignment, or if the read has been trimmed\r\n  (e.g., during error correction, or to trim poly-A tails for RNA-seq). This\r\n  operator is equivalent to SAM's 'H'.\r\n* `PAD`: The pad operator indicates that there is padding in an alignment.\r\n  This operator is equivalent to SAM's 'P'.\r\n* `SEQUENCE_MATCH`: This operator indicates that this portion of the aligned\r\n  sequence exactly matches the reference (e.g., all bases are equal to the\r\n  reference bases). This operator is equivalent to SAM's '='.\r\n* `SEQUENCE_MISMATCH`: This operator indicates that this portion of the\r\n  aligned sequence is an alignment match to the reference, but a sequence\r\n  mismatch (e.g., the bases are not equal to the reference). This can\r\n  indicate a SNP or a read error. This operator is equivalent to SAM's 'X'.",
+      "symbols" : [ "ALIGNMENT_MATCH", "INSERT", "DELETE", "SKIP", "CLIP_SOFT", "CLIP_HARD", "PAD", "SEQUENCE_MATCH", "SEQUENCE_MISMATCH" ]
+    },
+    "doc" : "The operation type."
+  }, {
+    "name" : "operationLength",
+    "type" : "long",
+    "doc" : "The number of bases that the operation runs for."
+  }, {
+    "name" : "referenceSequence",
+    "type" : [ "null", "string" ],
+    "doc" : "`referenceSequence` is only used at mismatches (`SEQUENCE_MISMATCH`)\r\n  and deletions (`DELETE`). Filling this field replaces the MD tag.\r\n  If the relevant information is not available, leave this field as `null`.",
+    "default" : null
+  } ]
+}

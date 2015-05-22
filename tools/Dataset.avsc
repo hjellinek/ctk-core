@@ -1,0 +1,15 @@
+{
+  "type" : "record",
+  "name" : "Dataset",
+  "namespace" : "org.ga4gh.models",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "The dataset ID."
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "The dataset description.",
+    "default" : null
+  } ]
+}

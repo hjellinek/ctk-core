@@ -1,0 +1,45 @@
+{
+  "type" : "record",
+  "name" : "IndividualGroup",
+  "namespace" : "org.ga4gh.models",
+  "doc" : "Represents a group of individuals. (e.g. a trio)",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "The individual group UUID. This is globally unique."
+  }, {
+    "name" : "name",
+    "type" : [ "null", "string" ],
+    "doc" : "The name of the individual group.",
+    "default" : null
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "A description of the individual group.",
+    "default" : null
+  }, {
+    "name" : "recordCreateTime",
+    "type" : "string",
+    "doc" : "The time at which this record was created. \r\n  Format: ISO 8601, YYYY-MM-DDTHH:MM:SS.SSS (e.g. 2015-02-10T00:03:42.123Z)"
+  }, {
+    "name" : "recordUpdateTime",
+    "type" : "string",
+    "doc" : "The time at which this record was last updated.\r\n  Format: ISO 8601, YYYY-MM-DDTHH:MM:SS.SSS (e.g. 2015-02-10T00:03:42.123Z)"
+  }, {
+    "name" : "type",
+    "type" : [ "null", "string" ],
+    "doc" : "The type of individual group.",
+    "default" : null
+  }, {
+    "name" : "info",
+    "type" : {
+      "type" : "map",
+      "values" : {
+        "type" : "array",
+        "items" : "string"
+      }
+    },
+    "doc" : "A map of additional individual group information.",
+    "default" : { }
+  } ]
+}

@@ -1,0 +1,65 @@
+{
+  "type" : "record",
+  "name" : "Path",
+  "namespace" : "org.ga4gh.models",
+  "doc" : "A `Path` is an ordered list of `Segment`s. In general any contiguous path\r\nthrough a sequence graph, with no novel adjacencies, can be represented by a\r\n`Path`.",
+  "fields" : [ {
+    "name" : "segments",
+    "type" : {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "Segment",
+        "doc" : "A `Segment` is a range on a `Sequence`. It does not include any base data. (The\r\nbases for a `Sequence` are available through the `getSequenceBases()` API call.)\r\n\r\nIn the sequence \"GTGG\", the `Segment` starting at index 1 on the forward strand\r\nwith length 2 is the \"TG\" on the forward strand. The length-2 `Segment` starting\r\nat index 1 on the reverse strand is \"AC\", corresponding to the first two base\r\npairs of the sequence, or the last two bases of the reverse complement.\r\n\r\nA `Segment` has a left and a right end, in its local orientation (i.e. taking\r\n`Segment.start.strand` to be the `Segment`'s forward strand).",
+        "fields" : [ {
+          "name" : "start",
+          "type" : {
+            "type" : "record",
+            "name" : "Side",
+            "doc" : "A `Side` is an oriented base in some already known sequence. A\r\n`Side` is represented by a sequence name or ID, a base number on that\r\nsequence (0-based), and a `Strand` to indicate the forward or reverse-complement\r\norientation.\r\n\r\nFor example, given the sequence \"GTGG\", the `Side` on that sequence at\r\noffset 1 in the forward orientation would be the left side of the T/A base pair.\r\nThe base at this `Side` is \"T\". Alternately, for offset 1 in the reverse\r\norientation, the `Side` would be the right side of the T/A base pair, and\r\nthe base at the `Side` is \"A\".\r\n\r\nOffsets added to a `Side` are interpreted as reading along its strand;\r\nadding to a reverse strand side actually subtracts from its `base.position`\r\nmember.\r\n\r\nThere is a total ordering on sides, assuming a total ordering on\r\n`Sequence`s. Sides are sorted by their `Sequence` (as specified by\r\n`sequenceId` and/or `referenceName`), then within a `Sequence` by their\r\n`position` offsets, and then finally by `Strand`, with `NEG_STRAND` first, then\r\n`POS_STRAND`.",
+            "fields" : [ {
+              "name" : "base",
+              "type" : {
+                "type" : "record",
+                "name" : "Position",
+                "doc" : "A `Position` is an unoriented base in some already known sequence. A\r\n`Position` is represented by a sequence name or ID, and a base number on that\r\nsequence (0-based).",
+                "fields" : [ {
+                  "name" : "sequenceId",
+                  "type" : [ "null", "string" ],
+                  "doc" : "The ID of the sequence on which the `Side` is located. This may be a\r\n  `Reference` sequence, or a novel piece of sequence associated with a\r\n  `VariantSet`.\r\n\r\n  We allow a null value for sequenceId to support the \"classic\" model.\r\n\r\n  If the server supports the \"graph\" mode, this must not be null.",
+                  "default" : null
+                }, {
+                  "name" : "referenceName",
+                  "type" : [ "null", "string" ],
+                  "doc" : "The name of the reference sequence in whatever reference set is being used.\r\n  Does not generally include a \"chr\" prefix, so for example \"X\" would be used\r\n  for the X chromosome.\r\n\r\n  If `sequenceId` is null, this must not be null.",
+                  "default" : null
+                }, {
+                  "name" : "position",
+                  "type" : "long",
+                  "doc" : "The 0-based offset from the start of the forward strand for that sequence.\r\n  Genomic positions are non-negative integers less than sequence length."
+                } ]
+              },
+              "doc" : "Base the `Side` is associated with."
+            }, {
+              "name" : "strand",
+              "type" : {
+                "type" : "enum",
+                "name" : "Strand",
+                "doc" : "Indicates the DNA strand associate for some data item.\r\n* `NEG_STRAND`: The negative (-) strand.\r\n* `POS_STRAND`:  The postive (+) strand.",
+                "symbols" : [ "NEG_STRAND", "POS_STRAND" ]
+              },
+              "doc" : "Strand the side is associated with. `POS_STRAND` represents the forward\r\n  strand, or equivalently the left side of a base, and `NEG_STRAND` represents\r\n  the reverse strand, or equivalently the right side of a base.\r\n\r\n  If you need a `Side` without a `Strand`, you need a `Position`."
+            } ]
+          },
+          "doc" : "The sequence ID and start index of this `Segment`. This base is the first\r\n  included in the `Segment`, regardless of orientation."
+        }, {
+          "name" : "length",
+          "type" : "long",
+          "doc" : "The length of this `Segment`'s sequence. If `start` is on the forward strand,\r\n  the `Segment` contains the range [`start.base.position`,\r\n  `start.base.position` + `length`). If `start` is on the reverse strand, the\r\n  `Segment` contains the range (`start.base.position` - `length`,\r\n  `start.base.position`]. This is equivalent to starting from the side indicated\r\n  by `start`, and traversing through that base out to the specified length.\r\n\r\n  A `Segment` may have zero length (for example, when it is being used to\r\n  specify a `Path` consisting only of a `Join`."
+        } ]
+      }
+    },
+    "doc" : "We require that each pair of consecutive `Segment`s in a `Path` be connected\r\n  by a `Join` from the right end of the first `Segment` to the left end of the\r\n  second. `Segment`s appear in the order in which they occur when walking the\r\n  path from one end to the other.\r\n\r\n  Note that the `Path` cannot follow two `Join`s in a row without traversing a\r\n  `Segment`.\r\n\r\n  Two adjacent `Segment`s that could be combined must be combined. Adjacent\r\n  `Segment`s should not be abutting on the same `Sequence`.\r\n\r\n  \"Sticky ends\", or `Path`s that start or end in a `Join`, are specified by\r\n  using a 0-length `Segment` at the start or end of the `Path`.",
+    "default" : [ ]
+  } ]
+}

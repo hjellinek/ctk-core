@@ -1,0 +1,7 @@
+{
+  "type" : "enum",
+  "name" : "Strand",
+  "namespace" : "org.ga4gh.models",
+  "doc" : "Indicates the DNA strand associate for some data item.\r\n* `NEG_STRAND`: The negative (-) strand.\r\n* `POS_STRAND`:  The postive (+) strand.",
+  "symbols" : [ "NEG_STRAND", "POS_STRAND" ]
+}

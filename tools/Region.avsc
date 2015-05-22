@@ -1,0 +1,34 @@
+{
+  "type" : "record",
+  "name" : "Region",
+  "namespace" : "org.ga4gh.models",
+  "doc" : "An abstraction for referring to a genomic region, in relation to some already \r\nknown reference. This will require some significant rework as we move to graph\r\ncoordinates.",
+  "fields" : [ {
+    "name" : "start",
+    "type" : {
+      "type" : "record",
+      "name" : "Position",
+      "doc" : "A `Position` is an unoriented base in some already known sequence. A\r\n`Position` is represented by a sequence name or ID, and a base number on that\r\nsequence (0-based).",
+      "fields" : [ {
+        "name" : "sequenceId",
+        "type" : [ "null", "string" ],
+        "doc" : "The ID of the sequence on which the `Side` is located. This may be a\r\n  `Reference` sequence, or a novel piece of sequence associated with a\r\n  `VariantSet`.\r\n\r\n  We allow a null value for sequenceId to support the \"classic\" model.\r\n\r\n  If the server supports the \"graph\" mode, this must not be null.",
+        "default" : null
+      }, {
+        "name" : "referenceName",
+        "type" : [ "null", "string" ],
+        "doc" : "The name of the reference sequence in whatever reference set is being used.\r\n  Does not generally include a \"chr\" prefix, so for example \"X\" would be used\r\n  for the X chromosome.\r\n\r\n  If `sequenceId` is null, this must not be null.",
+        "default" : null
+      }, {
+        "name" : "position",
+        "type" : "long",
+        "doc" : "The 0-based offset from the start of the forward strand for that sequence.\r\n  Genomic positions are non-negative integers less than sequence length."
+      } ]
+    },
+    "doc" : "The starting point of the region. For the moment the base-pair included in\r\n  the region, on the 5' end of the oriented region."
+  }, {
+    "name" : "length",
+    "type" : "long",
+    "doc" : "The length, in base pairs"
+  } ]
+}

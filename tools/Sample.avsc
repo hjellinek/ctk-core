@@ -1,0 +1,106 @@
+{
+  "type" : "record",
+  "name" : "Sample",
+  "namespace" : "org.ga4gh.models",
+  "doc" : "A biological sample used in an experiment. (e.g. whole blood from\r\nan affected individual)",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "The sample UUID. This is globally unique."
+  }, {
+    "name" : "individualId",
+    "type" : [ "null", "string" ],
+    "doc" : "The ID of the individual this sample belongs to.",
+    "default" : null
+  }, {
+    "name" : "accessions",
+    "type" : {
+      "type" : "array",
+      "items" : "string"
+    },
+    "doc" : "Public identifiers for this sample.",
+    "default" : [ ]
+  }, {
+    "name" : "name",
+    "type" : [ "null", "string" ],
+    "doc" : "The name of the sample.",
+    "default" : null
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "A description of the sample.",
+    "default" : null
+  }, {
+    "name" : "recordCreateTime",
+    "type" : "string",
+    "doc" : "The time at which this record was created. \r\n  Format: ISO 8601, YYYY-MM-DDTHH:MM:SS.SSS (e.g. 2015-02-10T00:03:42.123Z)"
+  }, {
+    "name" : "recordUpdateTime",
+    "type" : "string",
+    "doc" : "The time at which this record was last updated.\r\n  Format: ISO 8601, YYYY-MM-DDTHH:MM:SS.SSS (e.g. 2015-02-10T00:03:42.123Z)"
+  }, {
+    "name" : "samplingDate",
+    "type" : [ "null", "string" ],
+    "doc" : "The time at which this sample was taken from the individual.\r\n  Granularity here is variabel (e.g. only date would be common for \r\n  biopsies, minutes for in vitro time series).\r\n  Format: ISO 8601, YYYY-MM-DDTHH:MM:SS (e.g. 2015-02-10T00:03:42)",
+    "default" : null
+  }, {
+    "name" : "ageAtSampling",
+    "type" : [ "null", "long" ],
+    "doc" : "The age of the individual (not of the sample) at time of sample collection.\r\n  This field may be approximate.\r\n  TODO: Fixed unit? Years would be natural in human context.",
+    "default" : null
+  }, {
+    "name" : "cellType",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "OntologyTerm",
+      "doc" : "An ontology term describing an attribute. (e.g. the phenotype attribute\r\n  'polydactyly' from HPO)",
+      "fields" : [ {
+        "name" : "ontologySource",
+        "type" : "string",
+        "doc" : "The source of the onotology term.\r\n    (e.g. `Ontology for Biomedical Investigation`)"
+      }, {
+        "name" : "id",
+        "type" : "string",
+        "doc" : "The ID defined by the external onotology source.\r\n    (e.g. `http://purl.obolibrary.org/obo/OBI_0001271`)"
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ],
+        "doc" : "The name of the onotology term. (e.g. `RNA-seq assay`)",
+        "default" : null
+      } ]
+    } ],
+    "doc" : "The cell type of this sample.\r\n  Using the [Cell Ontology](http://cellontology.org/) (CL) is recommended. See",
+    "default" : null
+  }, {
+    "name" : "cellLine",
+    "type" : [ "null", "OntologyTerm" ],
+    "doc" : "The cell line of this sample. \r\n  Using the [Cell Line Ontology](https://code.google.com/p/clo-ontology/) is a possibility.\r\n  TODO: discuss further. Other possibilities: Cellosaurus (nextprot), BRENDA/BTO, EFO (EBI)",
+    "default" : null
+  }, {
+    "name" : "geocode",
+    "type" : [ "null", "string" ],
+    "doc" : "Geographic coordinates from which the individual was obtained.\r\n  TODO: Figure out the right type for this field.",
+    "default" : null
+  }, {
+    "name" : "sampleType",
+    "type" : [ "null", "string" ],
+    "doc" : "A descriptor of the sample type. (e.g. `frozen`)",
+    "default" : null
+  }, {
+    "name" : "organismPart",
+    "type" : [ "null", "OntologyTerm" ],
+    "doc" : "The anatomical part of the individual from which this sample derives.\r\n  Using [Uberon](http://uberon.org) is recommended.",
+    "default" : null
+  }, {
+    "name" : "info",
+    "type" : {
+      "type" : "map",
+      "values" : {
+        "type" : "array",
+        "items" : "string"
+      }
+    },
+    "doc" : "A map of additional sample information.",
+    "default" : { }
+  } ]
+}

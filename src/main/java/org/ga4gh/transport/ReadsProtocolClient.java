@@ -1,15 +1,34 @@
-package org.ga4gh.service;
+package org.ga4gh.transport;
 
 import org.apache.avro.AvroRemoteException;
+import org.apache.avro.ipc.HttpTransceiver;
+import org.apache.avro.ipc.Transceiver;
+import org.apache.avro.ipc.specific.SpecificRequestor;
 import org.ga4gh.methods.*;
 import org.ga4gh.models.Dataset;
 import org.ga4gh.models.ReadGroup;
 import org.ga4gh.models.ReadGroupSet;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URL;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * Created by Wayne Stidolph on 5/21/2015.
  */
-public class ReadsService implements org.ga4gh.methods.ReadMethods {
+public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
+
+    private org.slf4j.Logger log = getLogger(ReadsProtocolClient.class);
+
+    private InetSocketAddress endpointAddress;
+
+    private Transceiver transceiver; // comms channel
+
+    private ReadMethods protocolProxy; // actually talks to Server
+
+
     /**
      * Gets a list of `ReadAlignment` matching the search criteria.
      * <p>
@@ -20,9 +39,8 @@ public class ReadsService implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public SearchReadsResponse searchReads(SearchReadsRequest request) throws AvroRemoteException, GAException {
-        return null;
+        return protocolProxy.searchReads(request);
     }
-
     /**
      * Gets a list of `ReadGroupSet` matching the search criteria.
      * <p>
@@ -34,7 +52,7 @@ public class ReadsService implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public SearchReadGroupSetsResponse searchReadGroupSets(SearchReadGroupSetsRequest request) throws AvroRemoteException, GAException {
-        return null;
+        return protocolProxy.searchReadGroupSets(request);
     }
 
     /**
@@ -45,7 +63,7 @@ public class ReadsService implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public ReadGroupSet getReadGroupSet(CharSequence id) throws AvroRemoteException, GAException {
-        return null;
+        return protocolProxy.getReadGroupSet(id);
     }
 
     /**
@@ -56,7 +74,7 @@ public class ReadsService implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public ReadGroup getReadGroup(CharSequence id) throws AvroRemoteException, GAException {
-        return null;
+        return protocolProxy.getReadGroup(id);
     }
 
     /**
@@ -72,7 +90,7 @@ public class ReadsService implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public SearchDatasetsResponse searchDatasets(SearchDatasetsRequest request) throws AvroRemoteException, GAException {
-        return null;
+        return protocolProxy.searchDatasets(request);
     }
 
     /**
@@ -83,6 +101,31 @@ public class ReadsService implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public Dataset getDataset(CharSequence id) throws AvroRemoteException, GAException {
-        return null;
+        log.info("enter getDataSet");
+        Dataset ds = protocolProxy.getDataset(id);
+        return ds;
+    }
+
+    // support
+    public ReadsProtocolClient(InetSocketAddress endpointAddress) {
+        this.endpointAddress = endpointAddress;
+    }
+
+    public synchronized void start() throws IOException {
+        if (log.isInfoEnabled()) {
+            log.info("Starting Simple Reads Netty client on '{}'", endpointAddress);
+        }
+        transceiver = new HttpTransceiver(new URL("http://192.168.2.115:8000")); // comms channel
+        protocolProxy = SpecificRequestor.getClient(ReadMethods.class, transceiver);
+
+    }
+
+    public void stop() throws IOException {
+        if (log.isInfoEnabled()) {
+            log.info("Stopping Simple Reads Netty client on '{}'", endpointAddress);
+        }
+        if (transceiver != null && transceiver.isConnected()) {
+            transceiver.close();
+        }
     }
 }

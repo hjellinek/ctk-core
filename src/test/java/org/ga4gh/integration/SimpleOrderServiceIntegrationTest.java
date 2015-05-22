@@ -48,7 +48,6 @@ public class SimpleOrderServiceIntegrationTest {
 	private static SimpleOrderServiceEndpoint service;
 	private static SimpleOrderServiceClient client;
 
-
 	@Test
 	public void simpleRoundTripTest() throws Exception {
 		Order simpleOrder = createOrder();
@@ -97,6 +96,7 @@ public class SimpleOrderServiceIntegrationTest {
     // and, can't use the core assertThat().isBetween() on a ConfirmationAssert
     // so I switch to using Java8 feature - and that means I need to
     // add a clarifying error message, ese AssertJ just says "the given Predicate" :(
+    // TODO make estimatedCompletion validation same as above
 	@Test
 	public void assertjSoftRoundTripTest() throws Exception {
 		Order simpleOrder = createOrder();
@@ -141,7 +141,7 @@ public class SimpleOrderServiceIntegrationTest {
 
 		SoftAssertions softly = new SoftAssertions();
 		softly.assertThat(c)
-				.hasOrderId(simpleOrder.getOrderId()) // duplicate the test to compare readability
+				.hasOrderId(simpleOrder.getOrderId())
                 .matches(conf -> customerIdPreserved.test(conf,simpleOrder));
         softly.assertAll();
 
@@ -153,16 +153,17 @@ public class SimpleOrderServiceIntegrationTest {
 	// of fetch it from a DB or a file, whatever ... we just have to build the Object[]
 	private Object[] parametersForParAssertjParamsRoundTripTest() {
         boolean VALID_ECT = true;
-		return new Object[]{
+		return new Object[]{ // {Order, orderTime, isValid}
 				new Object[] {createOrder(), System.currentTimeMillis(), VALID_ECT},
-                new Object[] {createOrder(), System.currentTimeMillis() + SimpleOrderService.ECT_DELAY + 1, VALID_ECT},
+                // pass in an invalid ECT time
+                new Object[] {createOrder(), System.currentTimeMillis() + 2 * SimpleOrderService.ECT_DELAY + 1, !VALID_ECT},
                 new Object[] {createOrder(), System.currentTimeMillis() + SimpleOrderService.ECT_DELAY - 1, !VALID_ECT},
                 // this last one should fail since the EXT really *is* valid but we're saying it's not
 				new Object[] {createOrder(), System.currentTimeMillis() + SimpleOrderService.ECT_DELAY + 1, !VALID_ECT}
 		};
 	}
 
-	// try using a java8 BiPredicate
+	// using a java8 BiPredicate
 	// these would come from the DomainAssertions package
 	BiPredicate<Confirmation,Order> customerIdPreserved =
 			(Confirmation C, Order O) -> C.getCustomerId() == O.getCustomerId();
