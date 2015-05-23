@@ -1,14 +1,15 @@
 package org.ga4gh.transport;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
 import org.apache.avro.AvroRemoteException;
 import org.apache.avro.Schema;
 import org.apache.avro.io.DatumWriter;
-import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.io.JsonEncoder;
 import org.apache.avro.ipc.HttpTransceiver;
 import org.apache.avro.ipc.Transceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
 import org.apache.avro.specific.SpecificDatumWriter;
+import org.apache.http.HttpStatus;
 import org.ga4gh.methods.*;
 import org.ga4gh.models.Dataset;
 import org.ga4gh.models.ReadGroup;
@@ -34,6 +35,8 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
 
     private ReadMethods protocolProxy; // actually talks to Server
 
+    public String urlRoot = "http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
+
 
     /**
      * Gets a list of `ReadAlignment` matching the search criteria.
@@ -46,21 +49,22 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
     @Override
     public SearchReadsResponse searchReads(SearchReadsRequest request) throws AvroRemoteException, GAException {
 
-        Boolean pretty = true;
         final DatumWriter<SearchReadsRequest> dw = new SpecificDatumWriter<SearchReadsRequest>(SearchReadsRequest.class);
         Schema schema = SearchReadsRequest.SCHEMA$;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            JsonEncoder encoder = EncoderFactory.get().jsonEncoder(schema,out,pretty);
-            dw.setSchema(schema);
-            dw.write(request, encoder);
-            encoder.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } // WORKING HERE
-        return protocolProxy.searchReads(request);
+        SearchReadsResponse rtnSrr = null;
+
+        AvroJson aj = new AvroJson(urlRoot);
+
+        ByteArrayOutputStream jsonBytes = aj.avroToJson(dw, SearchReadsRequest.SCHEMA$, request);
+        HttpResponse<JsonNode> resp = aj.jsonPost(jsonBytes, "readgroupsets/search");
+        if (resp.getStatus() == HttpStatus.SC_OK) {
+            rtnSrr = (SearchReadsResponse) aj.jsonToObject(resp.getBody().toString());
+        } else {
+            log.warn("null SearchReadsResponse because POST to readgroupsets/search got status " + resp.getStatus());
+        }
+        return rtnSrr; // protocolProxy.searchReads(request);
     }
+
     /**
      * Gets a list of `ReadGroupSet` matching the search criteria.
      * <p>
@@ -136,7 +140,8 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
         if (log.isInfoEnabled()) {
             log.info("Starting Simple Reads client on '{}'", endpointAddress);
         }
-        transceiver = new HttpTransceiver(new URL("http://127.0.0.1:8000/v0.5.1")); // comms channel
+        // transceiver = new HttpTransceiver(new URL("http://127.0.0.1:8000/v0.5.1")); // comms channel
+        transceiver = new HttpTransceiver(new URL("http://192.168.2.115:8000/v0.5.1")); // comms channel
         protocolProxy = SpecificRequestor.getClient(ReadMethods.class, transceiver);
 
     }

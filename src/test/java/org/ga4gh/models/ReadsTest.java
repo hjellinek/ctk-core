@@ -9,11 +9,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.lang.reflect.Array;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -35,6 +32,7 @@ ReadGroupSet >--< ReadGroup --< fragment --< read --< alignment --< linear/graph
     public void searchReads() throws Exception {
         log.info("starting searchReads");
 
+        /*
         // ctor approach is best performance ...
         List<CharSequence> readGroupIds = Arrays.asList("foo");
         String referenceId = "bar";
@@ -43,10 +41,10 @@ ReadGroupSet >--< ReadGroup --< fragment --< read --< alignment --< linear/graph
         Integer pageSize = 10;
         String pageToken = "";
         SearchReadsRequest req = new SearchReadsRequest(readGroupIds, referenceId,start,end,pageSize,pageToken);
-
-        // but Builder does validation and sets defaults, so that's easier
+*/
+        // but Builder does validation and sets defaults, so that's better
         SearchReadsRequest reqb = SearchReadsRequest.newBuilder()
-                .setReadGroupIds(readGroupIds)
+                .setReadGroupIds(Arrays.asList("foo"))
                 .setReferenceId("bar")
                 .build();
 
