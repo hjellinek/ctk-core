@@ -38,6 +38,7 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
     public String urlRoot = "http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
 
 
+
     /**
      * Gets a list of `ReadAlignment` matching the search criteria.
      * <p>
@@ -48,21 +49,7 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public SearchReadsResponse searchReads(SearchReadsRequest request) throws AvroRemoteException, GAException {
-
-        final DatumWriter<SearchReadsRequest> dw = new SpecificDatumWriter<SearchReadsRequest>(SearchReadsRequest.class);
-        Schema schema = SearchReadsRequest.SCHEMA$;
-        SearchReadsResponse rtnSrr = null;
-
-        AvroJson aj = new AvroJson(urlRoot);
-
-        ByteArrayOutputStream jsonBytes = aj.avroToJson(dw, SearchReadsRequest.SCHEMA$, request);
-        HttpResponse<JsonNode> resp = aj.jsonPost(jsonBytes, "readgroupsets/search");
-        if (resp.getStatus() == HttpStatus.SC_OK) {
-            rtnSrr = (SearchReadsResponse) aj.jsonToObject(resp.getBody().toString());
-        } else {
-            log.warn("null SearchReadsResponse because POST to readgroupsets/search got status " + resp.getStatus());
-        }
-        return rtnSrr; // protocolProxy.searchReads(request);
+        return null;
     }
 
     /**
@@ -72,11 +59,29 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      * `SearchReadGroupSetsRequest` as the post body and will return a JSON
      * version of `SearchReadGroupSetsResponse`.
      *
-     * @param request
      */
     @Override
     public SearchReadGroupSetsResponse searchReadGroupSets(SearchReadGroupSetsRequest request) throws AvroRemoteException, GAException {
-        return protocolProxy.searchReadGroupSets(request);
+
+        // do the serialization as written up in Avro docs
+        final DatumWriter<SearchReadGroupSetsRequest> dw =
+                new SpecificDatumWriter<SearchReadGroupSetsRequest>(SearchReadGroupSetsRequest.class);
+        Schema schema = SearchReadGroupSetsRequest.SCHEMA$;
+        SearchReadGroupSetsResponse rtnSrr = null;
+
+        AvroJson aj = new AvroJson(urlRoot); // make an instance od comms utility instead of static
+                                             // in case someday we want to multi-thread the access
+
+        ByteArrayOutputStream jsonBytes = aj.avroToJson(dw, SearchReadGroupSetsRequest.SCHEMA$, request);
+
+        // enough, we'll use Jackson for the deserialization!
+        HttpResponse<JsonNode> resp = aj.jsonPost(jsonBytes, "readgroupsets/search");
+        if (resp.getStatus() == HttpStatus.SC_OK) {
+            rtnSrr = aj.jsonToObject(resp.getBody().toString(), SearchReadGroupSetsResponse.class);
+        } else {
+            log.warn("null SearchReadsResponse because POST to readgroupsets/search got status " + resp.getStatus());
+        }
+        return rtnSrr; // protocolProxy.searchReads(request);       return protocolProxy.searchReadGroupSets(request);
     }
 
     /**

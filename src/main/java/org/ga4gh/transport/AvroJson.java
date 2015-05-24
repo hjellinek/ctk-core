@@ -1,5 +1,11 @@
 package org.ga4gh.transport;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.KeyDeserializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -21,6 +27,13 @@ public class AvroJson {
     private org.slf4j.Logger log = getLogger(AvroJson.class);
     String urlRoot = "localhost";
 
+    public AvroJson() {
+    }
+
+    public AvroJson(String urlRoot) {
+        this.urlRoot = urlRoot;
+    }
+
     public String getUrlRoot() {
         return urlRoot;
     }
@@ -29,10 +42,6 @@ public class AvroJson {
         this.urlRoot = urlRoot;
     }
 
-    public AvroJson(){}
-    public AvroJson(String urlRoot){
-        this.urlRoot = urlRoot;
-    }
 
     public <T> ByteArrayOutputStream avroToJson(DatumWriter<T> dw, Schema schema, T request) {
 
@@ -67,8 +76,29 @@ public class AvroJson {
         return jsonResponse;
     }
 
-    public <T> Object jsonToObject(String jsonResp) {
-        return new Object();
+    /*
+     * Make new object using Jackson on the Avro-generated class
+     * @Param bs String json string to convert
+     * @Param objClass class to map into
+     */
+    public <T> T jsonToObject( String bs, Class<T> objClass){
+        T obj = null;
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule("HandleCharSeq",new Version(0,1,0,"alpha"));
+        KeyDeserializer jlcs = new KeyDeserializer() {
+            @Override
+            public Object deserializeKey(String s, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+                return null;
+            }
+        };
+                // WORKING HERE adding custom deserializer for java.lag.CharSeq
+//        module.addKeyDeserializer(java.lang.CharSequence.class,
+        try {
+            obj = new ObjectMapper().readValue(bs, objClass);
+        } catch (IOException e) {
+            log.warn("Failed to make new " + objClass.getName() + " from: " + bs, e);
+        }
+        return obj;
     }
 
 }

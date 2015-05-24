@@ -205,6 +205,7 @@
                         <param>org.ga4gh.service</param>
                         <param>org.ga4gh.models</param>
                         <param>org.ga4gh.beacon</param>
+                        <param>org.ga4gh.methods</param>
                     </packages>
                     <!--
                     <classes>

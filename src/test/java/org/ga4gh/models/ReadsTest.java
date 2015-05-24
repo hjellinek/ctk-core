@@ -1,8 +1,8 @@
 package org.ga4gh.models;
 
 import junitparams.JUnitParamsRunner;
-import org.ga4gh.methods.SearchReadsRequest;
-import org.ga4gh.methods.SearchReadsResponse;
+import org.ga4gh.methods.SearchReadGroupSetsRequest;
+import org.ga4gh.methods.SearchReadGroupSetsResponse;
 import org.ga4gh.transport.ReadsProtocolClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -29,26 +29,22 @@ ReadGroupSet >--< ReadGroup --< fragment --< read --< alignment --< linear/graph
 
 
     @Test
-    public void searchReads() throws Exception {
-        log.info("starting searchReads");
+    public void searchReadGroupSets() throws Exception {
+        log.info("testing searchReadGroupSets");
 
-        /*
-        // ctor approach is best performance ...
-        List<CharSequence> readGroupIds = Arrays.asList("foo");
-        String referenceId = "bar";
-        Long start = 0L;
-        Long end = 5L;
-        Integer pageSize = 10;
-        String pageToken = "";
-        SearchReadsRequest req = new SearchReadsRequest(readGroupIds, referenceId,start,end,pageSize,pageToken);
-*/
         // but Builder does validation and sets defaults, so that's better
-        SearchReadsRequest reqb = SearchReadsRequest.newBuilder()
-                .setReadGroupIds(Arrays.asList("foo"))
-                .setReferenceId("bar")
+        // this is based on  the example from the demo writeup:
+        // curl --data '{"datasetIds":[], "name":null}' --header 'Content-Type: application/json' \
+        //       http://localhost:8000/v0.5.1/readgroupsets/search
+        SearchReadGroupSetsRequest reqb = SearchReadGroupSetsRequest.newBuilder()
+                .setName(null)
+                .setDatasetIds(Arrays.asList())
                 .build();
 
-        SearchReadsResponse rtnVal = client.searchReads(reqb);
+        log.info("generating: " + reqb.toString());
+        SearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
+        // make asserts about the rtnVal
+        org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal).isNotNull();
         log.info(rtnVal.toString());
     }
 
