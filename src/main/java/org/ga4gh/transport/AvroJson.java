@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.KeyDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.dataformat.avro.AvroFactory;
+import com.fasterxml.jackson.dataformat.avro.AvroSchema;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -77,24 +79,25 @@ public class AvroJson {
     }
 
     /*
+    byte[] avroData = ... ; // or find an InputStream
+Employee empl = mapper.reader(Employee.class)
+   .with(schema)
+   .readValue(avroData);
+     */
+
+    /*
      * Make new object using Jackson on the Avro-generated class
      * @Param bs String json string to convert
      * @Param objClass class to map into
      */
-    public <T> T jsonToObject( String bs, Class<T> objClass){
+    public <T> T jsonToObject( String bs, Class<T> objClass, Schema schema){
         T obj = null;
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule("HandleCharSeq",new Version(0,1,0,"alpha"));
-        KeyDeserializer jlcs = new KeyDeserializer() {
-            @Override
-            public Object deserializeKey(String s, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-                return null;
-            }
-        };
-                // WORKING HERE adding custom deserializer for java.lag.CharSeq
-//        module.addKeyDeserializer(java.lang.CharSequence.class,
+        AvroSchema avSchema = new AvroSchema(schema);
         try {
-            obj = new ObjectMapper().readValue(bs, objClass);
+            obj = new ObjectMapper(new AvroFactory())
+                    .reader(objClass)
+                    .with(avSchema)
+                    .readValue(bs);
         } catch (IOException e) {
             log.warn("Failed to make new " + objClass.getName() + " from: " + bs, e);
         }

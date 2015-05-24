@@ -77,7 +77,7 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
         // enough, we'll use Jackson for the deserialization!
         HttpResponse<JsonNode> resp = aj.jsonPost(jsonBytes, "readgroupsets/search");
         if (resp.getStatus() == HttpStatus.SC_OK) {
-            rtnSrr = aj.jsonToObject(resp.getBody().toString(), SearchReadGroupSetsResponse.class);
+            rtnSrr = aj.jsonToObject(resp.getBody().toString(), SearchReadGroupSetsResponse.class, schema);
         } else {
             log.warn("null SearchReadsResponse because POST to readgroupsets/search got status " + resp.getStatus());
         }
