@@ -45,7 +45,9 @@ public class ReadsTest {
         log.info("generating: " + reqb.toString());
         SearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
         assertNotNull("should get a not-null SearchReadGroupSetsResponse", rtnVal);
-        // make asserts about the rtnVal
+        org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal)
+                .hasSchema(SearchReadGroupSetsResponse.SCHEMA$);
+
         //org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal).isNotNull();
         log.info(String.valueOf(rtnVal));
     }
