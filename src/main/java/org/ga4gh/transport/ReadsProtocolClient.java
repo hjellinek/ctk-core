@@ -1,21 +1,14 @@
 package org.ga4gh.transport;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import org.apache.avro.AvroRemoteException;
-import org.apache.avro.Schema;
-import org.apache.avro.io.DatumWriter;
 import org.apache.avro.ipc.HttpTransceiver;
 import org.apache.avro.ipc.Transceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
-import org.apache.avro.specific.SpecificDatumWriter;
-import org.apache.http.HttpStatus;
 import org.ga4gh.methods.*;
 import org.ga4gh.models.Dataset;
 import org.ga4gh.models.ReadGroup;
 import org.ga4gh.models.ReadGroupSet;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URL;
@@ -62,26 +55,8 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public SearchReadGroupSetsResponse searchReadGroupSets(SearchReadGroupSetsRequest request) throws AvroRemoteException, GAException {
-
-        // do the serialization as written up in Avro docs
-        final DatumWriter<SearchReadGroupSetsRequest> dw =
-                new SpecificDatumWriter<SearchReadGroupSetsRequest>(SearchReadGroupSetsRequest.class);
-        Schema schema = SearchReadGroupSetsRequest.SCHEMA$;
-        SearchReadGroupSetsResponse rtnSrr = null;
-
-        AvroJson aj = new AvroJson(urlRoot); // make an instance od comms utility instead of static
-                                             // in case someday we want to multi-thread the access
-
-        ByteArrayOutputStream jsonBytes = aj.avroToJson(dw, SearchReadGroupSetsRequest.SCHEMA$, request);
-
-        // enough, we'll use Jackson for the deserialization!
-        HttpResponse<JsonNode> resp = aj.jsonPost(jsonBytes, "readgroupsets/search");
-        if (resp.getStatus() == HttpStatus.SC_OK) {
-            rtnSrr = aj.jsonToObject(resp.getBody().toString(), SearchReadGroupSetsResponse.class, SearchReadGroupSetsResponse.SCHEMA$);
-        } else {
-            log.warn("null SearchReadsResponse because POST to readgroupsets/search got status " + resp.getStatus());
-        }
-        return rtnSrr; // protocolProxy.searchReads(request);       return protocolProxy.searchReadGroupSets(request);
+        SearchReadGroupSetsResponse response = new SearchReadGroupSetsResponse();
+        return AvroJson.avroReqRespJson(request, response,urlRoot, "readgroupsets/search" );
     }
 
     /**

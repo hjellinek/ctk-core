@@ -10,6 +10,8 @@ import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.*;
+import org.apache.avro.specific.SpecificDatumWriter;
+import org.apache.http.HttpStatus;
 
 import java.io.*;
 
@@ -19,7 +21,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Created by Wayne Stidolph on 5/22/2015.
  */
 public class AvroJson {
-    private org.slf4j.Logger log = getLogger(AvroJson.class);
+    private static org.slf4j.Logger log = getLogger(AvroJson.class);
     String urlRoot = "localhost";
 
     public AvroJson() {
@@ -37,6 +39,32 @@ public class AvroJson {
         this.urlRoot = urlRoot;
     }
 
+
+    public static <Q extends org.apache.avro.generic.GenericContainer,P extends org.apache.avro.generic.GenericContainer>
+    P avroReqRespJson(Q req, P resp, String urlRoot, String reqPath) {
+        AvroJson aj = new AvroJson(urlRoot);
+
+        // do the serialization as written up in Avro docs
+        final DatumWriter<Q> dw = new SpecificDatumWriter<Q>();
+        Schema schema = req.getSchema();
+        P rtn = null;
+
+
+
+        // split making JSON bytes and posting the JSON to make it easier to set breakpoints
+        // when someone is debugginng their API
+        ByteArrayOutputStream jsonBytes = aj.avroToJson(dw, req.getSchema(), req);
+        HttpResponse<JsonNode> postResp = aj.jsonPost(jsonBytes, reqPath);
+
+        if(postResp.getStatus() == HttpStatus.SC_OK) {
+            // use Jackson to be more relaxed about return JSON missing expected fields
+            rtn = (P) aj.jsonToObject(postResp.getBody().toString(), resp.getClass(), resp.getSchema());
+
+        } else {
+            log.warn("null SearchReadsResponse because POST to readgroupsets/search got status " + postResp.getStatus());
+        }
+        return rtn;
+    }
 
     public <T> ByteArrayOutputStream avroToJson(DatumWriter<T> dw, Schema schema, T srcBytes) {
 
@@ -122,7 +150,7 @@ public class AvroJson {
      * @Param bs String json string to convert
      * @Param objClass class to map into
      */
-    public <T> T jsonToObject( String jsonString, Class<T> objClass, Schema schema){
+    public Object jsonToObject( String jsonString, Class objClass, Schema schema){
 /*
         AvroSchema avSchema = new AvroSchema(schema);
         ObjectMapper om = new ObjectMapper(new AvroFactory());
@@ -139,7 +167,7 @@ public class AvroJson {
 */
 
        // tried a simple approach .. this didn't work :(
-        T target = null;
+        Object target = null;
 
         try {
             ObjectMapper mapper = new ObjectMapper();

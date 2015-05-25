@@ -194,7 +194,7 @@ public class SimpleOrderServiceIntegrationTest {
 
 	@BeforeClass
 	public static void setupTransport() throws Exception {
-		InetSocketAddress endpointAddress = new InetSocketAddress("0.0.0.0", 12345);
+		InetSocketAddress endpointAddress = new InetSocketAddress("192.168.2.115", 8000);
 		service = new SimpleOrderServiceEndpoint(endpointAddress);
 		client = new SimpleOrderServiceClient(endpointAddress);
 
