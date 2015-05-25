@@ -1,5 +1,9 @@
 package org.ga4gh.transport;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.avro.AvroFactory;
+import com.fasterxml.jackson.dataformat.avro.AvroSchema;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -114,6 +118,40 @@ public class AvroJson {
             outbytes = outputStream.toByteArray();
         }
         return outbytes;
+    }
+
+    /*
+     * Make new object using Jackson on the Avro-generated class
+     * @Param bs String json string to convert
+     * @Param objClass class to map into
+     */
+    public <T> T jsonToObject( String bs, Class<T> objClass, Schema schema){
+
+        AvroSchema avSchema = new AvroSchema(schema);
+        ObjectMapper om = new ObjectMapper(new AvroFactory());
+
+        T obj = null;
+
+        try {
+            ObjectReader reader = om.reader(objClass).with(avSchema);
+            obj = reader.readValue(bs.getBytes());
+        } catch (IOException e) {
+            log.warn("Used AvroFactory but failed to make new " + objClass.getName() + " from: " + bs, e);
+        }
+        return obj;
+
+       /*
+       // tried a simple approach .. this didn't work :(
+        T target = null;
+
+        try {
+            target = mapper.readValue(bs, objClass);
+            return target;
+        } catch (IOException e) {
+            log.warn("Failed to make new " + objClass.getName() + " from: " + bs, e);
+        }
+        // return  target;
+        */
     }
 
 }
