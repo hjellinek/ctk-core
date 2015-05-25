@@ -91,8 +91,8 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      * @param id
      */
     @Override
-    public ReadGroupSet getReadGroupSet(CharSequence id) throws AvroRemoteException, GAException {
-        return protocolProxy.getReadGroupSet(id);
+    public ReadGroupSet getReadGroupSet(String id) throws AvroRemoteException, GAException {
+        return null;
     }
 
     /**
@@ -102,9 +102,10 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      * @param id
      */
     @Override
-    public ReadGroup getReadGroup(CharSequence id) throws AvroRemoteException, GAException {
-        return protocolProxy.getReadGroup(id);
+    public ReadGroup getReadGroup(String id) throws AvroRemoteException, GAException {
+        return null;
     }
+
 
     /**
      * Gets a list of datasets accessible through the API.
@@ -130,10 +131,8 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      * @param id
      */
     @Override
-    public Dataset getDataset(CharSequence id) throws AvroRemoteException, GAException {
-        log.info("enter getDataSet");
-        Dataset ds = protocolProxy.getDataset(id);
-        return ds;
+    public Dataset getDataset(String id) throws AvroRemoteException, GAException {
+        return null;
     }
 
     // support

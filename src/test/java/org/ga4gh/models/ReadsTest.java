@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 
+import static org.junit.Assert.assertNotNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -21,9 +22,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ReadsTest {
 
     private org.slf4j.Logger log = getLogger(ReadsTest.class);
-/*
-ReadGroupSet >--< ReadGroup --< fragment --< read --< alignment --< linear/graph alignment
- */
+    /*
+    ReadGroupSet >--< ReadGroup --< fragment --< read --< alignment --< linear/graph alignment
+     */
     // private static SimpleOrderServiceEndpoint service; // use real server
     private static ReadsProtocolClient client;
 
@@ -43,9 +44,10 @@ ReadGroupSet >--< ReadGroup --< fragment --< read --< alignment --< linear/graph
 
         log.info("generating: " + reqb.toString());
         SearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
+        assertNotNull("should get a SearchReadGroupSetsResponse", rtnVal);
         // make asserts about the rtnVal
         //org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal).isNotNull();
-        log.info(rtnVal.toString());
+        log.info(String.valueOf(rtnVal));
     }
 
     @BeforeClass

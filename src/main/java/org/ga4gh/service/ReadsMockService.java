@@ -15,6 +15,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ReadsMockService implements org.ga4gh.methods.ReadMethods {
     private org.slf4j.Logger log = getLogger(ReadsMockService.class);
 
+
     /**
      * Gets a list of `ReadAlignment` matching the search criteria.
      * <p>
@@ -49,7 +50,7 @@ public class ReadsMockService implements org.ga4gh.methods.ReadMethods {
      * @param id
      */
     @Override
-    public ReadGroupSet getReadGroupSet(CharSequence id) throws AvroRemoteException, GAException {
+    public ReadGroupSet getReadGroupSet(String id) throws AvroRemoteException, GAException {
         return null;
     }
 
@@ -60,7 +61,7 @@ public class ReadsMockService implements org.ga4gh.methods.ReadMethods {
      * @param id
      */
     @Override
-    public ReadGroup getReadGroup(CharSequence id) throws AvroRemoteException, GAException {
+    public ReadGroup getReadGroup(String id) throws AvroRemoteException, GAException {
         return null;
     }
 
@@ -87,7 +88,7 @@ public class ReadsMockService implements org.ga4gh.methods.ReadMethods {
      * @param id
      */
     @Override
-    public Dataset getDataset(CharSequence id) throws AvroRemoteException, GAException {
+    public Dataset getDataset(String id) throws AvroRemoteException, GAException {
         return null;
     }
 }

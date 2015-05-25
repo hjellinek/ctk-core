@@ -142,7 +142,7 @@ public class SimpleOrderServiceIntegrationTest {
 		SoftAssertions softly = new SoftAssertions();
 		softly.assertThat(c)
 				.hasOrderId(simpleOrder.getOrderId())
-                .matches(conf -> customerIdPreserved.test(conf,simpleOrder));
+                .matches(conf -> customerIdPreserved.test(conf, simpleOrder));
         softly.assertAll();
 
         org.assertj.core.api.Assertions.assertThat(c.estimatedCompletion)
