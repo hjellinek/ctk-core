@@ -1,24 +1,16 @@
 package org.ga4gh.transport;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.KeyDeserializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.dataformat.avro.AvroFactory;
-import com.fasterxml.jackson.dataformat.avro.AvroSchema;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.avro.Schema;
-import org.apache.avro.io.DatumWriter;
-import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.io.JsonEncoder;
+import org.apache.avro.generic.GenericDatumReader;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -45,14 +37,16 @@ public class AvroJson {
     }
 
 
-    public <T> ByteArrayOutputStream avroToJson(DatumWriter<T> dw, Schema schema, T request) {
+    public <T> ByteArrayOutputStream avroToJson(DatumWriter<T> dw, Schema schema, T srcBytes) {
 
         Boolean pretty = true;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
+            // use jsonEncoder to writer to 'out' byte stream
             JsonEncoder encoder = EncoderFactory.get().jsonEncoder(schema, out, pretty);
+
             dw.setSchema(schema);
-            dw.write(request, encoder);
+            dw.write(srcBytes, encoder); // actual write
             encoder.flush();
             out.close();
         } catch (IOException e) {
@@ -78,30 +72,48 @@ public class AvroJson {
         return jsonResponse;
     }
 
-    /*
-    byte[] avroData = ... ; // or find an InputStream
-Employee empl = mapper.reader(Employee.class)
-   .with(schema)
-   .readValue(avroData);
-     */
-
-    /*
-     * Make new object using Jackson on the Avro-generated class
-     * @Param bs String json string to convert
-     * @Param objClass class to map into
-     */
-    public <T> T jsonToObject( String bs, Class<T> objClass, Schema schema){
-        T obj = null;
-        AvroSchema avSchema = new AvroSchema(schema);
+    public <T> T jsonToAvroObject(String theJson, Schema schema){
+        byte[] avroByteArray = fromJsonToBytes(theJson, schema);
+        DatumReader<GenericRecord> reader1 = new GenericDatumReader<GenericRecord>(schema);
+        Decoder decoder1 = DecoderFactory.get().binaryDecoder(avroByteArray, null);
         try {
-            obj = new ObjectMapper(new AvroFactory())
-                    .reader(objClass)
-                    .with(avSchema)
-                    .readValue(bs);
+            GenericRecord result = reader1.read(null, decoder1);
+            return (T) result;
         } catch (IOException e) {
-            log.warn("Failed to make new " + objClass.getName() + " from: " + bs, e);
+            log.warn("Failed making GenericRecord result",e);
         }
-        return obj;
+        return null;
+    }
+
+    public byte[] fromJsonToBytes(String theJson, Schema schema){
+        ByteArrayOutputStream outputStream = null;
+
+        InputStream input = new ByteArrayInputStream(theJson.getBytes());
+        DataInputStream din = new DataInputStream(input);
+        Decoder decoder = null;
+        try {
+            decoder = DecoderFactory.get().jsonDecoder(schema, din);
+            DatumReader<Object> reader = new GenericDatumReader<Object>(schema);
+            Object datum = reader.read(null, decoder);
+            GenericDatumWriter<Object> w = new GenericDatumWriter<Object>(schema);
+            outputStream = new ByteArrayOutputStream();
+
+            Encoder e = EncoderFactory.get().binaryEncoder(outputStream, null);
+
+            w.write(datum, e);
+            e.flush();
+
+        } catch (IOException e) {
+            log.warn("IOException getting bytes", e);
+        }
+        catch (org.apache.avro.AvroTypeException te){
+            log.warn("Failed fromJsonToBytes for " + schema.getName() + " on "+theJson, te);
+        }
+        byte[] outbytes = new byte[] {};
+        if(outputStream != null){
+            outbytes = outputStream.toByteArray();
+        }
+        return outbytes;
     }
 
 }
