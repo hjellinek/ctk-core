@@ -1,6 +1,7 @@
 package org.ga4gh.transport;
 
 import org.apache.avro.AvroRemoteException;
+import org.apache.avro.Schema;
 import org.apache.avro.ipc.HttpTransceiver;
 import org.apache.avro.ipc.Transceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
@@ -28,7 +29,7 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
 
     private ReadMethods protocolProxy; // actually talks to Server
 
-    public String urlRoot = "http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
+    public String urlRoot = URLMAPPING.urlRoot; //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
 
 
 
@@ -42,7 +43,12 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public SearchReadsResponse searchReads(SearchReadsRequest request) throws AvroRemoteException, GAException {
-        return null;
+        String path = URLMAPPING.searchReads;
+        SearchReadsResponse response = new SearchReadsResponse();
+        AvroJson aj =
+                new AvroJson<>(request, response, urlRoot, path );
+        response = (SearchReadsResponse) aj.doPostResp();
+        return response;
     }
 
     /**
@@ -55,8 +61,16 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public SearchReadGroupSetsResponse searchReadGroupSets(SearchReadGroupSetsRequest request) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.searchReadGroupSets;
+        // we use an empty concrete response class to pass into the Parameterized AvroJson
+        // as a quickway to get the class name and such; this bject actually gets replaced
+        // with the filled-in Repsonse object constructed in AvroJson and passed back
         SearchReadGroupSetsResponse response = new SearchReadGroupSetsResponse();
-        return AvroJson.avroReqRespJson(request, response,urlRoot, "readgroupsets/search" );
+        AvroJson aj =
+            new AvroJson<>(request, response, urlRoot, path );
+        response = (SearchReadGroupSetsResponse) aj.doPostResp();
+
+        return response;
     }
 
     /**
@@ -67,8 +81,16 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public ReadGroupSet getReadGroupSet(String id) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.getReadGroupSet;
+        ReadGroupSet response = new ReadGroupSet();
+        ReadGroupSetsRequest request = new ReadGroupSetsRequest(); // a dummy, for reusing the POST-oriented AJ class
+        AvroJson aj =
+                new AvroJson<>(request, response, urlRoot, path );
+        response = (ReadGroupSet) aj.doGetResp(id);
+
         return null;
     }
+
 
     /**
      * Gets a `org.ga4gh.models.ReadGroup` by ID.
@@ -78,7 +100,13 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public ReadGroup getReadGroup(String id) throws AvroRemoteException, GAException {
-        return null;
+        String path = URLMAPPING.getReadGroup;
+        ReadGroup response = new ReadGroup();
+        ReadGroupRequest request = new ReadGroupRequest(); // a dummy, for reusing the POST-oriented AJ class
+        AvroJson aj =
+                new AvroJson<>(request, response, urlRoot, path );
+        response = (ReadGroup) aj.doGetResp(id);
+        return response;
     }
 
 
@@ -95,8 +123,14 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public SearchDatasetsResponse searchDatasets(SearchDatasetsRequest request) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.searchDatasets;
+        SearchDatasetsResponse response = new SearchDatasetsResponse();
 
-        return protocolProxy.searchDatasets(request);
+        AvroJson aj =
+                new AvroJson<>(request, response, urlRoot, path );
+        response = (SearchDatasetsResponse) aj.doPostResp();
+
+        return response;
     }
 
     /**
@@ -107,6 +141,8 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
      */
     @Override
     public Dataset getDataset(String id) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.getDataset;
+
         return null;
     }
 
@@ -134,3 +170,16 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
         }
     }
 }
+
+class DummyRequest implements org.apache.avro.generic.GenericContainer {
+
+    /**
+     * The schema of this instance.
+     */
+    @Override
+    public Schema getSchema() {
+        return null;
+    }
+}
+class ReadGroupRequest extends DummyRequest{};
+class ReadGroupSetsRequest extends DummyRequest{};

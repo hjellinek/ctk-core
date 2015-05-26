@@ -1,8 +1,12 @@
 package org.ga4gh.models;
 
 import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.ga4gh.methods.SearchDatasetsRequest;
+import org.ga4gh.methods.SearchDatasetsResponse;
 import org.ga4gh.methods.SearchReadGroupSetsRequest;
 import org.ga4gh.methods.SearchReadGroupSetsResponse;
+import org.ga4gh.transport.AvroJson;
 import org.ga4gh.transport.ReadsProtocolClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -21,7 +25,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @RunWith(JUnitParamsRunner.class)
 public class ReadsTest {
 
-    private org.slf4j.Logger log = getLogger(ReadsTest.class);
+    private static org.slf4j.Logger log = getLogger(ReadsTest.class);
     /*
     ReadGroupSet >--< ReadGroup --< fragment --< read --< alignment --< linear/graph alignment
      */
@@ -47,8 +51,37 @@ public class ReadsTest {
         assertNotNull("should get a not-null SearchReadGroupSetsResponse", rtnVal);
         org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal)
                 .hasSchema(SearchReadGroupSetsResponse.SCHEMA$);
+        //ReadGroupSetAssert.assertThat(rtnVal.getReadGroupSets().get(0)).hasReadGroups()
+
 
         //org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal).isNotNull();
+        log.info(String.valueOf(rtnVal));
+    }
+
+    @Test
+    @Parameters({
+            "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522",
+            "low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522",
+            "low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
+    })
+    public void getReadGroupSet(String id) throws Exception {
+        log.info("testing searchReadGroupSets");
+
+        ReadGroupSet rgs = client.getReadGroupSet(id);
+        log.info("getReadGroupSet(" + id + ") got RGS of " + String.valueOf(rgs));
+
+        assertNotNull("should get a valid ReadGroupSet", rgs);
+
+    }
+
+    @Test
+    public void checkDatasets() throws Exception {
+        log.info("testing getDataSets");
+        SearchDatasetsRequest sdrQ = SearchDatasetsRequest.newBuilder()
+                // put params here, what are they?
+                .build();
+        SearchDatasetsResponse rtnVal = client.searchDatasets(sdrQ);
+        assertNotNull("should get a not-null SearchDatasetsResponse", rtnVal);
         log.info(String.valueOf(rtnVal));
     }
 
@@ -64,7 +97,9 @@ public class ReadsTest {
 
     @AfterClass
     public static void shutdownTransport() throws Exception {
+        log.info(AvroJson.getMessages().toString());
         client.stop();
+
         // service.stop();
     }
 }
