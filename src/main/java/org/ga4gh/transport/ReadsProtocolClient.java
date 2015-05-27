@@ -5,6 +5,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.ipc.HttpTransceiver;
 import org.apache.avro.ipc.Transceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
+import org.ga4gh.ctk.control.WireDiff;
 import org.ga4gh.methods.*;
 import org.ga4gh.models.Dataset;
 import org.ga4gh.models.ReadGroup;
@@ -31,13 +32,16 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
 
     public String urlRoot = URLMAPPING.urlRoot; //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
 
+    public WireDiff wireDiff;
+
     /**
      * Gets a list of `ReadAlignment` matching the search criteria.
      * <p>
      * `POST /reads/search` must accept a JSON version of `SearchReadsRequest` as
      * the post body and will return a JSON version of `SearchReadsResponse`.
      *
-     * @param request
+     * @param request {@code SearchReadsRequest}
+     * @return {@code SearchReadsResponse} can be null
      */
     @Override
     public SearchReadsResponse searchReads(SearchReadsRequest request) throws AvroRemoteException, GAException {
@@ -50,11 +54,29 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
     }
 
     /**
+     * Gets a list of `ReadAlignment` matching the search criteria.
+     * <p>
+     * `POST /reads/search` must accept a JSON version of `SearchReadsRequest` as
+     * the post body and will return a JSON version of `SearchReadsResponse`.
+     *
+     * @param request
+     * @param wd {@code WireDiff} control whether WireDiffs are use for test support
+     * @return  {@code SearchReadsResponse} can be null
+     */
+    public SearchReadsResponse searchReads(SearchReadsRequest request, WireDiff wd) throws AvroRemoteException, GAException {
+        this.wireDiff = wd;
+        return searchReads(request);
+    }
+
+    /**
      * Gets a list of `ReadGroupSet` matching the search criteria.
      * <p>
      * `POST /readgroupsets/search` must accept a JSON version of
      * `SearchReadGroupSetsRequest` as the post body and will return a JSON
      * version of `SearchReadGroupSetsResponse`.
+     *
+     * @param request {@code SearchReadGroupSetsRequest}
+     * @return {@code SearchReadGroupSetsResponse} can be null
      *
      */
     @Override
@@ -70,6 +92,23 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
         response = (SearchReadGroupSetsResponse) aj.doPostResp();
 
         return response;
+    }
+
+    /**
+     * Gets a list of `ReadGroupSet` matching the search criteria.
+     * <p>
+     * `POST /readgroupsets/search` must accept a JSON version of
+     * `SearchReadGroupSetsRequest` as the post body and will return a JSON
+     * version of `SearchReadGroupSetsResponse`.
+     *
+     * @param request {@code SearchReadGroupSetsRequest}
+     * @param wd {@code WireDiff} control whether WireDiffs are use for test support
+     * @return {@code SearchReadGroupSetsResponse} can be null
+     *
+     */
+    public SearchReadGroupSetsResponse searchReadGroupSets(SearchReadGroupSetsRequest request, WireDiff wd) throws AvroRemoteException, GAException {
+        this.wireDiff = wd;
+        return searchReadGroupSets(request);
     }
 
     /**
@@ -90,6 +129,17 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
         return response;
     }
 
+    /**
+     * Gets a `org.ga4gh.models.ReadGroupSet` by ID.
+     * `GET /readgroupsets/{id}` will return a JSON version of `ReadGroupSet`.
+     *
+     * @param id
+     * @param wd {@code WireDiff} control whether WireDiffs are use for test support
+     */
+    public ReadGroupSet getReadGroupSet(String id, WireDiff wd) throws AvroRemoteException, GAException {
+        this.wireDiff = wd;
+        return getReadGroupSet(id);
+    }
 
     /**
      * Gets a `org.ga4gh.models.ReadGroup` by ID.
@@ -108,6 +158,17 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
         return response;
     }
 
+    /**
+     * Gets a `org.ga4gh.models.ReadGroup` by ID.
+     * `GET /readgroups/{id}` will return a JSON version of `ReadGroup`.
+     *
+     * @param id
+     * @param wd {@code WireDiff} control whether WireDiffs are use for test support
+     */
+    public ReadGroup getReadGroup(String id, WireDiff wd) throws AvroRemoteException, GAException {
+        this.wireDiff = wd;
+        return getReadGroup(id);
+    }
 
     /**
      * Gets a list of datasets accessible through the API.
@@ -133,6 +194,23 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
     }
 
     /**
+     * Gets a list of datasets accessible through the API.
+     * <p>
+     * TODO: Reads and variants both want to have datasets. Are they the same object?
+     * <p>
+     * `POST /datasets/search` must accept a JSON version of
+     * `SearchDatasetsRequest` as the post body and will return a JSON version
+     * of `SearchDatasetsResponse`.
+     *
+     * @param request
+     * @param wd {@code WireDiff} control whether WireDiffs are use for test support
+     */
+    public SearchDatasetsResponse searchDatasets(SearchDatasetsRequest request, WireDiff wd) throws AvroRemoteException, GAException {
+        this.wireDiff = wd;
+        return searchDatasets(request);
+    }
+
+    /**
      * Gets a `Dataset` by ID.
      * `GET /datasets/{id}` will return a JSON version of `Dataset`.
      *
@@ -149,6 +227,18 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
         response = (Dataset) aj.doGetResp(id);
 
         return response;
+    }
+
+    /**
+     * Gets a `Dataset` by ID.
+     * `GET /datasets/{id}` will return a JSON version of `Dataset`.
+     *
+     * @param id
+     * @param wd {@code WireDiff} control whether WireDiffs are use for test support
+     */
+    public Dataset getDataset(String id, WireDiff wd) throws AvroRemoteException, GAException {
+        this.wireDiff = wd;
+        return getDataset(id);
     }
 
     // support

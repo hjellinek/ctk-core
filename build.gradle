@@ -1,0 +1,51 @@
+usePlugin 'java'
+usePlugin 'maven'
+
+	group = 'org.ga4gh'
+	version = '1.0-SNAPSHOT'
+
+configurations.compile.transitive = true
+
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+
+repositories {
+ 		mavenRepo urls: ["https://repo.maven.apache.org/maven2"]
+}
+	dependencies {
+	compile "org.apache.avro:avro:1.7.7"
+	compile "org.apache.avro:avro-ipc:1.7.7"
+	compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.5.3"
+	compile "com.fasterxml.jackson.dataformat:jackson-dataformat-avro:2.5.3"
+	compile "org.slf4j:slf4j-api:1.7.12"
+	compile "org.apache.logging.log4j:log4j-api:2.3"
+	compile "org.apache.logging.log4j:log4j-core:2.3"
+	compile "org.apache.logging.log4j:log4j-slf4j-impl:2.3"
+	compile "junit:junit:4.12"
+	compile "org.assertj:assertj-core:3.0.0"
+	compile "pl.pragmatists:JUnitParams:1.0.4"
+	compile "org.apache.httpcomponents:httpclient:4.4.1"
+	compile "org.apache.httpcomponents:httpasyncclient:4.1"
+	compile "org.apache.httpcomponents:httpmime:4.4.1"
+	compile "org.json:json:20141113"
+	compile "com.mashape.unirest:unirest-java:1.4.5"
+	}
+
+task replacePoms(dependsOn: install) << {
+    def pomsDir = new File(project.buildDir, "poms")
+    def defaultPomName = "pom-default.xml"
+    def defaultPom = new File(pomsDir, defaultPomName)
+    if (defaultPom.exists()) {
+      File pomFile = new File(project.projectDir, "pom.xml")
+      if (pomFile.exists()) {
+        pomFile.renameTo(new File(project.projectDir, "pom.xml.bak"))
+      }
+      project.copy {
+        from(pomsDir) {
+          include defaultPomName
+          rename defaultPomName, 'pom.xml'
+        }
+        into(project.projectDir)
+      }
+    }
+}
