@@ -1,5 +1,6 @@
 package org.ga4gh.models;
 
+import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.ga4gh.methods.SearchDatasetsRequest;
@@ -34,7 +35,14 @@ public class ReadsTest {
 
 
     @Test
-    public void searchReadGroupSets() throws Exception {
+    @Parameters({
+            "",
+            "foo",
+            "1kg-phase1",
+            "1kg-phase3",
+            "1kg-phase1:1kg-phase3"
+    })
+    public void searchReadGroupSets(String datasetid) throws Exception {
         log.info("testing searchReadGroupSets");
 
         // but Builder does validation and sets defaults, so that's better
@@ -43,19 +51,18 @@ public class ReadsTest {
         //       http://localhost:8000/v0.5.1/readgroupsets/search
         SearchReadGroupSetsRequest reqb = SearchReadGroupSetsRequest.newBuilder()
                 .setName(null)
-                .setDatasetIds(Arrays.asList())
+                .setDatasetIds(Arrays.asList(datasetid.split(":")))
                 .build();
 
-        log.info("generating: " + reqb.toString());
+        log.info("generating SearchReadGroupSetsRequest: " + reqb.toString());
         SearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
+        //org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal).isNotNull();
+        log.info("searchReadGroupSets " + datasetid+" returned: " + String.valueOf(rtnVal));
+
         assertNotNull("should get a not-null SearchReadGroupSetsResponse", rtnVal);
         org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal)
                 .hasSchema(SearchReadGroupSetsResponse.SCHEMA$);
         //ReadGroupSetAssert.assertThat(rtnVal.getReadGroupSets().get(0)).hasReadGroups()
-
-
-        //org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal).isNotNull();
-        log.info(String.valueOf(rtnVal));
     }
 
     @Test
@@ -97,7 +104,10 @@ public class ReadsTest {
 
     @AfterClass
     public static void shutdownTransport() throws Exception {
-        log.info(AvroJson.getMessages().toString());
+        for(Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()){
+            log.info("TRAFFIC " + cell.getRowKey() + " " + cell.getColumnKey() + " " +cell.getValue());
+        }
+        //log.info("total message traffic: "+ AvroJson.getMessages().toString());
         client.stop();
 
         // service.stop();

@@ -1,20 +1,26 @@
 package org.ga4gh.transport;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.*;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.avro.AvroFactory;
+import com.fasterxml.jackson.dataformat.avro.AvroSchema;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.apache.avro.AvroTypeException;
 import org.apache.avro.Schema;
-import org.apache.avro.io.DatumWriter;
-import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.io.JsonEncoder;
+import org.apache.avro.generic.GenericDatumReader;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.*;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.http.HttpStatus;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -25,10 +31,19 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
     private static org.slf4j.Logger log;
     private static Table<String, String, Integer> messages;
 
+    /*
+     * table cells are | request (class, post/get, body/id) | response class  | response status code|
+     */
     public static Table<String, String, Integer> getMessages() { return messages;}
     static {
         log = getLogger(AvroJson.class);
         messages = HashBasedTable.create();
+    }
+
+    public enum DESER_MODE {
+        JACKSON_RELAXED,
+        JACKSON_AVRO,
+        AVRO_DIRECT
     }
 
     String urlRoot;
@@ -43,13 +58,13 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
     ByteArrayOutputStream jsonBytes;
     HttpResponse<JsonNode> httpResp;
 
-    boolean useAvroForDeserialize = false; // default to Jackson for now
-    public boolean isUseAvroForDeserialize() {
-        return useAvroForDeserialize;
+    DESER_MODE avroDeserializer = DESER_MODE.JACKSON_RELAXED; // default
+    public DESER_MODE getAvroDeserializer() {
+        return avroDeserializer;
     }
 
-    public void setUseAvroForDeserialize(boolean useAvroForDeserialize) {
-        this.useAvroForDeserialize = useAvroForDeserialize;
+    public void setAvroDeserializer(DESER_MODE deserialization_mode) {
+        this.avroDeserializer = deserialization_mode;
     }
     /*
      * Construct an AvroJson for a particular request/response pattern
@@ -72,11 +87,11 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
         // just for ease of breakpointing
         jsonBytes = avroToJson(dw, reqSchema, theAvroReq);
         httpResp = jsonPost(urlRoot + path);
-        theResp = makeAvroFromResponse(httpResp);
+        theResp = makeAvroFromResponse(httpResp, urlRoot + path);
 
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null? theResp.getClass().getSimpleName() : "null";
-        messages.put(theAvroReq.getClass().getSimpleName()+" POST", respName, httpResp.getStatus());;
+        messages.put(theAvroReq.getClass().getSimpleName()+" POST <"+jsonBytes+">", respName, httpResp.getStatus());;
 
         return theResp;
     }
@@ -85,29 +100,47 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
 
         // no request object to build, just GET from the endpoint with route param
         httpResp = jsonGet(urlRoot+path, id);
-        theResp = makeAvroFromResponse(httpResp);
+        theResp = makeAvroFromResponse(httpResp, urlRoot + path + "/" + id);
 
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null? theResp.getClass().getSimpleName() : "null";
-        messages.put(theAvroReq.getClass().getSimpleName() + " GET " + id, respName, httpResp.getStatus());
+        messages.put(theAvroReq.getClass().getSimpleName() + " GET <" + id + ">", respName, httpResp.getStatus());
 
         return theResp;
     }
 
-    P makeAvroFromResponse(HttpResponse<JsonNode> respToBeConverted){
+    P makeAvroFromResponse(HttpResponse<JsonNode> respToBeConverted, String sourceForLog){
         P response = null;
         if (httpResp.getStatus() == HttpStatus.SC_OK){
-            if (!useAvroForDeserialize){
-                response = (P)jsonToObject(respToBeConverted.getBody().toString(), theResp.getClass());
-            } else {
-                // use avro
-                log.warn("Using Jackson because avro deserialization not yet supported");
-                response = (P)jsonToObject(respToBeConverted.getBody().toString(), theResp.getClass()); // FIXME use avro here, not Jackson
+            switch (avroDeserializer) {
+                case JACKSON_AVRO:
+                    try {
+                        response = (P)jsonToObject(respToBeConverted.getBody().toString(), theResp.getClass(), theResp.getSchema());
+                    } catch ( JsonMappingException jme){
+                        response = null;
+                        log.warn("deserializing via " + avroDeserializer + " returns null instead of a " + theResp.getClass().getName()
+                                + " from: " + respToBeConverted.getBody(), jme);
+                    }
+                    break;
+                case AVRO_DIRECT:
+                    try{
+                        response = (P) jsonToAvroObject(respToBeConverted.getBody().toString(),theResp.getSchema());
+                    } catch ( AvroTypeException ate){
+                        response = null;
+                        log.warn("deserializing via " + avroDeserializer + " returns null instead of a " + theResp.getClass().getName()
+                                + " from: " + respToBeConverted.getBody(), ate);
+                    }
+                    break;
+                case JACKSON_RELAXED:
+                    response = (P)jsonToObject(respToBeConverted.getBody().toString(), theResp.getClass());
+                    break;
             }
         } else {
-            log.warn("return null instead of a " + theResp.getClass().getName()
-                    + " because " + urlRoot + path
-                    + " returned status " + httpResp.getStatus());
+            log.warn("makeAvroFromResponse returns null instead of a " + theResp.getClass().getName()
+                    + " because rcd status " + httpResp.getStatus()
+                    + " with response_BODY < "+ httpResp.getBody() + " >"
+                    + " from " + sourceForLog + "with request_BODY < " + String.valueOf(jsonBytes) + " >"
+                    );
         }
         return response;
     }
@@ -128,7 +161,7 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
             log.warn("problem creating JSON from avro for schema " + schema, e);
         }
         if (log.isDebugEnabled()) {
-            log.debug(jsonBytes.toString());
+            log.debug("avroToJson generates: " + jsonBytes.toString());
         }
         return jsonBytes;
     }
@@ -139,7 +172,7 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
             jsonResponse = Unirest.post(theURL)
                     .header("Content-Type", "application/json")
                     .header("accept", "application/json")
-                    .body(jsonBytes.toString())
+                    .body(String.valueOf(jsonBytes))
                     .asJson();
         } catch (UnirestException e) {
             log.warn("problem communicating JSON with " + theURL, e);
@@ -171,23 +204,45 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
         } catch (IOException e) {
             log.warn("Failed to make new " + objClass.getName() + " from: " + jsonString, e);
         }
-        // return  target;
         return target;
     }
 
     // UNUSED BELOW: work-in-progress for Avro-specific deserialization
-    /*
+
+
+    public Object jsonToObject( String jsonString, Class objClass, Schema schema) throws JsonMappingException {
+
+        AvroSchema avSchema = new AvroSchema(schema);
+        ObjectMapper om = new ObjectMapper(new AvroFactory());
+
+        Object obj = null;
+
+        try {
+            ObjectReader reader = om.reader(objClass).with(avSchema);
+            obj = reader.readValue(jsonString.getBytes());
+        } catch (IOException e) {
+            log.warn("Jackson with AvroFactory failed to make new " + objClass.getName() + " from: " + jsonString, e);
+        }
+        return obj;
+    }
+
+
+
     public <T> T jsonToAvroObject(String theJson, Schema schema){
         byte[] avroByteArray = fromJsonToBytes(theJson, schema);
+        if(avroByteArray == null || avroByteArray.length == 0){
+            return null;
+        }
+
         DatumReader<GenericRecord> reader1 = new GenericDatumReader<GenericRecord>(schema);
         Decoder decoder1 = DecoderFactory.get().binaryDecoder(avroByteArray, null);
+        GenericRecord result = null;
         try {
-            GenericRecord result = reader1.read(null, decoder1);
-            return (T) result;
+            result = reader1.read(null, decoder1);
         } catch (IOException e) {
-            log.warn("Failed making GenericRecord result",e);
+            log.warn("Avro reader failed to get bytes for Schema " + schema.getName(),e);
         }
-        return null;
+        return (T) result;
     }
 
     public byte[] fromJsonToBytes(String theJson, Schema schema){
@@ -220,23 +275,4 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
         }
         return outbytes;
     }
-    */
-
-    /*
-    public Object jsonToObject( String jsonString, Class objClass, Schema schema){
-
-        AvroSchema avSchema = new AvroSchema(schema);
-        ObjectMapper om = new ObjectMapper(new AvroFactory());
-
-        T obj = null;
-
-        try {
-            ObjectReader reader = om.reader(objClass).with(avSchema);
-            obj = reader.readValue(jsonString.getBytes());
-        } catch (IOException e) {
-            log.warn("Used AvroFactory but failed to make new " + objClass.getName() + " from: " + jsonString, e);
-        }
-        return obj;
-    }
-    */
 }
