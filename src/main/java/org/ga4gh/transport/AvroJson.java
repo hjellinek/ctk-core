@@ -25,6 +25,7 @@ import java.io.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
+ * Provide Avro/Json communications layer specific to GA4GH and with extensive logging in support of CTK use.
  * Created by Wayne Stidolph on 5/22/2015.
  */
 public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P extends org.apache.avro.generic.GenericContainer> {
@@ -46,7 +47,19 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
         AVRO_DIRECT
     }
 
+    /*
+     * url root to system-under-test; e.g., "http://localhost:8000/v0.5.1/"
+     */
     String urlRoot;
+    /*
+     * url root to live comparison server
+     */
+    String refRoot;
+    /*
+     * if true, duplicate request to refserver and compare results
+     */
+    boolean compareToRef = false;
+
     String path;
     final DatumWriter<Q> dw;
     final Q theAvroReq;
@@ -167,6 +180,9 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
     }
 
     HttpResponse<JsonNode> jsonPost(String theURL) {
+        if(log.isDebugEnabled()){
+            log.debug("begin jsonPost to " + theURL + " of " + String.valueOf(jsonBytes));
+        }
         HttpResponse<JsonNode> jsonResponse = null;
         try {
             jsonResponse = Unirest.post(theURL)
@@ -177,10 +193,16 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
         } catch (UnirestException e) {
             log.warn("problem communicating JSON with " + theURL, e);
         }
+        if(log.isDebugEnabled()){
+            log.debug("exit jsonPost to " + theURL + " with status " + jsonResponse.getStatusText());
+        }
         return jsonResponse;
     }
 
     HttpResponse<JsonNode> jsonGet(String theUrl, String id){
+        if(log.isDebugEnabled()){
+            log.debug("begin jsonGet to " + theUrl + " id=" + id);
+        }
         HttpResponse<JsonNode> jsonResponse = null;
 
         try {
@@ -191,9 +213,15 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
         } catch (UnirestException e) {
             log.warn("problem communicating JSON with " + theUrl + " id: " + id, e);
         }
+        if(log.isDebugEnabled()){
+            log.debug("exit jsonGet to " + theUrl + " id=" + id + " with status " + jsonResponse.getStatusText());
+        }
         return jsonResponse;
     }
 
+    public void jsonCompare(){
+
+    }
     Object jsonToObject( String jsonString, Class objClass){
         Object target = null;
 
