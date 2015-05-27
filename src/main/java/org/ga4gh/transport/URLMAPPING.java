@@ -13,6 +13,16 @@ public class URLMAPPING {
     static public String searchDatasets = "datasets/search";
     static public String getDataset = "datasets/{id}";
 
+    static public String searchVariantSets = "variantsets/search";
+    static public String getVariantSet = "variantsets/{id}";
+    static public String searchVariants = "variants/search";
+    static public String getVariant = "variants/{id}";
+    static public String searchAlleles = "alleles/search";
+    static public String getAllele = "alleles/{id}";
+    static public String searchCallSets = "callsets/search";
+    static public String getCallSet = "callsets/{id}";
+    static public String searchCalls = "calls/search";
+    static public String searchAlleleCalls = "allelecalls/search";
     /*
 POST	/v0.5.1/callsets/search
 POST	/v0.5.1/readgroupsets/search

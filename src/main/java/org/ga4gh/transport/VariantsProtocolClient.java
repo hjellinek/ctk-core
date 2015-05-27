@@ -22,6 +22,7 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
      */
     @Override
     public SearchVariantSetsResponse searchVariantSets(SearchVariantSetsRequest request) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.searchVariantSets;
         return null;
     }
 
@@ -33,6 +34,7 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
      */
     @Override
     public VariantSet getVariantSet(String id) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.getVariantSet;
         return null;
     }
 
@@ -46,6 +48,7 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
      */
     @Override
     public SearchVariantsResponse searchVariants(SearchVariantsRequest request) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.searchVariants;
         return null;
     }
 
@@ -57,6 +60,7 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
      */
     @Override
     public Variant getVariant(String id) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.getVariant;
         return null;
     }
 
@@ -70,6 +74,7 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
      */
     @Override
     public SearchAllelesResponse searchAlleles(SearchAllelesRequest request) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.searchAlleles;
         return null;
     }
 
@@ -81,6 +86,7 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
      */
     @Override
     public Allele getAllele(String id) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.getAllele;
         return null;
     }
 
@@ -94,6 +100,7 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
      */
     @Override
     public SearchCallSetsResponse searchCallSets(SearchCallSetsRequest request) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.searchCallSets;
         return null;
     }
 
@@ -105,6 +112,7 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
      */
     @Override
     public CallSet getCallSet(String id) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.getCallSet;
         return null;
     }
 
@@ -118,6 +126,7 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
      */
     @Override
     public SearchCallsResponse searchCalls(SearchCallsRequest request) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.searchCalls;
         return null;
     }
 
@@ -131,6 +140,7 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
      */
     @Override
     public SearchAlleleCallsResponse searchAlleleCalls(SearchAlleleCallsRequest request) throws AvroRemoteException, GAException {
+        String path = URLMAPPING.searchAlleleCalls;
         return null;
     }
 }
