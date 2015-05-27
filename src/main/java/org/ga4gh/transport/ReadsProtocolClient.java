@@ -68,6 +68,7 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
         SearchReadGroupSetsResponse response = new SearchReadGroupSetsResponse();
         AvroJson aj =
             new AvroJson<>(request, response, urlRoot, path );
+        aj.setAvroDeserializer(AvroJson.DESER_MODE.JACKSON_RELAXED); // optional, JACKSON_RELAXED is default
         response = (SearchReadGroupSetsResponse) aj.doPostResp();
 
         return response;
@@ -88,7 +89,7 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
                 new AvroJson<>(request, response, urlRoot, path );
         response = (ReadGroupSet) aj.doGetResp(id);
 
-        return null;
+        return response;
     }
 
 
@@ -102,9 +103,9 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
     public ReadGroup getReadGroup(String id) throws AvroRemoteException, GAException {
         String path = URLMAPPING.getReadGroup;
         ReadGroup response = new ReadGroup();
-        ReadGroupRequest request = new ReadGroupRequest(); // a dummy, for reusing the POST-oriented AJ class
+        ReadGroupRequest dummyRequest = new ReadGroupRequest(); // a dummy, for reusing the POST-oriented AJ class
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path );
+                new AvroJson<>(dummyRequest, response, urlRoot, path );
         response = (ReadGroup) aj.doGetResp(id);
         return response;
     }
@@ -142,8 +143,14 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
     @Override
     public Dataset getDataset(String id) throws AvroRemoteException, GAException {
         String path = URLMAPPING.getDataset;
+        Dataset response = new Dataset();
+        DatasetRequest dummyRequest = new DatasetRequest();
 
-        return null;
+        AvroJson aj =
+                new AvroJson<>(dummyRequest, response,urlRoot, path);
+        response = (Dataset) aj.doGetResp(id);
+
+        return response;
     }
 
     // support
@@ -183,3 +190,4 @@ class DummyRequest implements org.apache.avro.generic.GenericContainer {
 }
 class ReadGroupRequest extends DummyRequest{};
 class ReadGroupSetsRequest extends DummyRequest{};
+class DatasetRequest extends DummyRequest{}
