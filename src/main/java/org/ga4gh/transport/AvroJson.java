@@ -1,5 +1,6 @@
 package org.ga4gh.transport;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -226,7 +227,8 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer,P exten
         Object target = null;
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper = new ObjectMapper()
+                    .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
             target = mapper.readValue(httpResp.getBody().toString(), objClass);
 
         } catch (IOException e) {

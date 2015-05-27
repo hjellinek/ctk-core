@@ -31,8 +31,6 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
 
     public String urlRoot = URLMAPPING.urlRoot; //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
 
-
-
     /**
      * Gets a list of `ReadAlignment` matching the search criteria.
      * <p>

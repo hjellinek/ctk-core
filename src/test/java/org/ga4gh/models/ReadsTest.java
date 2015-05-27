@@ -75,7 +75,7 @@ public class ReadsTest {
         log.info("testing searchReadGroupSets");
 
         ReadGroupSet rgs = client.getReadGroupSet(id);
-        log.info("getReadGroupSet(" + id + ") got RGS of " + String.valueOf(rgs));
+        log.info("getReadGroupSet(" + id + ") got " + String.valueOf(rgs));
 
         assertNotNull("should get a valid ReadGroupSet", rgs);
 
