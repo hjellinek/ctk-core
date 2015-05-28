@@ -67,10 +67,10 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
      * Construct an AvroJson for a particular request/response interaction.
      * The req and resp types parameterize this interaction object.
      *
-     * @param req an instance of the avro *Request method object
-     * @param resp an instance of the avro *Response method object
+     * @param req     an instance of the avro *Request method object
+     * @param resp    an instance of the avro *Response method object
      * @param urlRoot String the server base (often includes a version number)
-     * @param path String the request target path as identified in the avdl
+     * @param path    String the request target path as identified in the avdl
      */
     public AvroJson(Q req, P resp, String urlRoot, String path) {
         this.theAvroReq = req;
@@ -85,10 +85,10 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
      * Construct an AvroJson for a particular request/response interaction.
      * The req and resp types parameterize this interaction object.
      *
-     * @param req an instance of the avro *Request method object
-     * @param resp an instance of the avro *Response method object
-     * @param urlRoot String the server base (often includes a version number)
-     * @param path String the request target path as identified in the avdl
+     * @param req      an instance of the avro *Request method object
+     * @param resp     an instance of the avro *Response method object
+     * @param urlRoot  String the server base (often includes a version number)
+     * @param path     String the request target path as identified in the avdl
      * @param wireDiff {@code WireDiff} control and transfer of on-the-wire difference measure
      */
     public AvroJson(Q req, P resp, String urlRoot, String path, WireDiff wireDiff) {
@@ -145,10 +145,12 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
 
 
         httpResp = jsonPost(urlRoot + path);
-        if (wireDiff != null) wireDiff.setActJson(httpResp.getBody().toString());
+        if (httpResp.getStatus() == HttpStatus.SC_OK) {
+            String json = httpResp.getBody().toString();
+            if (wireDiff != null) wireDiff.setActJson(json);
 
-        theResp = makeAvroFromResponse(httpResp, urlRoot + path);
-
+            theResp = makeAvroFromJson(json, urlRoot + path);
+        }
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null ? theResp.getClass().getSimpleName() : "null";
         messages.put(theAvroReq.getClass().getSimpleName() + " POST <" + jsonBytes + ">", respName, httpResp.getStatus());
@@ -171,10 +173,13 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
 
         // no request object to build, just GET from the endpoint with route param
         httpResp = jsonGet(urlRoot + path, id);
-        if (wireDiff != null) wireDiff.setActJson(httpResp.getBody().toString());
 
-        theResp = makeAvroFromResponse(httpResp, urlRoot + path + "/" + id);
+        if (httpResp.getStatus() == HttpStatus.SC_OK) {
+            String json = httpResp.getBody().toString();
+            if (wireDiff != null) wireDiff.setActJson(json);
 
+            theResp = makeAvroFromJson(json, urlRoot + path + "/" + id);
+        }
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null ? theResp.getClass().getSimpleName() : "null";
         messages.put(theAvroReq.getClass().getSimpleName() + " GET <" + id + ">", respName, httpResp.getStatus());
@@ -182,39 +187,37 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
         return theResp;
     }
 
-    P makeAvroFromResponse(HttpResponse<JsonNode> respToBeConverted, String sourceForLog) {
+    P makeAvroFromJson(String json, String sourceForLog) {
         P response = null;
-        if (httpResp.getStatus() == HttpStatus.SC_OK) {
-            switch (avroDeserializer) {
-                case JACKSON_AVRO:
-                    try {
-                        response = (P) jsonToObject(respToBeConverted.getBody().toString(), theResp.getClass(), theResp.getSchema());
-                    } catch (JsonMappingException jme) {
-                        response = null;
-                        log.warn("deserializing via " + avroDeserializer + " returns null instead of a " + theResp.getClass().getName()
-                                + " from: " + respToBeConverted.getBody(), jme);
-                    }
-                    break;
-                case AVRO_DIRECT:
-                    try {
-                        response = (P) jsonToAvroObject(respToBeConverted.getBody().toString(), theResp.getSchema());
-                    } catch (AvroTypeException ate) {
-                        response = null;
-                        log.warn("deserializing via " + avroDeserializer + " returns null instead of a " + theResp.getClass().getName()
-                                + " from: " + respToBeConverted.getBody(), ate);
-                    }
-                    break;
-                case JACKSON_RELAXED:
-                    response = (P) jsonToObject(respToBeConverted.getBody().toString(), theResp.getClass());
-                    break;
-            }
-        } else {
-            log.warn("makeAvroFromResponse returns null instead of a " + theResp.getClass().getName()
-                            + " because rcd status " + httpResp.getStatus()
-                            + " with response_BODY < " + httpResp.getBody() + " >"
-                            + " from " + sourceForLog + "with request_BODY < " + String.valueOf(jsonBytes) + " >"
-            );
+        switch (avroDeserializer) { // TODO use polymorphic on jsonToObject instead of switch? Or is this clearer?
+            case JACKSON_AVRO:
+                try {
+                    response = (P) jsonToObject(json, theResp.getClass(), theResp.getSchema());
+                } catch (JsonMappingException jme) {
+                    response = null;
+                    log.warn("deserializing via " + avroDeserializer + " returns null instead of a " + theResp.getClass().getName()
+                            + " from: " + json, jme);
+                }
+                break;
+            case AVRO_DIRECT:
+                try {
+                    response = (P) jsonToAvroObject(json, theResp.getSchema());
+                } catch (AvroTypeException ate) {
+                    response = null;
+                    log.warn("deserializing via " + avroDeserializer + " returns null instead of a " + theResp.getClass().getName()
+                            + " from: " + json, ate);
+                }
+                break;
+            case JACKSON_RELAXED:
+                response = (P) jsonToObject(json, theResp.getClass());
+                break;
         }
+
+        log.warn("makeAvroFromResponse returns null instead of a " + theResp.getClass().getName()
+                        + " because rcd status " + httpResp.getStatus()
+                        + " with response_BODY < " + httpResp.getBody() + " >"
+                        + " from " + sourceForLog + "with request_BODY < " + String.valueOf(jsonBytes) + " >"
+        );
         return response;
     }
 
