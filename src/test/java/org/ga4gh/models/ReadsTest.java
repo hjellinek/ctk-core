@@ -56,6 +56,7 @@ public class ReadsTest {
 
         log.info("generating SearchReadGroupSetsRequest: " + reqb.toString());
         SearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
+
         //org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal).isNotNull();
         log.info("searchReadGroupSets " + datasetid+" returned: " + String.valueOf(rtnVal));
 
