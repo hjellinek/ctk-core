@@ -30,11 +30,11 @@
         <version>1.2.3.RELEASE</version>
     </parent>
 
-<!--
-    <modules>
-        <module>schemas</module>
-    </modules>
--->
+    <!--
+        <modules>
+            <module>schemas</module>
+        </modules>
+    -->
 
     <name>Simple Avro Ordering Service</name>
 
@@ -61,12 +61,24 @@
 
     </properties>
 
+    <!-- add snapshot repos to try and move ahead to 1.3.0 quickly -->
+    <repositories>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>http://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencies>
 
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-            </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.avro</groupId>
