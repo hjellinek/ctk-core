@@ -8,10 +8,14 @@ import org.ga4gh.models.CallSet;
 import org.ga4gh.models.Variant;
 import org.ga4gh.models.VariantSet;
 
+import java.net.InetSocketAddress;
+
 /**
  * Created by Wayne Stidolph on 5/25/2015.
  */
 public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods {
+
+    private final InetSocketAddress endpointAddress;
 
     public WireDiff wireDiff = null;
     /**
@@ -256,5 +260,15 @@ public class VariantsProtocolClient implements org.ga4gh.methods.VariantMethods 
         this.wireDiff = wd;
 ;
         return searchAlleleCalls(request);
+    }
+
+    // support
+    public VariantsProtocolClient(InetSocketAddress endpointAddress){
+        this.endpointAddress = endpointAddress;
+    }
+
+    public VariantsProtocolClient(InetSocketAddress endpointAddress, WireDiff wd){
+        this(endpointAddress );
+        this.wireDiff = wd;
     }
 }

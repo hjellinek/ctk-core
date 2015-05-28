@@ -246,6 +246,11 @@ public class ReadsProtocolClient implements org.ga4gh.methods.ReadMethods {
         this.endpointAddress = endpointAddress;
     }
 
+    public ReadsProtocolClient(InetSocketAddress endpointAddress, WireDiff wd) {
+        this(endpointAddress);
+        this.wireDiff = wd;
+    }
+
     public synchronized void start() throws IOException {
         if (log.isInfoEnabled()) {
             log.info("Starting Simple Reads client on '{}'", endpointAddress);
