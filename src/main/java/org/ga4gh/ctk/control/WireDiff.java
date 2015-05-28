@@ -36,10 +36,6 @@ public class WireDiff {
 
     boolean shouldDoRefCompare = false;
 
-    public static WireDiff DO_NOTHING = new WireDiff() {
-    };
-
-
     /**
      * Gets difference between the actual (rcd) and expected JSON.
      *
