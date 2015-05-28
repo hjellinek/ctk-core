@@ -207,10 +207,10 @@
                 <version>1.5</version>
                 <executions>
                     <execution>
-                    <goals>
-                        <goal>compile</goal>
-                        <goal>testCompile</goal>
-                    </goals>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -295,7 +295,28 @@
                         <param>your.third.package.YourClass</param>
                     </classes>
                     -->
+                    <targetDir>src/main/assertj-assertions</targetDir>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/assertj-assertions</source>
+                                ...
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
