@@ -8,8 +8,8 @@ import org.ga4gh.methods.SearchDatasetsResponse;
 import org.ga4gh.methods.SearchReadGroupSetsRequest;
 import org.ga4gh.methods.SearchReadGroupSetsResponse;
 import org.ga4gh.models.ReadGroupSet;
-import org.ga4gh.transport.AvroJson;
-import org.ga4gh.transport.ReadsProtocolClient;
+import org.ga4gh.ctk.transport.AvroJson;
+import org.ga4gh.ctk.transport.ReadsProtocolClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,9 +25,9 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Created by wstidolph on 5/20/15.
  */
 @RunWith(JUnitParamsRunner.class)
-public class ReadsTest {
+public class ReadMethodsTests {
 
-    private static org.slf4j.Logger log = getLogger(ReadsTest.class);
+    private static org.slf4j.Logger log = getLogger(ReadMethodsTests.class);
     /*
     ReadGroupSet >--< ReadGroup --< fragment --< read --< alignment --< linear/graph alignment
      */

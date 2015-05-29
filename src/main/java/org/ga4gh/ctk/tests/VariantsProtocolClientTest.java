@@ -1,4 +1,4 @@
-package test.org.ga4gh.transport; 
+package org.ga4gh.ctk.tests;
 
 import org.junit.Test; 
 import org.junit.Before; 

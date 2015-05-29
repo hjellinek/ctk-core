@@ -1,4 +1,4 @@
-package org.ga4gh.transport;
+package org.ga4gh.ctk.transport;
 
 import org.apache.avro.AvroRemoteException;
 import org.ga4gh.ctk.control.WireDiff;

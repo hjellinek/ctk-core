@@ -1,4 +1,4 @@
-package org.ga4gh.service;
+package org.ga4gh.ctk.service;
 
 import org.apache.avro.AvroRemoteException;
 import org.ga4gh.methods.*;

@@ -1,4 +1,4 @@
-package org.ga4gh.transport;
+package org.ga4gh.ctk.transport;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -59,7 +59,7 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
     Schema respSchema;
     ByteArrayOutputStream jsonBytes;
     HttpResponse<JsonNode> httpResp;
-    DESER_MODE avroDeserializer = DESER_MODE.JACKSON_RELAXED; // default
+    DESER_MODE avroDeserializer = DESER_MODE.AVRO_DIRECT; // default
     private P theResp;
     private WireDiff wireDiff;
 
