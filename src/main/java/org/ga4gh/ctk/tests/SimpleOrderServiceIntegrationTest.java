@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-package org.ga4gh.integration;
+package org.ga4gh.ctk.tests;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.ga4gh.models.SoftAssertions;
+import org.ga4gh.ctk.asserts.SoftAssertions;
 import org.ga4gh.service.*;
 import org.ga4gh.transport.SimpleOrderServiceClient;
 import org.ga4gh.transport.SimpleOrderServiceEndpoint;
@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.function.BiPredicate;
 
 import static junit.framework.Assert.assertTrue;
-import static org.ga4gh.service.ConfirmationAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -84,8 +83,8 @@ public class SimpleOrderServiceIntegrationTest {
 		long orderTime = System.currentTimeMillis();
 		Confirmation c = client.submitOrder(simpleOrder);
 
-		assertThat(c).hasCustomerId(simpleOrder.getCustomerId());
-		assertThat(c).hasOrderId(simpleOrder.getOrderId());
+		ConfirmationAssert.assertThat(c).hasCustomerId(simpleOrder.getCustomerId());
+		ConfirmationAssert.assertThat(c).hasOrderId(simpleOrder.getOrderId());
 		org.assertj.core.api.Assertions.assertThat(c.estimatedCompletion)
                 .isBetween(orderTime, orderTime + 2 * SimpleOrderService.ECT_DELAY);
 

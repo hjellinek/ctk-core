@@ -1,4 +1,4 @@
-package org.ga4gh.models;
+package org.ga4gh.ctk.tests;
 
 import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
@@ -7,6 +7,7 @@ import org.ga4gh.methods.SearchDatasetsRequest;
 import org.ga4gh.methods.SearchDatasetsResponse;
 import org.ga4gh.methods.SearchReadGroupSetsRequest;
 import org.ga4gh.methods.SearchReadGroupSetsResponse;
+import org.ga4gh.models.ReadGroupSet;
 import org.ga4gh.transport.AvroJson;
 import org.ga4gh.transport.ReadsProtocolClient;
 import org.junit.AfterClass;
@@ -57,7 +58,7 @@ public class ReadsTest {
         log.info("generating SearchReadGroupSetsRequest: " + reqb.toString());
         SearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
 
-        //org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal).isNotNull();
+        org.ga4gh.methods.SearchReadGroupSetsResponseAssert.assertThat(rtnVal).isNotNull();
         log.info("searchReadGroupSets " + datasetid+" returned: " + String.valueOf(rtnVal));
 
         assertNotNull("should get a not-null SearchReadGroupSetsResponse", rtnVal);

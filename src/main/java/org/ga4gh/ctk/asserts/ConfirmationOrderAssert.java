@@ -1,4 +1,4 @@
-package org.ga4gh.asserts;
+package org.ga4gh.ctk.asserts;
 
 import org.ga4gh.service.Confirmation;
 import org.ga4gh.service.Order;
