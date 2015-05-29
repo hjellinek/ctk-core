@@ -21,7 +21,7 @@
 
     <groupId>org.ga4gh</groupId>
     <artifactId>ctk-core</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -36,12 +36,12 @@
         </modules>
     -->
 
-    <name>Simple Avro Ordering Service</name>
+    <name>CTK</name>
 
     <properties>
 
         <ga4gh.schema.version>0.6.0-SNAPSHOT</ga4gh.schema.version>
-        <ga4gh.schema.local.version>0.7.0-DUMMY</ga4gh.schema.local.version>
+        <ga4gh.schema.local.version>0.1.0-SNAPSHOT</ga4gh.schema.local.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -198,22 +198,26 @@
         </dependency>
 
         <!-- the prebuilt avro schemas for GA4GH -->
+<!--
         <dependency>
             <groupId>org.ga4gh</groupId>
             <artifactId>ga4gh-format</artifactId>
             <version>${ga4gh.schema.version}</version>
         </dependency>
+-->
 
-        <!-- example if you want to build with link to a local schema jar file -->
-        <!--
+
+
         <dependency>
             <groupId>org.ga4gh</groupId>
             <artifactId>ga4gh-format</artifactId>
             <version>${ga4gh.schema.local.version}</version>
+            <!-- example if you want to build with link to a local schema jar file
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/ga4gh-format-${ga4gh.schema.local.version}.jar</systemPath>
+            -->
         </dependency>
-        -->
+
     </dependencies>
 
     <build>
@@ -307,7 +311,6 @@
                 <version>${assertj.generator.version}</version>
                 <configuration>
                     <packages>
-                        <param>org.ga4gh.service</param>
                         <param>org.ga4gh.models</param>
                         <param>org.ga4gh.beacon</param>
                         <param>org.ga4gh.methods</param>
