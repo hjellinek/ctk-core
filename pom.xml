@@ -83,7 +83,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
@@ -198,24 +201,17 @@
         </dependency>
 
         <!-- the prebuilt avro schemas for GA4GH -->
-<!--
-        <dependency>
-            <groupId>org.ga4gh</groupId>
-            <artifactId>ga4gh-format</artifactId>
-            <version>${ga4gh.schema.version}</version>
-        </dependency>
--->
-
-
-
         <dependency>
             <groupId>org.ga4gh</groupId>
             <artifactId>ga4gh-format</artifactId>
             <version>${ga4gh.schema.local.version}</version>
-            <!-- example if you want to build with link to a local schema jar file
+            <!-- example if you want to build with link to a local schema jar file -->
+            <!-- which I need to do since I can't find 0.1.0 externally -->
+
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/ga4gh-format-${ga4gh.schema.local.version}.jar</systemPath>
-            -->
+            <systemPath>${project.basedir}/src/main/resources/ga4gh-format-${ga4gh.schema.local.version}.jar
+            </systemPath>
+
         </dependency>
 
     </dependencies>
@@ -240,7 +236,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-maven-plugin</artifactId>
                 <version>${avro.version}</version>
@@ -250,7 +246,6 @@
                 <executions>
                     <execution>
                         <goals>
-                            <!-- By default generates classes from all Protocol (.avpr) files found in 'src/main/avro' -->
                             <goal>protocol</goal>
                             <goal>idl-protocol</goal>
                         </goals>
@@ -263,11 +258,11 @@
                         <version>${avro.version}</version>
                     </dependency>
                 </dependencies>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12</version>
+                <version>2.18.1</version>
                 <configuration>
                     <useFile>false</useFile>
                     <includes>
@@ -275,24 +270,26 @@
                         <include>**/*Test.java</include>
                     </includes>
                     <excludes>
-                        <exclude>%regex[.*.integration.*]</exclude>
+                        <exclude>%regex[.*.sut.*]</exclude>
                     </excludes>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.12</version>
+                <version>2.18.1</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>integration-test</goal>
                             <goal>verify</goal>
                         </goals>
-                        <configuration>
+
+                        <!--<configuration>
                             <includes>
-                                <include>%regex[.*.integration.*]</include>
+                                <include>ReadMethodsIT.java</include>
                             </includes>
-                        </configuration>
+                        </configuration>-->
+
                     </execution>
                 </executions>
             </plugin>
@@ -311,21 +308,12 @@
                 <version>${assertj.generator.version}</version>
                 <configuration>
                     <packages>
-                        <param>org.ga4gh.models</param>
-                        <param>org.ga4gh.beacon</param>
-                        <param>org.ga4gh.methods</param>
+                        <param>org.ga4gh</param>
                     </packages>
                     <entryPointClassPackage>org.ga4gh.ctk.asserts</entryPointClassPackage>
-                    <!--
                     <excludes>
-                        <exclude>%regex[*.Assert]</exclude>
+                        <exclude>%regex[org.ga4gh.ctk.*]</exclude>
                     </excludes>
-                    -->
-                    <!--
-                    <classes>
-                        <param>your.third.package.YourClass</param>
-                    </classes>
-                    -->
                     <targetDir>src/main/assertj-assertions</targetDir>
                 </configuration>
             </plugin>

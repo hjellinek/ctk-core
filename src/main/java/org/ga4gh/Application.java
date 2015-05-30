@@ -18,7 +18,7 @@ public class Application {
 
 
         List<Class> testCases = new ArrayList();
-        testCases.add(org.ga4gh.ctk.tests.ReadMethodsTests.class);
+        // testCases.add(org.ga4gh.ctk.sut.ReadMethodsTests.class);
 
         for (Class testCase : testCases) {
             runTestCase(testCase);

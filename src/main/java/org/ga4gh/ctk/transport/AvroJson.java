@@ -188,6 +188,7 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
     }
 
     P makeAvroFromJson(String json, String sourceForLog) {
+        assert httpResp.getStatus() == HttpStatus.SC_OK;
         P response = null;
         switch (avroDeserializer) { // TODO use polymorphic on jsonToObject instead of switch? Or is this clearer?
             case JACKSON_AVRO:
@@ -213,11 +214,12 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
                 break;
         }
 
-        log.warn("makeAvroFromResponse returns null instead of a " + theResp.getClass().getName()
-                        + " because rcd status " + httpResp.getStatus()
-                        + " with response_BODY < " + httpResp.getBody() + " >"
-                        + " from " + sourceForLog + "with request_BODY < " + String.valueOf(jsonBytes) + " >"
-        );
+        if(response == null){
+            log.info("makeAvroFromResponse returns null instead of requested " + theResp.getClass().getName()
+                            + " with response_BODY < " + httpResp.getBody() + " >"
+                            + " from " + sourceForLog + " for request_BODY < " + String.valueOf(jsonBytes) + " >"
+            );
+        }
         return response;
     }
 
