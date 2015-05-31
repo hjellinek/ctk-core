@@ -149,10 +149,13 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
             String json = httpResp.getBody().toString();
             if (wireDiff != null) wireDiff.setActJson(json);
 
-            theResp = makeAvroFromJson(json, urlRoot + path);
+            // will use current dummy theResp (as set by constructor), to get
+            // schema info, then replace the dummy with the real response
+            // as received and parsed
+            theResp = makeAvroFromJson(json, urlRoot + path); // URL just for logging
         }
         // track all message types sent/received for simple "test coverage" indication
-        String respName = theResp != null ? theResp.getClass().getSimpleName() : "null";
+        String respName = theResp != null ? theResp.getClass().getSimpleName()  : "null";
         messages.put(theAvroReq.getClass().getSimpleName() + " POST <" + jsonBytes + ">", respName, httpResp.getStatus());
 
 
@@ -190,6 +193,8 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
     P makeAvroFromJson(String json, String sourceForLog) {
         assert httpResp.getStatus() == HttpStatus.SC_OK;
         P response = null;
+        String theRespSchema = theResp.getSchema().toString(true);
+        log.info("SCHEMA: " + theRespSchema);
         switch (avroDeserializer) { // TODO use polymorphic on jsonToObject instead of switch? Or is this clearer?
             case JACKSON_AVRO:
                 try {
@@ -321,8 +326,6 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
         return obj;
     }
 
-    // UNUSED BELOW: work-in-progress for Avro-specific deserialization
-
     public <T> T jsonToAvroObject(String theJson, Schema schema) {
         byte[] avroByteArray = fromJsonToBytes(theJson, schema);
         if (avroByteArray == null || avroByteArray.length == 0) {
@@ -343,13 +346,13 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
     public byte[] fromJsonToBytes(String theJson, Schema schema) {
         ByteArrayOutputStream outputStream = null;
 
-        InputStream input = new ByteArrayInputStream(theJson.getBytes());
-        DataInputStream din = new DataInputStream(input);
-        Decoder decoder = null;
+        //InputStream input = new ByteArrayInputStream(theJson.getBytes());
+        // DataInputStream din = new DataInputStream(input);
+        // Decoder decoder = null;
         try {
-            decoder = DecoderFactory.get().jsonDecoder(schema, din);
-            DatumReader<Object> reader = new GenericDatumReader<Object>(schema);
-            Object datum = reader.read(null, decoder);
+            JsonDecoder decoder = DecoderFactory.get().jsonDecoder(schema, theJson);
+            DatumReader<GenericRecord> reader = new GenericDatumReader<GenericRecord>(schema);
+            GenericRecord datum = reader.read(null, decoder);
             GenericDatumWriter<Object> w = new GenericDatumWriter<Object>(schema);
             outputStream = new ByteArrayOutputStream();
 
@@ -360,8 +363,8 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
 
         } catch (IOException e) {
             log.warn("IOException getting bytes", e);
-        } catch (org.apache.avro.AvroTypeException te) {
-            log.warn("Failed fromJsonToBytes for " + schema.getName() + " on " + theJson, te);
+        } catch (org.apache.avro.AvroTypeException ate) {
+            log.warn("Failed fromJsonToBytes for " + schema.getName() + " on " + theJson, ate);
         }
         byte[] outbytes = new byte[]{};
         if (outputStream != null) {

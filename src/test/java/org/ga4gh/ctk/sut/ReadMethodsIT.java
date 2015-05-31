@@ -16,7 +16,6 @@ import java.net.InetSocketAddress;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -29,6 +28,16 @@ public class ReadMethodsIT {
 
     private static ReadsProtocolClient client;
 
+
+    @Test
+    public void srgsForDumbDatasetidShouldGetNothing() throws Exception {
+        GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
+                .setName(null)
+                .setDatasetIds(Arrays.asList("realyUnlikelyQQQ"))
+                .build();
+        GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
+        // avro says always get a 200
+    }
 
     @Test
     @Parameters({
@@ -59,13 +68,8 @@ public class ReadMethodsIT {
         assertNotNull("should get a not-null SearchReadGroupSetsResponse", rtnVal);
         org.ga4gh.GASearchReadGroupSetsResponseAssert.assertThat(rtnVal)
                 .hasSchema(GASearchReadGroupSetsResponse.SCHEMA$);
-        //ReadGroupSetAssert.assertThat(rtnVal.getReadGroupSets().get(0)).hasReadGroups()
     }
 
-    @Test
-    public static void dippyTest() throws Exception{
-        assertTrue(true);
-    }
 
     @BeforeClass
     public static void setupTransport() throws Exception {
