@@ -59,7 +59,7 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
     Schema respSchema;
     ByteArrayOutputStream jsonBytes;
     HttpResponse<JsonNode> httpResp;
-    DESER_MODE avroDeserializer = DESER_MODE.AVRO_DIRECT; // default
+    DESER_MODE avroDeserializer = DESER_MODE.JACKSON_RELAXED; // default
     private P theResp;
     private WireDiff wireDiff;
 
@@ -194,7 +194,8 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
         assert httpResp.getStatus() == HttpStatus.SC_OK;
         P response = null;
         String theRespSchema = theResp.getSchema().toString(true);
-        log.info("SCHEMA: " + theRespSchema);
+        log.trace("AVRO EXPECTED-RESPONSE SCHEMA: " + theRespSchema);
+
         switch (avroDeserializer) { // TODO use polymorphic on jsonToObject instead of switch? Or is this clearer?
             case JACKSON_AVRO:
                 try {
