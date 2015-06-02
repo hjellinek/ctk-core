@@ -12,10 +12,10 @@ public class URLMAPPING {
     static public String searchReads = "reads/search";
     static public String searchReadGroupSets = "readgroupsets/search";
     //    static public String getReadGroupSet = "readgroupsets/{id}";
-    static public String getReferences = "references/{id}";
-    static public String getReferencesBases = "references/{id}/bases";
-    static public String searchReferences = "references/search";
-    static public String getReferencesets = "referencesets/{id}";
+    //    static public String getReferences = "references/{id}";
+    //    static public String getReferencesBases = "references/{id}/bases";
+    //    static public String searchReferences = "references/search";
+    //    static public String getReferencesets = "referencesets/{id}";
     static public String searchReferencesets = "referencesets/search";
     //    static public String getReadGroup = "readgroups/{id}";
 //    static public String searchDatasets = "datasets/search";
