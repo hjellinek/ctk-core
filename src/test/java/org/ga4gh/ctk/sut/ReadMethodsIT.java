@@ -3,19 +3,23 @@ package org.ga4gh.ctk.sut;
 import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.ga4gh.GAReadGroupSet;
 import org.ga4gh.GASearchReadGroupSetsRequest;
 import org.ga4gh.GASearchReadGroupSetsResponse;
 import org.ga4gh.ctk.transport.AvroJson;
 import org.ga4gh.ctk.transport.ReadsProtocolClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -30,15 +34,17 @@ public class ReadMethodsIT {
 
 
     @Test
-    public void srgsForDumbDatasetidShouldGetNothing() throws Exception {
+    public void srgsForDumbDatasetidShouldBeEmpty() throws Exception {
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
                 .setName(null)
                 .setDatasetIds(Arrays.asList("realyUnlikelyQQQ"))
                 .build();
         GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
         // avro says always get a 200
+        assertTrue(rtnVal.getReadGroupSets().isEmpty());
     }
 
+    @Ignore ("datasetId not supported in v0.5.1 server")
     @Test
     @Parameters({
             "",
@@ -47,10 +53,10 @@ public class ReadMethodsIT {
             "1kg-phase3",
             "1kg-phase1:1kg-phase3"
     })
-    public void searchReadGroupSets(String datasetid) throws Exception {
+    public void datasetIdShouldDetermineReturnedReadgroupsets(String datasetid) throws Exception {
         log.info("testing searchReadGroupSets");
 
-        // but Builder does validation and sets defaults, so that's better
+        //  Builder does validation and sets defaults
         // this is based on  the example from the demo writeup:
         // curl --data '{"datasetIds":[], "name":null}' --header 'Content-Type: application/json' \
         //       http://localhost:8000/v0.5.1/readgroupsets/search
@@ -59,15 +65,14 @@ public class ReadMethodsIT {
                 .setDatasetIds(Arrays.asList(datasetid.split(":")))
                 .build();
 
-        log.info("generating SearchReadGroupSetsRequest: " + reqb.toString());
+        log.debug("SearchReadGroupSetsRequest: " + reqb.toString());
         GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
-
-        org.ga4gh.GASearchReadGroupSetsResponseAssert.assertThat(rtnVal).isNotNull();
-        log.info("searchReadGroupSets " + datasetid+" returned: " + String.valueOf(rtnVal));
-
+        log.debug("searchReadGroupSets " + datasetid + " returned: " + String.valueOf(rtnVal));
         assertNotNull("should get a not-null SearchReadGroupSetsResponse", rtnVal);
-        org.ga4gh.GASearchReadGroupSetsResponseAssert.assertThat(rtnVal)
-                .hasSchema(GASearchReadGroupSetsResponse.SCHEMA$);
+
+        List<GAReadGroupSet> rgs = rtnVal.getReadGroupSets();
+
+        org.ga4gh.GAReadGroupSetAssert.assertThat(rgs.get(0)).hasDatasetId(datasetid);
     }
 
 
@@ -83,7 +88,7 @@ public class ReadMethodsIT {
     @AfterClass
     public static void shutdownTransport() throws Exception {
         for(Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()){
-            log.info("TRAFFIC " + cell.getRowKey() + " " + cell.getColumnKey() + " " +cell.getValue());
+            log.info("ReadMethodIT TRAFFIC:" + cell.getRowKey() + " " + cell.getColumnKey() + " " +cell.getValue());
         }
     }
 }
