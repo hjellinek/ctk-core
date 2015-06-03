@@ -145,6 +145,7 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
 
 
         httpResp = jsonPost(urlRoot + path);
+        log.debug(httpResp.getBody().toString());
         if (httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
             if (wireDiff != null) wireDiff.setActJson(json);
