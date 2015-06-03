@@ -289,7 +289,8 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
-                            <includes>%regex[.*.sut.*]</includes>
+                            <!-- Include SUT test package so we don't have to follow the 'IT' naming -->
+                            <includes>%regex[org.ga4gh.ctk.sut.*]</includes>
                         </configuration>
                     </execution>
                 </executions>
