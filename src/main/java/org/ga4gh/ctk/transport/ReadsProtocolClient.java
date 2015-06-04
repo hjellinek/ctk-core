@@ -4,6 +4,7 @@ import org.apache.avro.AvroRemoteException;
 import org.apache.avro.Schema;
 import org.ga4gh.*;
 import org.ga4gh.ctk.control.WireDiff;
+import org.ga4gh.ctk.transport.avrojson.AvroJson;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -75,7 +76,7 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
         GASearchReadGroupSetsResponse response = new GASearchReadGroupSetsResponse();
         AvroJson aj =
                 new AvroJson<>(request, response, urlRoot, path);
-        //aj.setAvroDeserializer(AvroJson.DESER_MODE.AVRO_DIRECT); // optional, AVRO_DIRECT is default
+        //aj.setDeserMode(AvroJson.DESER_MODE.AVRO_DIRECT); // optional, AVRO_DIRECT is default
         response = (GASearchReadGroupSetsResponse) aj.doPostResp();
 
         return response;

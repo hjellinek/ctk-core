@@ -6,11 +6,10 @@ import junitparams.Parameters;
 import org.ga4gh.GAReadGroupSet;
 import org.ga4gh.GASearchReadGroupSetsRequest;
 import org.ga4gh.GASearchReadGroupSetsResponse;
-import org.ga4gh.ctk.transport.AvroJson;
+import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.ga4gh.ctk.transport.ReadsProtocolClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -44,7 +43,7 @@ public class ReadMethodsIT {
         assertTrue(rtnVal.getReadGroupSets().isEmpty());
     }
 
-    @Ignore ("datasetId not supported in v0.5.1 server")
+   // @Ignore ("datasetId not supported in v0.5.1 server")
     @Test
     @Parameters({
             "",
