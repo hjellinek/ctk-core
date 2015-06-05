@@ -3,7 +3,7 @@ package org.ga4gh.ctk.transport.avrojson;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.avro.specific.SpecificDatumWriter;
-import org.ga4gh.GASearchReadsRequest;
+import org.ga4gh.GASearchReadsResponse;
 import org.ga4gh.ctk.transport.avrojson.AvroMaker.DESER_MODE;
 import org.junit.After;
 import org.junit.Before;
@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 
 import java.io.ByteArrayOutputStream;
 
-import static org.ga4gh.GASearchReadsRequestAssert.assertThat;
+import static org.ga4gh.GASearchReadsResponseAssert.assertThat;
 
 /**
  * AvroMaker Tester.
@@ -24,22 +24,22 @@ import static org.ga4gh.GASearchReadsRequestAssert.assertThat;
 @RunWith(JUnitParamsRunner.class)
 public class AvroMakerTest {
 
-    GASearchReadsRequest gsrr;
+    GASearchReadsResponse gsrr;
     ByteArrayOutputStream theJson;
 
     long startVal = 4321L;
     int pageSizeVal = 33;
+    String TOKEN = "I_am_a_test";
 
     @Before
     public void before() throws Exception {
-        gsrr = GASearchReadsRequest.newBuilder()
-                .setPageSize(pageSizeVal)
-                .setStart(startVal)
+        gsrr = GASearchReadsResponse.newBuilder()
+                .setNextPageToken(TOKEN)
                 .build();
 
         theJson = JsonMaker.avroToJsonBytes(
-                new SpecificDatumWriter<GASearchReadsRequest>(),
-                GASearchReadsRequest.SCHEMA$,
+                new SpecificDatumWriter<GASearchReadsResponse>(),
+                GASearchReadsResponse.SCHEMA$,
                 gsrr);
     }
 
@@ -54,14 +54,16 @@ public class AvroMakerTest {
     @Test
     @Parameters({"JACKSON_RELAXED", "JACKSON_AVRO", "AVRO_DIRECT"})
     public void testMakeAvroFromJson(DESER_MODE dmode) throws Exception {
-        GASearchReadsRequest examplar = new GASearchReadsRequest();
+        GASearchReadsResponse examplar = new GASearchReadsResponse();
 
-        AvroMaker<GASearchReadsRequest> av = new AvroMaker<>(examplar);
+        AvroMaker<GASearchReadsResponse> av = new AvroMaker<>(examplar);
 
-        GASearchReadsRequest actual =
-                av.makeAvroFromJson(theJson.toString(), "testing deserializing " + dmode, dmode);
+        GASearchReadsResponse deserializationResult =
+                av.makeAvroFromJson(theJson.toString(), "test deserializing using " + dmode, dmode);
         // do field-by-field compare here
-        assertThat(actual).hasStart(startVal).hasPageSize(pageSizeVal);
+        assertThat(deserializationResult)
+                .isNotNull()
+                .hasNextPageToken(TOKEN);
     }
 
 

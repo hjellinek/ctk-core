@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.2.3.RELEASE</version>
+        <version>1.2.4.RELEASE</version>
     </parent>
 
     <!--
@@ -64,7 +64,7 @@
         <log4j.version>2.3</log4j.version>
         <org.json.json.version>20141113</org.json.json.version>
         <slf4j.version>1.7.12</slf4j.version>
-        <typetools.version>0.4.1</typetools.version>
+        <!--<typetools.version>0.4.1</typetools.version>-->
         <unirest-java.version>1.4.5</unirest-java.version>
 
     </properties>
@@ -211,11 +211,13 @@
             <version>2.1</version>
         </dependency>
         <!-- TypeTools for easier reflective work with the generated Avro types -->
+<!--
         <dependency>
             <groupId>net.jodah</groupId>
             <artifactId>typetools</artifactId>
             <version>${typetools.version}</version>
         </dependency>
+-->
 
         <!-- the prebuilt avro schemas for GA4GH -->
         <dependency>

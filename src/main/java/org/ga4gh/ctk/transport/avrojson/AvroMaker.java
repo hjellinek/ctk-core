@@ -51,39 +51,32 @@ public class AvroMaker<T extends SpecificRecordBase> {
         AVRO_DIRECT
     }
 
-    private Class avroClass;
+    private Class avroClass; // class for the avroObj examplar
     private T avroObj; // dummy object, so reflection can get properties
-   // private Schema schema; // extracted by reflection in getSchema() below
+    // private Schema schema; // extracted by reflection in getSchema() below
 
     public AvroMaker(T examplar) {
         avroObj = examplar;
         avroClass = avroObj.getClass();
+        //schema = avroObj.getSchema();
     }
 
     /**
      * Make avro from json.
      *
-     * @param json the json
+     * @param json         the json
      * @param sourceForLog the source of the json, for log message
-     * @param deserMode the deserialization mode
+     * @param deserMode    the deserialization mode
      * @return the generic container
      */
-    public  T makeAvroFromJson(String json, String sourceForLog, DESER_MODE deserMode) {
+    public T makeAvroFromJson(String json, String sourceForLog, DESER_MODE deserMode) {
 
         T response = null;
-        try {
-            response = (T) avroClass.newInstance();
-        } catch (InstantiationException e) {
-            log.warn("Couldn't make Avro object " + avroClass.getName(), e);
-            return null;
-        } catch (IllegalAccessException e) {
-           log.warn("Couldn't make Avro object " + avroClass.getName(), e);
-            return null;
-        }
-        String theRespSchema = response.getSchema().toString(true);
-        log.trace("AVRO EXPECTED-RESPONSE SCHEMA: " + theRespSchema);
 
         switch (deserMode) { // TODO use polymorphic on jsonToObject instead of switch? Or is this clearer?
+            case JACKSON_RELAXED:
+                response = jsonToObjectRelaxed(json);
+                break;
             case JACKSON_AVRO:
                 try {
                     response = jsonToObjectJacksonFactory(json);
@@ -102,14 +95,11 @@ public class AvroMaker<T extends SpecificRecordBase> {
                             + " from: " + json, ate);
                 }
                 break;
-            case JACKSON_RELAXED:
-                response = jsonToObjectRelaxed(json);
-                break;
         }
 
-        if(response == null){
+        if (response == null) {
             log.info("makeAvroFromResponse returns null instead of requested " + avroClass.getName()
-                            + " from " + sourceForLog + " for json < " +json + " >"
+                            + " from " + sourceForLog + " for json < " + json + " >"
             );
         }
         return response;
@@ -124,12 +114,12 @@ public class AvroMaker<T extends SpecificRecordBase> {
             target = (T) mapper.readValue(jsonString, avroClass);
 
         } catch (IOException e) {
-            log.warn("Failed to make new " + avroClass.getName() + " from: " + jsonString, e);
+            log.warn("Jackson basic failed to make new " + avroClass.getName() + " from: " + jsonString, e);
         }
         return target;
     }
 
-    private  T jsonToObjectJacksonFactory(String jsonString) throws JsonMappingException {
+    private T jsonToObjectJacksonFactory(String jsonString) throws JsonMappingException {
         AvroSchema avSchema = new AvroSchema(getSchema());
         ObjectMapper om = new ObjectMapper(new AvroFactory());
 
@@ -145,8 +135,8 @@ public class AvroMaker<T extends SpecificRecordBase> {
         return obj;
     }
 
-    private  T jsonToAvroObject(String theJson) {
-       // byte[] avroByteArray = fromJsonToBytes(theJson, schema);
+    private T jsonToAvroObject(String theJson) {
+        // byte[] avroByteArray = fromJsonToBytes(theJson, schema);
         if (theJson == null || theJson.isEmpty()) {
             log.warn("jsonToAvroObject got empty JSON string");
             return null;
@@ -169,7 +159,7 @@ public class AvroMaker<T extends SpecificRecordBase> {
     }
 
 
-    private Schema getSchema(){
+    private Schema getSchema() {
         return avroObj.getSchema();
     }
 
