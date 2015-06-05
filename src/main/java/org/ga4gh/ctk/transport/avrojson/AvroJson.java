@@ -9,6 +9,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.avro.Schema;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.specific.SpecificDatumWriter;
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.http.HttpStatus;
 import org.ga4gh.ctk.control.WireDiff;
 
@@ -20,7 +21,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Provide Avro/Json communications layer specific to GA4GH and with extensive logging in support of CTK use.
  * Created by Wayne Stidolph on 5/22/2015.
  */
-public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P extends org.apache.avro.generic.GenericContainer> {
+public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase> {
     private static org.slf4j.Logger log;
     private static Table<String, String, Integer> messages;
 
@@ -133,16 +134,12 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
         // just for ease of breakpointing
         jsonBytes = JsonMaker.avroToJsonBytes(dw, reqSchema, theAvroReq);
 
-
         httpResp = jsonPost(urlRoot + path);
         if (httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
             if (wireDiff != null) wireDiff.setActJson(json);
 
-            // will use current dummy theResp (as set by constructor), to get
-            // schema info, then replace the dummy with the real response
-            // as received and parsed
-            theResp = (P) AvroMaker.makeAvroFromJson(json, theResp.getClass(), urlRoot + path, deserMode); // URL just for logging
+            theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path, deserMode); // URL just for logging
         }
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null ? theResp.getClass().getSimpleName()  : "null";
@@ -170,7 +167,7 @@ public class AvroJson<Q extends org.apache.avro.generic.GenericContainer, P exte
             String json = httpResp.getBody().toString();
             if (wireDiff != null) wireDiff.setActJson(json);
 
-            theResp = (P) AvroMaker.makeAvroFromJson(json, theResp.getClass(), urlRoot + path + "/" + id, deserMode);
+            theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path + "/" + id, deserMode);
         }
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null ? theResp.getClass().getSimpleName() : "null";

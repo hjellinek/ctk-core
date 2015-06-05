@@ -1,89 +1,68 @@
 package org.ga4gh.ctk.transport.avrojson;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.ga4gh.GASearchReadsRequest;
+import org.ga4gh.ctk.transport.avrojson.AvroMaker.DESER_MODE;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.ByteArrayOutputStream;
 
-/** 
-* AvroMaker Tester. 
-* 
-* @author <Authors name> 
-* @since <pre>Jun 3, 2015</pre> 
-* @version 1.0 
-*/ 
+import static org.ga4gh.GASearchReadsRequestAssert.assertThat;
+
+/**
+ * AvroMaker Tester.
+ *
+ * @author <Authors name>
+ * @version 1.0
+ * @since <pre>Jun 3, 2015</pre>
+ */
+@RunWith(JUnitParamsRunner.class)
 public class AvroMakerTest {
 
     GASearchReadsRequest gsrr;
     ByteArrayOutputStream theJson;
-@Before
-public void before() throws Exception {
-    gsrr = GASearchReadsRequest.newBuilder()
-            .setStart(0L)
-            .setPageSize(33)
-            .setStart(4321L)
-            .build();
 
-     theJson = JsonMaker.avroToJsonBytes(
-            new SpecificDatumWriter<GASearchReadsRequest>(),
-            GASearchReadsRequest.SCHEMA$,
-            gsrr);
-} 
+    long startVal = 4321L;
+    int pageSizeVal = 33;
 
-@After
-public void after() throws Exception { 
-} 
+    @Before
+    public void before() throws Exception {
+        gsrr = GASearchReadsRequest.newBuilder()
+                .setPageSize(pageSizeVal)
+                .setStart(startVal)
+                .build();
 
-/** 
-* 
-* Method: makeAvroFromJson(String json, Class<? extends GenericContainer> tgt, String sourceForLog, DESER_MODE deserMode) 
-* 
-*/ 
-@Test
-public void testMakeAvroFromJson() throws Exception {
-    GASearchReadsRequest actual =
-            (GASearchReadsRequest) AvroMaker.jsonToAvroObject(theJson.toString(), GASearchReadsRequest.SCHEMA$);
-    // do field-by-field compare here
-    assert gsrr.equals(actual);
-} 
+        theJson = JsonMaker.avroToJsonBytes(
+                new SpecificDatumWriter<GASearchReadsRequest>(),
+                GASearchReadsRequest.SCHEMA$,
+                gsrr);
+    }
 
-/** 
-* 
-* Method: jsonToObjectRelaxed(String jsonString, Class objClass) 
-* 
-*/ 
-@Test
-public void testJsonToObjectRelaxed() throws Exception { 
-    // make an example Avro object
-    // start by generating the expected JSON
+    @After
+    public void after() throws Exception {
+    }
 
-    // now we have JSON in "avro order" so we need to swap
-    // a couple fields
+    /**
+     * Method: makeAvroFromJson use tge @Before avro object, serializes it to
+     * JSON then auses AvroMaker to deserialize.
+     */
+    @Test
+    @Parameters({"JACKSON_RELAXED", "JACKSON_AVRO", "AVRO_DIRECT"})
+    public void testMakeAvroFromJson(DESER_MODE dmode) throws Exception {
+        GASearchReadsRequest examplar = new GASearchReadsRequest();
 
-} 
+        AvroMaker<GASearchReadsRequest> av = new AvroMaker<>(examplar);
 
-/** 
-* 
-* Method: jsonToObjectJacksonFactory(String jsonString, Class objClass, Schema schema) 
-* 
-*/ 
-@Test
-public void testJsonToObjectJacksonFactory() throws Exception { 
-//TODO: Test goes here... 
-} 
-
-/** 
-* 
-* Method: jsonToAvroObject(String theJson, Schema schema) 
-* 
-*/ 
-@Test
-public void testJsonToAvroObject() throws Exception { 
-//TODO: Test goes here... 
-} 
+        GASearchReadsRequest actual =
+                av.makeAvroFromJson(theJson.toString(), "testing deserializing " + dmode, dmode);
+        // do field-by-field compare here
+        assertThat(actual).hasStart(startVal).hasPageSize(pageSizeVal);
+    }
 
 
 } 
