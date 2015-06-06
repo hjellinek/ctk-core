@@ -88,7 +88,7 @@ public class JsonMakerTest {
     public void AvroGeneratesJsonBytesForDefaultGA() throws Exception {
         //JsonMaker av = new JsonMaker();
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .setStart(0L) // must set, even to default
+                .setStart(0L)
                 .build();
         assertNotNull("test data is default GaSearchReadsRequest", gsrr);
         Schema sampleSchema = GASearchReadsRequest.SCHEMA$;
@@ -112,6 +112,30 @@ public class JsonMakerTest {
         JSONAssert.assertEquals(expected, actual, strictCompare);
     }
 
+    public void JacksonGeneratesJsonBytesForDefaultGA() throws Exception {
+        //JsonMaker av = new JsonMaker();
+        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
+                .setStart(0L)
+                .build();
+        assertNotNull("test data is default GaSearchReadsRequest", gsrr);
+        Schema sampleSchema = GASearchReadsRequest.SCHEMA$;
+        DatumWriter dw = new GenericDatumWriter<>(sampleSchema);
+
+        String actual =
+                JsonMaker.JacksonToJsonBytes(gsrr).toString();
+
+        String expected = "{\n" +
+                "  \"readGroupIds\" : [ ],\n" +
+                "  \"referenceName\" : null,\n" +
+                "  \"referenceId\" : null,\n" +
+                "  \"start\" : 0,\n" +
+                "  \"end\" : null,\n" +
+                "  \"pageSize\" : null,\n" +
+                "  \"pageToken\" : null\n" +
+                "}";
+        boolean strictCompare = true;
+        JSONAssert.assertEquals(expected, actual, strictCompare);
+    }
     /**
      * Avro notice mismatch obj schema.
      *
