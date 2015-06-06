@@ -51,6 +51,7 @@
         <assertj.core.version>3.0.0</assertj.core.version>
         <assertj.generator.version>1.6.0</assertj.generator.version>
         <avro.version>1.7.7</avro.version>
+        <gson.version>2.3.1</gson.version>
         <guava.version>18.0</guava.version>
         <httpasyncclient.version>4.1</httpasyncclient.version>
         <httpclient.version>4.4.1</httpclient.version>
@@ -110,6 +111,11 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-avro</artifactId>
             <version>${jackson2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

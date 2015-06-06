@@ -13,8 +13,6 @@ import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.http.HttpStatus;
 import org.ga4gh.ctk.control.WireDiff;
 
-import java.io.ByteArrayOutputStream;
-
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -48,7 +46,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     String path;
     Schema reqSchema;
     Schema respSchema;
-    ByteArrayOutputStream jsonBytes;
+    String jsonStr;
     HttpResponse<JsonNode> httpResp;
     AvroMaker.DESER_MODE deserMode = AvroMaker.DESER_MODE.JACKSON_RELAXED; // default
     private P theResp;
@@ -130,9 +128,10 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
      */
     public P doPostResp() {
         reqSchema = theAvroReq.getSchema();
-        // split the json-build, the posting, and the resp-build into 3 method calls
-        // just for ease of breakpointing
-        jsonBytes = JsonMaker.avroToJsonBytes(dw, reqSchema, theAvroReq);
+
+        //jsonBytes = JsonMaker.avroToJsonBytes(dw, reqSchema, theAvroReq);
+        //jsonBytes = JsonMaker.JacksonToJsonBytes(theAvroReq);
+        jsonStr = JsonMaker.GsonToJsonBytes(theAvroReq);
 
         httpResp = jsonPost(urlRoot + path);
         if (httpResp.getStatus() == HttpStatus.SC_OK) {
@@ -143,7 +142,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         }
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null ? theResp.getClass().getSimpleName()  : "null";
-        messages.put(theAvroReq.getClass().getSimpleName() + " POST <" + jsonBytes + ">", respName, httpResp.getStatus());
+        messages.put(theAvroReq.getClass().getSimpleName() + " POST <" + jsonStr + ">", respName, httpResp.getStatus());
 
         return theResp;
     }
@@ -178,14 +177,14 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
 
     HttpResponse<JsonNode> jsonPost(String theURL) {
         if (log.isDebugEnabled()) {
-            log.debug("begin jsonPost to " + theURL + " of " + String.valueOf(jsonBytes));
+            log.debug("begin jsonPost to " + theURL + " of " + jsonStr);
         }
         HttpResponse<JsonNode> jsonResponse = null;
         try {
             jsonResponse = Unirest.post(theURL)
                     .header("Content-Type", "application/json")
                     .header("accept", "application/json")
-                    .body(String.valueOf(jsonBytes))
+                    .body(jsonStr)
                     .asJson();
         } catch (UnirestException e) {
             log.warn("problem communicating JSON with " + theURL, e);

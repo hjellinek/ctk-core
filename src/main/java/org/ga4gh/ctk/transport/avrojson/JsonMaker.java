@@ -1,6 +1,7 @@
 package org.ga4gh.ctk.transport.avrojson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.apache.avro.Schema;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
@@ -74,6 +75,15 @@ public class JsonMaker<T> {
         } catch (IOException e) {
             log.warn("Jackson can't make output " + src.getClass().getName(), e);
         }
+        if (log.isDebugEnabled()) {
+            log.debug("JacksonToJsonBytes generates: " + jsonBytes.toString());
+        }
         return jsonBytes;
+    }
+
+    public static String GsonToJsonBytes(Object src){
+        Gson gson = new Gson();
+        String theJson = gson.toJson(src);
+        return theJson;
     }
 }

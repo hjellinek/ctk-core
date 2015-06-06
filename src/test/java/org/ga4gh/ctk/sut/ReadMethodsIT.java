@@ -6,10 +6,12 @@ import junitparams.Parameters;
 import org.ga4gh.GAReadGroupSet;
 import org.ga4gh.GASearchReadGroupSetsRequest;
 import org.ga4gh.GASearchReadGroupSetsResponse;
-import org.ga4gh.ctk.transport.avrojson.AvroJson;
+import org.ga4gh.GASearchReadGroupSetsResponseAssert;
 import org.ga4gh.ctk.transport.ReadsProtocolClient;
+import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,8 +19,6 @@ import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -32,6 +32,7 @@ public class ReadMethodsIT {
     private static ReadsProtocolClient client;
 
 
+    @Ignore("datasetId not supported in v0.5.1 server")
     @Test
     public void srgsForDumbDatasetidShouldBeEmpty() throws Exception {
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
@@ -40,19 +41,19 @@ public class ReadMethodsIT {
                 .build();
         GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
         // avro says always get a 200
-        assertTrue(rtnVal.getReadGroupSets().isEmpty());
+        GASearchReadGroupSetsResponseAssert.assertThat(rtnVal)
+                .isNotNull()
+                .hasNoReadGroupSets();
     }
 
-   // @Ignore ("datasetId not supported in v0.5.1 server")
+
+    @Ignore("datasetId not supported in v0.5.1 server")
     @Test
     @Parameters({
             "",
-            "foo",
-            "1kg-phase1",
-            "1kg-phase3",
-            "1kg-phase1:1kg-phase3"
+            "foo"
     })
-    public void datasetIdShouldDetermineReturnedReadgroupsets(String datasetid) throws Exception {
+    public void badReadgroupIdShouldReturnErrors(String datasetid) throws Exception {
         log.info("testing searchReadGroupSets");
 
         //  Builder does validation and sets defaults
@@ -67,13 +68,44 @@ public class ReadMethodsIT {
         log.debug("SearchReadGroupSetsRequest: " + reqb.toString());
         GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
         log.debug("searchReadGroupSets " + datasetid + " returned: " + String.valueOf(rtnVal));
-        assertNotNull("should get a not-null SearchReadGroupSetsResponse", rtnVal);
+        GASearchReadGroupSetsResponseAssert.assertThat(rtnVal)
+                .isNotNull();
 
         List<GAReadGroupSet> rgs = rtnVal.getReadGroupSets();
 
         org.ga4gh.GAReadGroupSetAssert.assertThat(rgs.get(0)).hasDatasetId(datasetid);
     }
 
+
+    @Test
+    @Parameters({
+            "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522" ,
+            "low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522",
+            "low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
+    })
+    public void goodReadgroupNameShouldRetrieveMatchingReadGroupSet(String rgName) throws Exception {
+        // IDL: "Only return read group sets for which a substring of the name
+        // matches this string.
+        log.info("");
+        GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
+                .setName(rgName)
+                .build();
+
+        log.info("SearchReadGroupSetsRequest: " + reqb.toString());
+        GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
+        log.info("searchReadGroupSets " + rgName + " returned: " + String.valueOf(rtnVal));
+
+        List<GAReadGroupSet> rgs = rtnVal.getReadGroupSets();
+
+        //org.ga4gh.GASearchReadGroupSetsResponset(rtnVal).hasName("low-coverage");
+
+                /*
+                rgs.get(0))
+
+                .isNotNull()
+                .hasName(rgName);
+                */
+    }
 
     @BeforeClass
     public static void setupTransport() throws Exception {
@@ -90,4 +122,5 @@ public class ReadMethodsIT {
             log.info("ReadMethodIT TRAFFIC:" + cell.getRowKey() + " " + cell.getColumnKey() + " " +cell.getValue());
         }
     }
+
 }
