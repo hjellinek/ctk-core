@@ -120,6 +120,7 @@ public class AvroMaker<T extends SpecificRecordBase> {
     }
 
     private T jsonToObjectJacksonFactory(String jsonString) throws JsonMappingException {
+
         AvroSchema avSchema = new AvroSchema(getSchema());
         ObjectMapper om = new ObjectMapper(new AvroFactory());
 

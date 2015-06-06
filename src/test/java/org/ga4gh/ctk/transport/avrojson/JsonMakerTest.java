@@ -76,6 +76,13 @@ public class JsonMakerTest {
 
     /**
      * Method: avroToJson(DatumWriter dw, Schema schema, T srcBytes)
+     * Note this test is specific to the Avro-using JSON serializer
+     * so the "expected" JSON is in the Avro style, with JSON blocks
+     * for non-null fields, like ... "start": { "long" : "0"}
+     *
+     * This is fine for an Avro deserializer, but doesn't work with
+     * defaul Jackson deserializing, so we'll have a distinct test
+     * for Jackson.
      */
     @Test
     public void AvroGeneratesJsonBytesForDefaultGA() throws Exception {
