@@ -3,10 +3,7 @@ package org.ga4gh.ctk.sut;
 import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.ga4gh.GAReadGroupSet;
-import org.ga4gh.GASearchReadGroupSetsRequest;
-import org.ga4gh.GASearchReadGroupSetsResponse;
-import org.ga4gh.GASearchReadGroupSetsResponseAssert;
+import org.ga4gh.*;
 import org.ga4gh.ctk.transport.ReadsProtocolClient;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.junit.AfterClass;
@@ -19,6 +16,7 @@ import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -107,6 +105,40 @@ public class ReadMethodsIT {
                 .isNotNull()
                 .hasName(rgName);
                 */
+    }
+    /*
+    In any Reads response, the alignedSequence field can only contain [ACTGN]+.
+    No spaces, no other letters, no lowercase, no null. This is dataset specific
+    at this point, but we might be able to extend it to all datasets later
+     */
+
+    /*
+    If a reference is specified, all queried `GAReadGroup`s must be aligned
+    to `GAReferenceSet`s containing that same `GAReference`. If no reference is
+    specified, all `GAReadGroup`s must be aligned to the same `GAReferenceSet`.
+     */
+    @Test
+    public void readsResponseMatchesACTGNPattern() throws Exception {
+        // do a readsearch
+        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
+                .build();
+        GASearchReadsResponse grtn = client.searchReads(gsrr);
+        log.info("send SearchReadsRequest <" + gsrr.toString() + "> RTN is < "+ grtn );
+
+/*
+        assertThat(grtn.getAlignments())
+                .extracting("alignedSequence")
+                .matches("[ACTGN]+");
+*/
+    }
+
+    @Test
+    public void defaultReadsRequestGetsNullAlignments() throws Exception {
+        // do a readsearch
+        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
+                .build();
+        GASearchReadsResponse grtn = client.searchReads(gsrr);
+        assertThat(grtn.getAlignments()).isNull();
     }
 
     @BeforeClass
