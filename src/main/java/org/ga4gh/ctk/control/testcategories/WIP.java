@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.control.testcategories.API;
+package org.ga4gh.ctk.control.testcategories;
 
 /**
  * <p>Marker interface for tests which are somehow "work in progress"

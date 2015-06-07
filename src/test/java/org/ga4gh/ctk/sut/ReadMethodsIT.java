@@ -4,12 +4,14 @@ import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.ga4gh.*;
+import org.ga4gh.ctk.control.testcategories.API.ReadsTests;
 import org.ga4gh.ctk.transport.ReadsProtocolClient;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
@@ -22,6 +24,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Created by wstidolph on 5/20/15.
  */
+@Category(ReadsTests.class)
 @RunWith(JUnitParamsRunner.class)
 public class ReadMethodsIT {
 
