@@ -1,105 +1,115 @@
 package org.ga4gh.ctk.sut;
 
-import org.junit.Test; 
-import org.junit.Before; 
-import org.junit.After; 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.ga4gh.GASearchVariantSetsRequest;
+import org.ga4gh.GASearchVariantsRequest;
+import org.ga4gh.GASearchVariantsResponse;
+import org.ga4gh.GASearchVariantsResponseAssert;
+import org.ga4gh.ctk.transport.VariantsProtocolClient;
+import org.junit.*;
+import org.junit.runner.RunWith;
 
-/** 
-* VariantsProtocolClient Tester. 
-* 
-* @author <Authors name> 
-* @since <pre>Jun 6, 2015</pre> 
-* @version 1.0 
-*/ 
+import java.net.InetSocketAddress;
+import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.slf4j.LoggerFactory.getLogger;
+
+/**
+ * VariantsProtocolClient Tester.
+ *
+ * @author <Authors name>
+ * @version 1.0
+ * @since <pre>Jun 6, 2015</pre>
+ */
+@RunWith(JUnitParamsRunner.class)
 public class VariantsMethodsIT {
 
-@Before
-public void before() throws Exception { 
-} 
+    private static org.slf4j.Logger log = getLogger(ReadMethodsIT.class);
 
-@After
-public void after() throws Exception { 
-} 
+    private static VariantsProtocolClient client;
 
-/** 
-* 
-* Method: searchVariantSets(GASearchVariantSetsRequest request) 
-* 
-*/ 
-@Test
-public void testSearchVariantSetsRequest() throws Exception { 
+    @Before
+    public void before() throws Exception {
+    }
+
+    @After
+    public void after() throws Exception {
+    }
+
+    /**
+     * Method: searchVariantSets(GASearchVariantSetsRequest request)
+     */
+    @Ignore
+    @Test
+    public void testSearchVariantSetsRequest() throws Exception {
+        GASearchVariantSetsRequest svsr = GASearchVariantSetsRequest.newBuilder()
+                .build();
+
+    }
+
+    /**
+     * Method: searchVariantSets(GASearchVariantSetsRequest request, WireDiff wd)
+     */
+    @Ignore
+    @Test
+    public void testSearchVariantSetsForRequestWd() throws Exception {
 //TODO: Test goes here... 
-} 
+    }
 
-/** 
-* 
-* Method: searchVariantSets(GASearchVariantSetsRequest request, WireDiff wd) 
-* 
-*/ 
-@Test
-public void testSearchVariantSetsForRequestWd() throws Exception { 
+    /**
+     * Method: searchVariants(GASearchVariantsRequest request)
+     */
+    @Test
+    @Parameters({
+            // "In the testdataset 1kg-phase1, a query for all variants on chr22
+            // between coordinates 16050408 and 16052159 should have exactly 16 results
+            "1kg-phase1, 22, 16050408, 16052159, 16"
+    })
+    public void SearchVariantsRequestResultSizeAsExpected(String vsetIds, String refName, long start, long end, int expLength) throws Exception {
+        GASearchVariantsRequest request = GASearchVariantsRequest.newBuilder()
+                .setVariantSetIds(Arrays.asList(vsetIds.split(",")))
+                .setReferenceName(refName)
+                .setStart(start)
+                .setEnd(end)
+                .build();
+
+        GASearchVariantsResponse response = client.searchVariants(request);
+
+        GASearchVariantsResponseAssert.assertThat(response).isNotNull();
+        // List<GAVariant> variants = ;
+        assertThat(response.getVariants()).hasSize(expLength);
+    }
+
+    /**
+     * Method: searchVariants(GASearchVariantsRequest request, WireDiff wd)
+     */
+    @Ignore
+    @Test
+    public void testSearchVariantsForRequestWd() throws Exception {
 //TODO: Test goes here... 
-} 
+    }
 
-/** 
-* 
-* Method: searchVariants(GASearchVariantsRequest request) 
-* 
-*/ 
-@Test
-public void testSearchVariantsRequest() throws Exception { 
+    /**
+     * Method: searchCallSets(GASearchCallSetsRequest request)
+     */
+    @Ignore
+    @Test
+    public void testSearchCallSetsRequest() throws Exception {
 //TODO: Test goes here... 
-} 
+    }
 
-/** 
-* 
-* Method: searchVariants(GASearchVariantsRequest request, WireDiff wd) 
-* 
-*/ 
-@Test
-public void testSearchVariantsForRequestWd() throws Exception { 
-//TODO: Test goes here... 
-} 
 
-/** 
-* 
-* Method: searchCallSets(GASearchCallSetsRequest request) 
-* 
-*/ 
-@Test
-public void testSearchCallSetsRequest() throws Exception { 
-//TODO: Test goes here... 
-} 
+    @BeforeClass
+    public static void setupTransport() throws Exception {
+        InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
+        // service = new SimpleOrderServiceEndpoint(endpointAddress);
+        client = new VariantsProtocolClient();
+        // TODO verify correct data installed
 
-/** 
-* 
-* Method: searchVariantSets(GASearchVariantSetsRequest var1, org.apache.avro.ipc.Callback<GASearchVariantSetsResponse> var2) 
-* 
-*/ 
-@Test
-public void testSearchVariantSetsForGaSearchVariantSetsRequestCallback() throws Exception { 
-//TODO: Test goes here... 
-} 
 
-/** 
-* 
-* Method: searchVariants(GASearchVariantsRequest var1, org.apache.avro.ipc.Callback<GASearchVariantsResponse> var2) 
-* 
-*/ 
-@Test
-public void testSearchVariantsForGaSearchVariantsRequestCallback() throws Exception { 
-//TODO: Test goes here... 
-} 
-
-/** 
-* 
-* Method: searchCallSets(GASearchCallSetsRequest var1, org.apache.avro.ipc.Callback<GASearchCallSetsResponse> var2) 
-* 
-*/ 
-@Test
-public void testSearchCallSetsForGaSearchCallSetsRequestCallback() throws Exception { 
-//TODO: Test goes here... 
-} 
-
+        //client.start(); start binary transceiver to Server Under Test
+    }
 
 } 

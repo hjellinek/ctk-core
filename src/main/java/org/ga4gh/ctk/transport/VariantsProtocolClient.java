@@ -5,8 +5,6 @@ import org.ga4gh.*;
 import org.ga4gh.ctk.control.WireDiff;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
 
-import java.net.InetSocketAddress;
-
 /**
  * Created by Wayne Stidolph on 5/25/2015.
  */
@@ -17,7 +15,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
 
     public WireDiff wireDiff = null;
 
-    public VariantsProtocolClient(InetSocketAddress endpointAddress){
+    public VariantsProtocolClient(){
 
     }
 
