@@ -32,8 +32,9 @@ public class ReadMethodsIT {
     private static ReadsProtocolClient client;
 
 
+    // commenting out @Test because the Runner seems to be ignoring @Ignore!
     @Ignore("datasetId not supported in v0.5.1 server")
-    @Test
+    // @Test
     public void srgsForDumbDatasetidShouldBeEmpty() throws Exception {
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
                 .setName(null)
@@ -47,8 +48,9 @@ public class ReadMethodsIT {
     }
 
 
+    // commenting out @Test because the Runner seems to be ignoring @Ignore!
     @Ignore("datasetId not supported in v0.5.1 server")
-    @Test
+    // @Test
     @Parameters({
             "",
             "foo"
