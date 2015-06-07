@@ -107,7 +107,7 @@ public class ReadMethodsIT {
                 */
     }
     /*
-    In any Reads response, the alignedSequence field can only contain [ACTGN]+.
+    In any ReadsTests response, the alignedSequence field can only contain [ACTGN]+.
     No spaces, no other letters, no lowercase, no null. This is dataset specific
     at this point, but we might be able to extend it to all datasets later
      */
@@ -125,11 +125,13 @@ public class ReadMethodsIT {
         GASearchReadsResponse grtn = client.searchReads(gsrr);
         log.info("send SearchReadsRequest <" + gsrr.toString() + "> RTN is < "+ grtn );
 
+
 /*
         assertThat(grtn.getAlignments())
                 .extracting("alignedSequence")
                 .matches("[ACTGN]+");
 */
+
     }
 
     @Test

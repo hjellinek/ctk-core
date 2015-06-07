@@ -4,10 +4,13 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.ga4gh.GASearchReadsResponse;
+import org.ga4gh.ctk.control.testcategories.CTK.AvroTests;
+import org.ga4gh.ctk.control.testcategories.CTK.TransportTests;
 import org.ga4gh.ctk.transport.avrojson.AvroMaker.DESER_MODE;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.io.ByteArrayOutputStream;
@@ -22,6 +25,7 @@ import static org.ga4gh.GASearchReadsResponseAssert.assertThat;
  * @since <pre>Jun 3, 2015</pre>
  */
 @RunWith(JUnitParamsRunner.class)
+@Category({TransportTests.class, AvroTests.class})
 public class AvroMakerTest {
 
     long startVal = 4321L;

@@ -7,9 +7,12 @@ import org.ga4gh.GAReadGroup;
 import org.ga4gh.GASearchAnalysesRequest;
 import org.ga4gh.GASearchReadsRequest;
 import org.ga4gh.GASearchVariantsRequest;
+import org.ga4gh.ctk.control.testcategories.CTK.AvroTests;
+import org.ga4gh.ctk.control.testcategories.CTK.TransportTests;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.ByteArrayOutputStream;
@@ -25,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
  * @version 1.0
  * @since <pre>Jun 3, 2015</pre>
  */
+@Category(TransportTests.class)
 public class JsonMakerTest {
 
     @Before
@@ -39,6 +43,7 @@ public class JsonMakerTest {
      * Method: avroToJson(DatumWriter dw, Schema schema, T srcBytes)
      */
     //@Test
+    // not really an Avro-specific test so no Category here
     public void NullAvroMeansEmptyJsonBytes() throws Exception {
         //JsonMaker av = new JsonMaker();
         Schema sampleSchema = GAReadGroup.SCHEMA$;
@@ -53,20 +58,6 @@ public class JsonMakerTest {
         assertEquals(0, bytes.length);
     }
 
-    /**
-     * Avro requires start be set.
-     * This test illustrates an apparent problem with avro 'builder'
-     * it seems sometimes a default-ed field has to be set!
-     * In this case, if we don't set the "start" field then we
-     * catch an AvroRuntimeException.
-     *
-     * @throws Exception the exception
-     */
-    //@Test//(expected = org.apache.avro.AvroRuntimeException.class)
-    public void AvroRequiresStartBeSet() throws Exception {
-        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .build();
-    }
 
     //@Test
     public void AvroBuildsDefaultObject() throws Exception {
@@ -87,6 +78,7 @@ public class JsonMakerTest {
      * for Jackson.
      */
     //@Test
+    @Category(AvroTests.class)
     public void AvroGeneratesJsonBytesForDefaultGA() throws Exception {
         //JsonMaker av = new JsonMaker();
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
@@ -114,6 +106,7 @@ public class JsonMakerTest {
         JSONAssert.assertEquals(expected, actual, strictCompare);
     }
 
+    @Category(AvroTests.class)
     public void JacksonGeneratesJsonBytesForDefaultGA() throws Exception {
         //JsonMaker av = new JsonMaker();
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
@@ -159,6 +152,7 @@ public class JsonMakerTest {
     }
 
     @Test
+    @Category(TransportTests.class)
     public void GsonGeneratesSimpleJSONSearchReadsRequest() throws Exception {
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
                 .setStart(0L)
@@ -180,6 +174,7 @@ public class JsonMakerTest {
      * @throws Exception the exception
      */
     //@Test(expected = org.apache.avro.UnresolvedUnionException.class)
+    @Category(AvroTests.class)
     public void AvroNoticeMismatchObjSchema() throws Exception {
         //JsonMaker av = new JsonMaker();
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
