@@ -15,7 +15,7 @@
  * <p>
  * To parameterize your test, so that it gets run in a data-driven style, you'll need to
  * have it in a class executed using @RunWith(JUnitParamsRunner.class), and then annotate
- * your test methods with @Parameters(...)
+ * your test methods with @Parameters(...) - and you may want to use a
  * @see <a href="https://github.com/Pragmatists/JUnitParams">JUnitParams github site</a>
  * </p>
  * <h2>Running Tests</h2>
