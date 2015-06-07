@@ -76,7 +76,7 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
         GASearchReadGroupSetsResponse response = new GASearchReadGroupSetsResponse();
         AvroJson aj =
                 new AvroJson<>(request, response, urlRoot, path);
-        //aj.setDeserMode(AvroJson.DESER_MODE.AVRO_DIRECT); // optional, AVRO_DIRECT is default
+        //aj.setDeserMode(AvroJson.DESER_MODE.AVRO_DIRECT);
         response = (GASearchReadGroupSetsResponse) aj.doPostResp();
 
         return response;
