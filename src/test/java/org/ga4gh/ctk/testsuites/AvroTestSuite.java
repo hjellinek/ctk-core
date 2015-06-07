@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * Tests cosely connected to Avro behavior.
+ * Tests closely connected to Avro behavior.
  * Created by Wayne Stidolph on 6/7/2015.
  */
 @RunWith(Categories.class)
