@@ -19,6 +19,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * VariantsProtocolClient Tester.
  *
+ * This is @RunWith() the JUnitParamsRunner so you can paramaterize tests -
+ * this is done here with simple @Parameter annotations, but normal
+ * @Paramter behavior holds if you want to load from a file, DB, etc.
+ *
  * @author <Authors name>
  * @version 1.0
  * @since <pre>Jun 6, 2015</pre>
