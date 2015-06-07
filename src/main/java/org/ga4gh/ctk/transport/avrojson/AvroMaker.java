@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.avro.AvroFactory;
 import com.fasterxml.jackson.dataformat.avro.AvroSchema;
+import com.google.gson.Gson;
 import org.apache.avro.AvroTypeException;
 import org.apache.avro.Schema;
 import org.apache.avro.io.DatumReader;
@@ -30,6 +31,10 @@ public class AvroMaker<T extends SpecificRecordBase> {
      * The enum DESER _ MODE.
      */
     public enum DESER_MODE {
+        /**
+         * Use Gson to deserialize JSON into an Avro-generated class.
+         */
+        GSON_RELAXED,
         /**
          * Use Jackson to pull JSON into field,
          * without worry about order matching. But, if the
@@ -74,6 +79,9 @@ public class AvroMaker<T extends SpecificRecordBase> {
         T response = null;
 
         switch (deserMode) { // TODO use polymorphic on jsonToObject instead of switch? Or is this clearer?
+            case GSON_RELAXED:
+                response = gsonToObjectRelaxed(json);
+                break;
             case JACKSON_RELAXED:
                 response = jsonToObjectRelaxed(json);
                 break;
@@ -159,6 +167,13 @@ public class AvroMaker<T extends SpecificRecordBase> {
         return result;
     }
 
+
+    private T gsonToObjectRelaxed(String theJson){
+        Gson gson = new Gson();
+        T tgt = (T) gson.fromJson(theJson, avroClass);
+        log.debug("generating a "+ avroClass.getName() + " from <" + theJson + "> yields " + tgt.toString());
+        return tgt;
+    }
 
     private Schema getSchema() {
         return avroObj.getSchema();

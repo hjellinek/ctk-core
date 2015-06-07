@@ -140,14 +140,7 @@ public class JsonMakerTest {
     }
 
     @Test
-    public void GsonGeneratesSimpleJSON() throws Exception {
-        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .setStart(0L)
-                .setPageSize(32)
-                .setEnd(4321L)
-                .build();
-        String actual = JsonMaker.GsonToJsonBytes(gsrr);
-        System.out.println(actual);
+    public void GsonGenerateSimpleJSONSearchVariantsRequest() throws Exception {
 
         GASearchVariantsRequest gsvr = GASearchVariantsRequest.newBuilder()
                 .setCallSetIds(Arrays.asList("foo", "bar"))
@@ -157,8 +150,26 @@ public class JsonMakerTest {
                 .setPageToken("snuffle.bunny")
                 .setVariantName("garble")
                 .build();
-        actual = JsonMaker.GsonToJsonBytes(gsvr);
-        System.out.println(actual);
+        String actual = JsonMaker.GsonToJsonBytes(gsvr);
+
+        JSONAssert.assertEquals("{variantName:garble}", actual, false);
+        JSONAssert.assertEquals("{referenceName:I.Am.The.Walrus}", actual, false);
+        JSONAssert.assertEquals("{callSetIds:[\"foo\", \"bar\"]}", actual, false);
+        JSONAssert.assertEquals("{callSetIds:[\"bar\", \"foo\"]}", actual, false);
+    }
+
+    @Test
+    public void GsonGeneratesSimpleJSONSearchReadsRequest() throws Exception {
+        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
+                .setStart(0L)
+                .setPageSize(32)
+                .setEnd(4321L)
+                .build();
+        String actual = JsonMaker.GsonToJsonBytes(gsrr);
+
+        JSONAssert.assertEquals("{start:0}", actual, false);
+        JSONAssert.assertEquals("{pageSize:32}", actual, false);
+        JSONAssert.assertEquals("{end:4321}", actual, false);
     }
     /**
      * Avro notice mismatch obj schema.

@@ -48,7 +48,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     Schema respSchema;
     String jsonStr;
     HttpResponse<JsonNode> httpResp;
-    AvroMaker.DESER_MODE deserMode = AvroMaker.DESER_MODE.JACKSON_RELAXED; // default
+    AvroMaker.DESER_MODE deserMode = AvroMaker.DESER_MODE.GSON_RELAXED; // default
     private P theResp;
     private WireDiff wireDiff;
 
