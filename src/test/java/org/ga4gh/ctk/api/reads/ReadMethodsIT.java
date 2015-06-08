@@ -29,7 +29,11 @@ import static org.slf4j.LoggerFactory.getLogger;
  * on the endpoint and verifies the response. For tests with more insight into
  * the data returned (complex queries, etc) refer to the ReadsSearchingIT tests.</p>
  *
-
+ * <p>As a demo, we show making an assertion about a field of the return (in {@code defaultReadsRequestGetsNullAlignments})
+ * and simply making an assertion about the return itself (in {@code defaultReadgroupsetsRequestGetsResponse}). In each case,
+ * the impartant element of the test is that the Response cam back and was
+ * parsed without Exception.</p>
+ *
  * <p>Created by wstidolph on 5/20/15.</p>
  */
 @Category(ReadsTests.class)
@@ -62,8 +66,7 @@ public class ReadMethodsIT {
                 .build();
         GASearchReadGroupSetsResponse grtn = client.searchReadGroupSets(gsrgs);
 
-        GASearchReadGroupSetsResponseAssert.assertThat(grtn)
-                .isNotNull();
+        GASearchReadGroupSetsResponseAssert.assertThat(grtn).isNotNull();
     }
 
     @BeforeClass
