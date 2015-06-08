@@ -5,7 +5,9 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by Wayne Stidolph on 5/30/2015.
+ * <p>Stupidly named zz... so it runs last, this test class will evaluate
+ * integration test completeness (are all messages, data type,and endpoints exercised)</p>
+ * <p>Created by Wayne Stidolph on 5/30/2015.</p>
  */
 
 public class zzCheckCoverageIT {
