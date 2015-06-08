@@ -1,22 +1,22 @@
 package org.ga4gh.ctk.api.variants;
 
+import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
+import org.apache.http.HttpStatus;
 import org.ga4gh.GASearchVariantSetsRequest;
 import org.ga4gh.GASearchVariantsRequest;
 import org.ga4gh.GASearchVariantsResponse;
 import org.ga4gh.GASearchVariantsResponseAssert;
+import org.ga4gh.ctk.control.WireDiff;
 import org.ga4gh.ctk.control.testcategories.API.VariantsTests;
-import org.ga4gh.ctk.api.reads.ReadMethodsIT;
 import org.ga4gh.ctk.transport.VariantsProtocolClient;
+import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
-import java.util.Arrays;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -45,7 +45,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Category(VariantsTests.class)
 public class VariantsMethodsIT {
 
-    private static org.slf4j.Logger log = getLogger(ReadMethodsIT.class);
+    private static org.slf4j.Logger log = getLogger(VariantsMethodsIT.class);
 
     private static VariantsProtocolClient client;
 
@@ -81,25 +81,20 @@ public class VariantsMethodsIT {
      * Method: searchVariants(GASearchVariantsRequest request)
      */
     @Test
-    @Parameters({
-            // "In the testdataset 1kg-phase1, a query for all variants on chr22
-            // between coordinates 16050408 and 16052159 should have exactly 16 results
-            // This is one example, feel free to add more!
-            "1kg-phase1, 22, 16050408, 16052159, 16"
-    })
-    public void SearchVariantsRequestResultSizeAsExpected(String vsetIds, String refName, long start, long end, int expLength) throws Exception {
+    public void defaultSearchVariantsRequestResultIsNotNull() throws Exception {
         GASearchVariantsRequest request = GASearchVariantsRequest.newBuilder()
-                .setVariantSetIds(Arrays.asList(vsetIds.split(",")))
-                .setReferenceName(refName)
-                .setStart(start)
-                .setEnd(end)
+                .setReferenceName("foo")
+                .setStart(0L)
+                .setEnd(1L)
                 .build();
 
-        GASearchVariantsResponse response = client.searchVariants(request);
+        WireDiff mywd = new WireDiff();
+        GASearchVariantsResponse response = client.searchVariants(request, mywd);
+
+        org.junit.Assert.assertTrue(mywd.getResponseStatus() == HttpStatus.SC_OK);
 
         GASearchVariantsResponseAssert.assertThat(response).isNotNull();
-        // List<GAVariant> variants = ;
-        assertThat(response.getVariants()).hasSize(expLength);
+
     }
 
     /**
@@ -130,6 +125,14 @@ public class VariantsMethodsIT {
 
 
         //client.start(); start binary transceiver to Server Under Test
+    }
+
+    @AfterClass
+    public static void shutdownTransport() throws Exception {
+        for(Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()){
+            // TODO either filter this to just this Test or move the extraction to zzCheckCoverage
+            log.info("VariantsMethodIT TRAFFIC:" + cell.getRowKey() + " " + cell.getColumnKey() + " " +cell.getValue());
+        }
     }
 
 } 

@@ -38,7 +38,7 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
         String path = URLMAPPING.searchReads;
         GASearchReadsResponse response = new GASearchReadsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path);
+                new AvroJson<>(request, response, urlRoot, path, wireDiff);
         response = (GASearchReadsResponse) aj.doPostResp();
         return response;
     }
@@ -74,7 +74,7 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
         // with the filled-in Repsonse object constructed in AvroJson and passed back
         GASearchReadGroupSetsResponse response = new GASearchReadGroupSetsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path);
+                new AvroJson<>(request, response, urlRoot, path, wireDiff);
         //aj.setDeserMode(AvroJson.DESER_MODE.AVRO_DIRECT);
         response = (GASearchReadGroupSetsResponse) aj.doPostResp();
 

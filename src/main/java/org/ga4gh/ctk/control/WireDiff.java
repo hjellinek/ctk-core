@@ -20,6 +20,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class WireDiff {
     final static Logger log = getLogger(WireDiff.class);
 
+
+
+    int responseStatus;
     JsonPatch expDiff;
     JsonPatch refDiff;
 
@@ -104,5 +107,13 @@ public class WireDiff {
             log.warn("could not make JsonNode from string " + jsonStr, e);
         }
         return rtnNode;
+    }
+
+    public int getResponseStatus() {
+        return responseStatus;
+    }
+
+    public void setResponseStatus(int responseStatus) {
+        this.responseStatus = responseStatus;
     }
 }

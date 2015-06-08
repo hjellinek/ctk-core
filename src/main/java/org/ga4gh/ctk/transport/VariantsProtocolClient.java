@@ -37,7 +37,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
         String path = URLMAPPING.searchVariantSets;
         GASearchVariantSetsResponse response = new GASearchVariantSetsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path);
+                new AvroJson<>(request, response, urlRoot, path, wireDiff);
         response = (GASearchVariantSetsResponse) aj.doPostResp();
         return response;
     }
@@ -70,7 +70,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
         String path = URLMAPPING.searchVariants;
         GASearchVariantsResponse response = new GASearchVariantsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path);
+                new AvroJson<>(request, response, urlRoot, path, wireDiff);
         response = (GASearchVariantsResponse) aj.doPostResp();
         return response;
     }

@@ -134,9 +134,15 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         jsonStr = JsonMaker.GsonToJsonBytes(theAvroReq);
 
         httpResp = jsonPost(urlRoot + path);
+        if(wireDiff != null){
+            wireDiff.setResponseStatus(httpResp.getStatus());
+            //wireDiff.setActJson(json);
+        }
         if (httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
-            if (wireDiff != null) wireDiff.setActJson(json);
+            if (wireDiff != null) {
+                wireDiff.setActJson(json);
+            }
 
             theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path, deserMode); // URL just for logging
         }
@@ -161,7 +167,10 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
 
         // no request object to build, just GET from the endpoint with route param
         httpResp = jsonGet(urlRoot + path, id);
-
+        if(wireDiff != null){
+            wireDiff.setResponseStatus(httpResp.getStatus());
+            //wireDiff.setActJson(json);
+        }
         if (httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
             if (wireDiff != null) wireDiff.setActJson(json);
