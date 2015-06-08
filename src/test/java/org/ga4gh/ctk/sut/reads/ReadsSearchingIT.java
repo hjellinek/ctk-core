@@ -2,7 +2,8 @@ package org.ga4gh.ctk.sut.reads;
 
 import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
-import org.ga4gh.*;
+import org.ga4gh.GASearchReadsRequest;
+import org.ga4gh.GASearchReadsResponse;
 import org.ga4gh.ctk.control.testcategories.API.ReadsTests;
 import org.ga4gh.ctk.transport.ReadsProtocolClient;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
@@ -14,55 +15,46 @@ import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * <p>This test class verifies basic sanity of the reads/search API.</p>
+ * <p>Verify data returned from reads/search queries
+ * meet expectations.</p>
  *
- * <p>The test invokes a search request with null, default, and error parameters
- * on the endpoint and verifies the response. For tests with more insight into
- * the data returned (complex queries, etc) refer to the ReadsSearchingIT tests.</p>
- *
- * <p>The {@code READS} API (as defined by the readmethods.avdl) exchanges messages:</p>
- * <ul>
- *     <li>POST reads/search of GASearchReadsRequest yields GASearchReadsResponse</li>
- *     <li>POST /readgroupsets/search of GASearchReadGroupSetsRequest yields GASearchReadGroupSetsResponse</li>
- * </ul>
- * <p>Created by wstidolph on 5/20/15.</p>
+ * <p>Created by Wayne Stidolph on 6/7/2015.</p>
  */
 @Category(ReadsTests.class)
 @RunWith(JUnitParamsRunner.class)
-public class ReadMethodsIT {
-
-    private static org.slf4j.Logger log = getLogger(ReadMethodsIT.class);
+public class ReadsSearchingIT {
+    private static org.slf4j.Logger log = getLogger(ReadsSearchingIT.class);
 
     private static ReadsProtocolClient client;
+     /*
+    In any ReadsTests response, the alignedSequence field can only contain [ACTGN]+.
+    No spaces, no other letters, no lowercase, no null. This is dataset specific
+    at this point, but we might be able to extend it to all datasets later
+     */
 
-    /**
-     * <p>Show that a GASearchReadsRequest is accepted and
-     * returns a parseable Response.</p>
-     *
-     * @throws Exception the exception
+    /*
+    If a reference is specified, all queried `GAReadGroup`s must be aligned
+    to `GAReferenceSet`s containing that same `GAReference`. If no reference is
+    specified, all `GAReadGroup`s must be aligned to the same `GAReferenceSet`.
      */
     @Test
-    public void defaultReadsRequestGetsNullAlignments() throws Exception {
+    public void readsResponseMatchesACTGNPattern() throws Exception {
         // do a readsearch
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
                 .build();
         GASearchReadsResponse grtn = client.searchReads(gsrr);
-        assertThat(grtn.getAlignments()).isNull();
-    }
+        log.info("send SearchReadsRequest <" + gsrr.toString() + "> RTN is < "+ grtn );
 
 
-    @Test
-    public void defaultReadgroupsetsRequestGetsResponse() throws Exception {
-        GASearchReadGroupSetsRequest gsrgs = GASearchReadGroupSetsRequest.newBuilder()
-                .build();
-        GASearchReadGroupSetsResponse grtn = client.searchReadGroupSets(gsrgs);
+/*
+        assertThat(grtn.getAlignments())
+                .extracting("alignedSequence")
+                .matches("[ACTGN]+");
+*/
 
-        GASearchReadGroupSetsResponseAssert.assertThat(grtn)
-                .isNotNull();
     }
 
     @BeforeClass
@@ -80,5 +72,4 @@ public class ReadMethodsIT {
             log.info("ReadMethodIT TRAFFIC:" + cell.getRowKey() + " " + cell.getColumnKey() + " " +cell.getValue());
         }
     }
-
 }

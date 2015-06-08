@@ -1,7 +1,6 @@
 package org.ga4gh.ctk.transport;
 
 import org.apache.avro.AvroRemoteException;
-import org.apache.avro.Schema;
 import org.ga4gh.*;
 import org.ga4gh.ctk.control.WireDiff;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
@@ -95,16 +94,5 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
     public GASearchReadGroupSetsResponse searchReadGroupSets(GASearchReadGroupSetsRequest request, WireDiff wd) throws AvroRemoteException, GAException {
         this.wireDiff = wd;
         return searchReadGroupSets(request);
-    }
-}
-
-class DummyRequest implements org.apache.avro.generic.GenericContainer {
-
-    /**
-     * The schema of this instance.
-     */
-    @Override
-    public Schema getSchema() {
-        return null;
     }
 }
