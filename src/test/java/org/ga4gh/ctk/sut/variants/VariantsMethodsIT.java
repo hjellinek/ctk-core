@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.sut;
+package org.ga4gh.ctk.sut.variants;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -7,6 +7,7 @@ import org.ga4gh.GASearchVariantsRequest;
 import org.ga4gh.GASearchVariantsResponse;
 import org.ga4gh.GASearchVariantsResponseAssert;
 import org.ga4gh.ctk.control.testcategories.API.VariantsTests;
+import org.ga4gh.ctk.sut.reads.ReadMethodsIT;
 import org.ga4gh.ctk.transport.VariantsProtocolClient;
 import org.junit.*;
 import org.junit.experimental.categories.Category;

@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.sut;
+package org.ga4gh.ctk.sut.reads;
 
 import org.junit.experimental.theories.DataPoint;
 import org.junit.experimental.theories.Theories;
