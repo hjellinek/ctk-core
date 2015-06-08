@@ -21,12 +21,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * <p>Verifies basic sanity of the variants/search API.</p>
-
  *
  * <p>The {@code VARIANTS} API methods (as defined in {@code variantmethods.avdl}) are:</p>
  * <ul>
- *     <li>POST /variants/search GASearchVariantsRequest yields GASearchVariantsResponse [searchVariants()]</li>
- *     <li>POST /variantsets/search GASearchVariantSetsRequest yields GASearchVariantSetsResponse [searchVariantSets()]</li>
+ *     <li>POST /variants/search GASearchVariantsRequest yields GASearchVariantsResponse [{@code searchVariants()}]</li>
+ *     <li>POST /variantsets/search GASearchVariantSetsRequest yields GASearchVariantSetsResponse [{@code searchVariantSets()}]</li>
+ *     <li>POST /callsets/search GASearchCallSetsRequest yields GASearchCallSetsResponse [{@code searchCallSets()}]</li>
  * </ul>
  *
  * <p>The test invokes a search request with null, default, and error parameters
@@ -84,6 +84,7 @@ public class VariantsMethodsIT {
     @Parameters({
             // "In the testdataset 1kg-phase1, a query for all variants on chr22
             // between coordinates 16050408 and 16052159 should have exactly 16 results
+            // This is one example, feel free to add more!
             "1kg-phase1, 22, 16050408, 16052159, 16"
     })
     public void SearchVariantsRequestResultSizeAsExpected(String vsetIds, String refName, long start, long end, int expLength) throws Exception {
