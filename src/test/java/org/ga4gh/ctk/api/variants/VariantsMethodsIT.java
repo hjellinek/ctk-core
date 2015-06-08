@@ -20,11 +20,22 @@ import static org.assertj.core.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * VariantsProtocolClient Tester.
+ * <p>Verifies basic sanity of the variants/search API.</p>
+
  *
- * This is @RunWith() the JUnitParamsRunner so you can paramaterize tests -
+ * <p>The {@code VARIANTS} API methods (as defined in {@code variantmethods.avdl}) are:</p>
+ * <ul>
+ *     <li>POST /variants/search GASearchVariantsRequest yields GASearchVariantsResponse [searchVariants()]</li>
+ *     <li>POST /variantsets/search GASearchVariantSetsRequest yields GASearchVariantSetsResponse [searchVariantSets()]</li>
+ * </ul>
+ *
+ * <p>The test invokes a search request with null, default, and error parameters
+ * on the endpoint and verifies the response. For tests with more insight into
+ * the data returned (complex queries, etc) refer to the VariantsSearchingIT tests.</p>
+ *
+ * <p>This is @RunWith() the JUnitParamsRunner so you can paramaterize tests -
  * this is done here with simple @Parameter annotations, but normal
- * @Paramter behavior holds if you want to load from a file, DB, etc.
+ * @Parameter behavior holds if you want to load from a file, DB, etc.</p>
  *
  * @author <Authors name>
  * @version 1.0

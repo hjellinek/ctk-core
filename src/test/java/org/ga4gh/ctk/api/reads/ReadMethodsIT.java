@@ -18,17 +18,18 @@ import static org.assertj.core.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * <p>This test class verifies basic sanity of the reads/search API.</p>
+ * <p>Verifies basic sanity of the reads/search API.</p>
+ * <p>The {@code READS} API methods (as defined by the {@code readmethods.avdl}) are:</p>
+ * <ul>
+ *     <li>POST reads/search of GASearchReadsRequest yields GASearchReadsResponse</li>
+ *     <li>POST /readgroupsets/search of GASearchReadGroupSetsRequest yields GASearchReadGroupSetsResponse</li>
+ * </ul>
  *
  * <p>The test invokes a search request with null, default, and error parameters
  * on the endpoint and verifies the response. For tests with more insight into
  * the data returned (complex queries, etc) refer to the ReadsSearchingIT tests.</p>
  *
- * <p>The {@code READS} API (as defined by the readmethods.avdl) exchanges messages:</p>
- * <ul>
- *     <li>POST reads/search of GASearchReadsRequest yields GASearchReadsResponse</li>
- *     <li>POST /readgroupsets/search of GASearchReadGroupSetsRequest yields GASearchReadGroupSetsResponse</li>
- * </ul>
+
  * <p>Created by wstidolph on 5/20/15.</p>
  */
 @Category(ReadsTests.class)
