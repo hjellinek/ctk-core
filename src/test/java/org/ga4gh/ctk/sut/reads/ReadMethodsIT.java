@@ -22,7 +22,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Created by wstidolph on 5/20/15.
+ * <p>This test class verifies basic sanity of the reads/search API.</p>
+ *
+ * <p>The test invokes a search request with null, default, and error parameters
+ * on the endpoint and verifies the response. For tests with more insight into
+ * the data returned (complex queries, etc) refer to the ReadsSearchingIT tests.</p>
+ *
+ * <p>The {@code READS} API (as defined by the readmethods.avdl) exchanges messages:</p>
+ * <ul>
+ *     <li>POST reads/search of GASearchReadsRequest yields GASearchReadsResponse</li>
+ *     <li>POST /readgroupsets/search of GASearchReadGroupSetsRequest yields GASearchReadGroupSetsResponse</li>
+ * </ul>
+ * <p>Created by wstidolph on 5/20/15.</p>
  */
 @Category(ReadsTests.class)
 @RunWith(JUnitParamsRunner.class)
@@ -34,7 +45,7 @@ public class ReadMethodsIT {
 
 
     // commenting out @Test because the Runner seems to be ignoring @Ignore!
-    @Ignore("datasetId not supported in v0.5.1 server")
+    @Ignore("datasetId not yet supported in v0.5.1 server")
     // @Test
     public void srgsForDumbDatasetidShouldBeEmpty() throws Exception {
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
@@ -82,21 +93,18 @@ public class ReadMethodsIT {
 
     @Test
     @Parameters({
-            "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522" ,
-            "low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522",
-            "low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
+            "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
     })
-    public void goodReadgroupNameShouldRetrieveMatchingReadGroupSet(String rgName) throws Exception {
+    public void goodReadgroupsetsNameShouldRetrieveMatchingReadGroupSet(String rgName) throws Exception {
         // IDL: "Only return read group sets for which a substring of the name
         // matches this string.
-        log.info("");
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
                 .setName(rgName)
                 .build();
 
-        log.info("SearchReadGroupSetsRequest: " + reqb.toString());
+        log.debug("SearchReadGroupSetsRequest: " + reqb.toString());
         GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
-        log.info("searchReadGroupSets " + rgName + " returned: " + String.valueOf(rtnVal));
+        log.debug("searchReadGroupSets " + rgName + " returned: " + String.valueOf(rtnVal));
 
         List<GAReadGroupSet> rgs = rtnVal.getReadGroupSets();
 
@@ -109,33 +117,7 @@ public class ReadMethodsIT {
                 .hasName(rgName);
                 */
     }
-    /*
-    In any ReadsTests response, the alignedSequence field can only contain [ACTGN]+.
-    No spaces, no other letters, no lowercase, no null. This is dataset specific
-    at this point, but we might be able to extend it to all datasets later
-     */
 
-    /*
-    If a reference is specified, all queried `GAReadGroup`s must be aligned
-    to `GAReferenceSet`s containing that same `GAReference`. If no reference is
-    specified, all `GAReadGroup`s must be aligned to the same `GAReferenceSet`.
-     */
-    @Test
-    public void readsResponseMatchesACTGNPattern() throws Exception {
-        // do a readsearch
-        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .build();
-        GASearchReadsResponse grtn = client.searchReads(gsrr);
-        log.info("send SearchReadsRequest <" + gsrr.toString() + "> RTN is < "+ grtn );
-
-
-/*
-        assertThat(grtn.getAlignments())
-                .extracting("alignedSequence")
-                .matches("[ACTGN]+");
-*/
-
-    }
 
     @Test
     public void defaultReadsRequestGetsNullAlignments() throws Exception {
