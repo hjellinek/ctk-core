@@ -13,11 +13,11 @@ public enum RespCode {
     /**
      * Request accepted but doesn't match any data.
      */
-    NO_DATA_FOUND(404),
+    NOT_FOUND(404),
     /**
-     * Request violates semantic constraints.
+     * Client error, used to indicate violation of validation or semantic constraints.
      */
-    NONSENSICAL_REQUEST(400),
+    BAD_REQUEST(400),
     /**
      * Request invokes facility not implemented.
      */
@@ -25,7 +25,7 @@ public enum RespCode {
 
     private int code;
 
-    private RespCode(int value){
+    RespCode(int value){
         this.code=value;
     }
 
