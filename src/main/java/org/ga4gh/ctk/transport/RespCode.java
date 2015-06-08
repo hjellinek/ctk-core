@@ -28,4 +28,10 @@ public enum RespCode {
     private RespCode(int value){
         this.code=value;
     }
+
+    public static boolean isKnownResponse(int val){
+        for (RespCode rc : values())
+            if(rc.code == val) return true;
+        return false;
+    }
 }
