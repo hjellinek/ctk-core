@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.sut.reads;
+package org.ga4gh.ctk.api.reads;
 
 import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
