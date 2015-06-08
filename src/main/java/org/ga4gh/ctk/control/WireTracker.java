@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.diff.JsonDiff;
+import org.ga4gh.ctk.transport.RespCode;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -17,12 +18,13 @@ import static org.slf4j.LoggerFactory.getLogger;
  * of the Avro-defined objects used in a given interaction
  * Created by Wayne Stidolph on 5/27/2015.
  */
-public class WireDiff {
-    final static Logger log = getLogger(WireDiff.class);
+public class WireTracker {
+    final static Logger log = getLogger(WireTracker.class);
 
 
 
-    int responseStatus;
+    RespCode responseStatus;
+
     JsonPatch expDiff;
     JsonPatch refDiff;
 
@@ -109,11 +111,11 @@ public class WireDiff {
         return rtnNode;
     }
 
-    public int getResponseStatus() {
+    public RespCode getResponseStatus() {
         return responseStatus;
     }
 
-    public void setResponseStatus(int responseStatus) {
+    public void setResponseStatus(RespCode responseStatus) {
         this.responseStatus = responseStatus;
     }
 }

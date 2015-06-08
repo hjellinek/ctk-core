@@ -29,6 +29,17 @@ public enum RespCode {
         this.code=value;
     }
 
+    public static RespCode fromInt(int val){
+        for(RespCode rc : values()){
+            if(rc.code == val){
+                return rc;
+            }
+        }
+        org.slf4j.LoggerFactory.getLogger("org.ga4gh.ctk.transport.RespCode")
+                .warn("Unexpected value lookup for RespCode: "+ val);
+        return NOT_IMPLEMENTED;
+    }
+
     public static boolean isKnownResponse(int val){
         for (RespCode rc : values())
             if(rc.code == val) return true;

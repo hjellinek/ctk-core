@@ -2,7 +2,7 @@ package org.ga4gh.ctk.transport;
 
 import org.apache.avro.AvroRemoteException;
 import org.ga4gh.*;
-import org.ga4gh.ctk.control.WireDiff;
+import org.ga4gh.ctk.control.WireTracker;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -16,13 +16,13 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
 
     public String urlRoot = URLMAPPING.urlRoot; //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
 
-    public WireDiff wireDiff;
+    public WireTracker wireTracker;
 
     public ReadsProtocolClient() {
     }
 
-    public ReadsProtocolClient( WireDiff wd) {
-        this.wireDiff = wd;
+    public ReadsProtocolClient( WireTracker wt) {
+        this.wireTracker = wt;
     }
 
     /**
@@ -38,7 +38,7 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
         String path = URLMAPPING.searchReads;
         GASearchReadsResponse response = new GASearchReadsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireDiff);
+                new AvroJson<>(request, response, urlRoot, path, wireTracker);
         response = (GASearchReadsResponse) aj.doPostResp();
         return response;
     }
@@ -50,10 +50,10 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
      * the post body and will return a JSON version of `GASearchReadsResponse`.
      *
      * @param request
-     * @param wd      {@code WireDiff} control whether WireDiffs are use for test support
+     * @param wt      {@code WireTracker} control whether WireDiffs are use for test support
      */
-    public GASearchReadsResponse searchReads(GASearchReadsRequest request, WireDiff wd) throws AvroRemoteException, GAException {
-        this.wireDiff = wd;
+    public GASearchReadsResponse searchReads(GASearchReadsRequest request, WireTracker wt) throws AvroRemoteException, GAException {
+        this.wireTracker = wt;
         return searchReads(request);
     }
 
@@ -74,7 +74,7 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
         // with the filled-in Repsonse object constructed in AvroJson and passed back
         GASearchReadGroupSetsResponse response = new GASearchReadGroupSetsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireDiff);
+                new AvroJson<>(request, response, urlRoot, path, wireTracker);
         //aj.setDeserMode(AvroJson.DESER_MODE.AVRO_DIRECT);
         response = (GASearchReadGroupSetsResponse) aj.doPostResp();
 
@@ -89,10 +89,10 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
      * version of `GASearchReadGroupSetsResponse`.
      *
      * @param request
-     * @param wd      {@code WireDiff} control whether WireDiffs are use for test support
+     * @param wt      {@code WireTracker} control whether WireDiffs are use for test support
      */
-    public GASearchReadGroupSetsResponse searchReadGroupSets(GASearchReadGroupSetsRequest request, WireDiff wd) throws AvroRemoteException, GAException {
-        this.wireDiff = wd;
+    public GASearchReadGroupSetsResponse searchReadGroupSets(GASearchReadGroupSetsRequest request, WireTracker wt) throws AvroRemoteException, GAException {
+        this.wireTracker = wt;
         return searchReadGroupSets(request);
     }
 }

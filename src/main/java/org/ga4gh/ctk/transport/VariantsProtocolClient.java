@@ -2,7 +2,7 @@ package org.ga4gh.ctk.transport;
 
 import org.apache.avro.AvroRemoteException;
 import org.ga4gh.*;
-import org.ga4gh.ctk.control.WireDiff;
+import org.ga4gh.ctk.control.WireTracker;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
 
 /**
@@ -13,14 +13,14 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
 
     public String urlRoot = URLMAPPING.urlRoot; //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
 
-    public WireDiff wireDiff = null;
+    public WireTracker wireTracker = null;
 
     public VariantsProtocolClient(){
 
     }
 
-    public VariantsProtocolClient(WireDiff wd){
-        this.wireDiff = wd;
+    public VariantsProtocolClient(WireTracker wt){
+        this.wireTracker = wt;
     }
 
     /**
@@ -37,7 +37,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
         String path = URLMAPPING.searchVariantSets;
         GASearchVariantSetsResponse response = new GASearchVariantSetsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireDiff);
+                new AvroJson<>(request, response, urlRoot, path, wireTracker);
         response = (GASearchVariantSetsResponse) aj.doPostResp();
         return response;
     }
@@ -50,10 +50,10 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      * of `GASearchVariantSetsResponse`.
      *
      * @param request
-     * @param wd the WireDiff control/recording support object
+     * @param wt the WireTracker control/recording support object
      */
-    public GASearchVariantSetsResponse searchVariantSets(GASearchVariantSetsRequest request, WireDiff wd) throws AvroRemoteException, GAException {
-        this.wireDiff = wd;
+    public GASearchVariantSetsResponse searchVariantSets(GASearchVariantSetsRequest request, WireTracker wt) throws AvroRemoteException, GAException {
+        this.wireTracker = wt;
         return searchVariantSets(request);
     }
 
@@ -70,7 +70,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
         String path = URLMAPPING.searchVariants;
         GASearchVariantsResponse response = new GASearchVariantsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireDiff);
+                new AvroJson<>(request, response, urlRoot, path, wireTracker);
         response = (GASearchVariantsResponse) aj.doPostResp();
         return response;
     }
@@ -82,11 +82,11 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      * as the post body and will return a JSON version of `GASearchVariantsResponse`.
      *
      * @param request
-     * @param wd the WireDiff contro/recording support object
+     * @param wt the WireTracker contro/recording support object
      */
 
-    public GASearchVariantsResponse searchVariants(GASearchVariantsRequest request, WireDiff wd) throws AvroRemoteException, GAException {
-        this.wireDiff = wd;
+    public GASearchVariantsResponse searchVariants(GASearchVariantsRequest request, WireTracker wt) throws AvroRemoteException, GAException {
+        this.wireTracker = wt;
         return searchVariants(request);
     }
         /**

@@ -2,13 +2,13 @@ package org.ga4gh.ctk.api.variants;
 
 import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
-import org.apache.http.HttpStatus;
 import org.ga4gh.GASearchVariantSetsRequest;
 import org.ga4gh.GASearchVariantsRequest;
 import org.ga4gh.GASearchVariantsResponse;
 import org.ga4gh.GASearchVariantsResponseAssert;
-import org.ga4gh.ctk.control.WireDiff;
+import org.ga4gh.ctk.control.WireTracker;
 import org.ga4gh.ctk.control.testcategories.API.VariantsTests;
+import org.ga4gh.ctk.transport.RespCode;
 import org.ga4gh.ctk.transport.VariantsProtocolClient;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.junit.*;
@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -69,7 +70,7 @@ public class VariantsMethodsIT {
     }
 
     /**
-     * Method: searchVariantSets(GASearchVariantSetsRequest request, WireDiff wd)
+     * Method: searchVariantSets(GASearchVariantSetsRequest request, WireTracker wd)
      */
     @Ignore
     @Test
@@ -88,17 +89,17 @@ public class VariantsMethodsIT {
                 .setEnd(1L)
                 .build();
 
-        WireDiff mywd = new WireDiff();
+        WireTracker mywd = new WireTracker();
         GASearchVariantsResponse response = client.searchVariants(request, mywd);
 
-        org.junit.Assert.assertTrue(mywd.getResponseStatus() == HttpStatus.SC_OK);
+        assertThat(mywd.getResponseStatus()).isEqualTo(RespCode.NO_DATA_FOUND);
 
         GASearchVariantsResponseAssert.assertThat(response).isNotNull();
 
     }
 
     /**
-     * Method: searchVariants(GASearchVariantsRequest request, WireDiff wd)
+     * Method: searchVariants(GASearchVariantsRequest request, WireTracker wd)
      */
     @Ignore
     @Test

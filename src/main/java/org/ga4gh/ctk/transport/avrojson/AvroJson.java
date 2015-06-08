@@ -11,7 +11,8 @@ import org.apache.avro.io.DatumWriter;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.http.HttpStatus;
-import org.ga4gh.ctk.control.WireDiff;
+import org.ga4gh.ctk.control.WireTracker;
+import org.ga4gh.ctk.transport.RespCode;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -50,7 +51,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     HttpResponse<JsonNode> httpResp;
     AvroMaker.DESER_MODE deserMode = AvroMaker.DESER_MODE.GSON_RELAXED; // default
     private P theResp;
-    private WireDiff wireDiff;
+    private WireTracker wireTracker;
 
     /**
      * Construct an AvroJson for a particular request/response interaction.
@@ -67,7 +68,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         this.dw = new SpecificDatumWriter<Q>();
         this.urlRoot = urlRoot;
         this.path = path;
-        this.wireDiff = null;
+        this.wireTracker = null;
     }
 
     /**
@@ -78,11 +79,11 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
      * @param resp     an instance of the avro *Response method object
      * @param urlRoot  String the server base (often includes a version number)
      * @param path     String the request target path as identified in the avdl
-     * @param wireDiff {@code WireDiff} control and transfer of on-the-wire difference measure
+     * @param wireTracker {@code WireTracker} control and transfer of on-the-wire difference measure
      */
-    public AvroJson(Q req, P resp, String urlRoot, String path, WireDiff wireDiff) {
+    public AvroJson(Q req, P resp, String urlRoot, String path, WireTracker wireTracker) {
         this(req, resp, urlRoot, path);
-        this.wireDiff = wireDiff;
+        this.wireTracker = wireTracker;
     }
 
     /*
@@ -101,27 +102,27 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     }
 
     /**
-     * Getter for the WireDiff (if present, triggers JSON collection).
+     * Getter for the WireTracker (if present, triggers JSON collection).
      *
-     * @return the {@code WireDiff}
+     * @return the {@code WireTracker}
      */
-    public WireDiff getWireDiff() {
-        return wireDiff;
+    public WireTracker getWireTracker() {
+        return wireTracker;
     }
 
     /**
-     * Setter for the WireDiff (if present, tiggers JSON collection).
+     * Setter for the WireTracker (if present, tiggers JSON collection).
      *
-     * @param wireDiff
+     * @param wireTracker
      */
-    public void setWireDiff(WireDiff wireDiff) {
-        this.wireDiff = wireDiff;
+    public void setWireTracker(WireTracker wireTracker) {
+        this.wireTracker = wireTracker;
     }
 
     /**
      * Perform POST (according the data stored in this object at construction).
      * <p>
-     * If this object has a WireDiff then the return JSON (if any) is copied into that.
+     * If this object has a WireTracker then the return JSON (if any) is copied into that.
      * This method also tracks all message types sent and received, in the 'messages' Table.
      *
      * @return an instance of the response type (as set during onbject construction), can be null.
@@ -134,14 +135,14 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         jsonStr = JsonMaker.GsonToJsonBytes(theAvroReq);
 
         httpResp = jsonPost(urlRoot + path);
-        if(wireDiff != null){
-            wireDiff.setResponseStatus(httpResp.getStatus());
-            //wireDiff.setActJson(json);
+        if(wireTracker != null){
+            wireTracker.setResponseStatus(RespCode.fromInt(httpResp.getStatus()));
+            //wireTracker.setActJson(json);
         }
         if (httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
-            if (wireDiff != null) {
-                wireDiff.setActJson(json);
+            if (wireTracker != null) {
+                wireTracker.setActJson(json);
             }
 
             theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path, deserMode); // URL just for logging
@@ -156,7 +157,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     /**
      * Perform GET (according the data stored in this object at construction).
      * <p>
-     * If this object has a WireDiff then the return JSON (if any) is copied into that.
+     * If this object has a WireTracker then the return JSON (if any) is copied into that.
      * This method also tracks all message types sent and received, in the 'messages' Table. The
      * 'sent' message type (the Request type) is meaningless, except that it sets the target URL
      * during object construction - the Request type avro object isn't actually serialized.
@@ -167,13 +168,13 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
 
         // no request object to build, just GET from the endpoint with route param
         httpResp = jsonGet(urlRoot + path, id);
-        if(wireDiff != null){
-            wireDiff.setResponseStatus(httpResp.getStatus());
-            //wireDiff.setActJson(json);
+        if(wireTracker != null){
+            wireTracker.setResponseStatus(RespCode.fromInt(httpResp.getStatus()));
+            //wireTracker.setActJson(json);
         }
         if (httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
-            if (wireDiff != null) wireDiff.setActJson(json);
+            if (wireTracker != null) wireTracker.setActJson(json);
 
             theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path + "/" + id, deserMode);
         }
@@ -221,8 +222,8 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         if (log.isDebugEnabled()) {
             log.debug("exit jsonGet to " + theUrl + " id=" + id + " with status " + jsonResponse.getStatusText());
         }
-        if (wireDiff != null) {
-            wireDiff.setActJson(jsonResponse.getBody().toString());
+        if (wireTracker != null) {
+            wireTracker.setActJson(jsonResponse.getBody().toString());
         }
         return jsonResponse;
     }
