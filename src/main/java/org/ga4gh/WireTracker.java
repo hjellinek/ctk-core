@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.control;
+package org.ga4gh;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,10 +21,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class WireTracker {
     final static Logger log = getLogger(WireTracker.class);
 
-
+    public String theUrl;
+    public String bodySent;
+    public String bodyReceived;
 
     RespCode responseStatus;
 
+
+    // RANDOM CRAP HERE FROM START OF JSON COMPARISON
+    // TODO REFACTOR INTO TEST UTIL (YAGNI?)
     JsonPatch expDiff;
     JsonPatch refDiff;
 
