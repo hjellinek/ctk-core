@@ -93,6 +93,22 @@ public class ReadMethodsIT {
         GAExceptionAssert.assertThat(mywt.getGae()).isNotNull();
     }
 
+    @Test
+    @Parameters({
+            "\"\", NOT_FOUND",
+            "low-coverage:HG00534;low-coverage:HG00533, NOT_IMPLEMENTED"
+    })
+    public void multipleReadGroupsNotSupported(String rgid, RespCode expStatus) throws Exception {
+        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
+                .setReadGroupIds(Arrays.asList(rgid.split(";")))
+                .build();
+        WireTracker mywt = new WireTracker();
+        GASearchReadsResponse grtn = client.searchReads(gsrr, mywt);
+        WireTrackerAssert.assertThat(mywt)
+                .hasResponseStatus(expStatus);
+        GAExceptionAssert.assertThat(mywt.getGae()).isNotNull();
+    }
+
     @BeforeClass
     public static void setupTransport() throws Exception {
         InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);

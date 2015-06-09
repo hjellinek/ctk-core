@@ -39,7 +39,10 @@ public class VariantsSearchResponseCheckIT {
     })
     public void SearchVariantsRequestResultSizeAsExpected(String vsetIds, String refName, long start, long end, int expLength) throws Exception {
         GASearchVariantsRequest request = GASearchVariantsRequest.newBuilder()
-                .setVariantSetIds(Arrays.asList(vsetIds.split(",")))
+                // I ‘split’ the vsetIds param, if we’re given a first param with
+                // semicolons the split sections become individual (multiple)
+                // variantSetIds entries
+                .setVariantSetIds(Arrays.asList(vsetIds.split(";")))
                 .setReferenceName(refName)
                 .setStart(start)
                 .setEnd(end)
@@ -48,7 +51,6 @@ public class VariantsSearchResponseCheckIT {
         GASearchVariantsResponse response = client.searchVariants(request);
 
         GASearchVariantsResponseAssert.assertThat(response).isNotNull();
-        // List<GAVariant> variants = ;
         assertThat(response.getVariants()).hasSize(expLength);
     }
 

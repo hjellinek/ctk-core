@@ -33,11 +33,7 @@ public class ReadsSearchingIT {
     private static org.slf4j.Logger log = getLogger(ReadsSearchingIT.class);
 
     private static ReadsProtocolClient client;
-     /* per Jeltje:
-    In any ReadsTests response, the alignedSequence field can only contain [ACTGN]+.
-    No spaces, no other letters, no lowercase, no null. This is dataset specific
-    at this point, but we might be able to extend it to all datasets later
-     */
+
 
     @BeforeClass
     public static void setupTransport() throws Exception {
@@ -60,6 +56,12 @@ public class ReadsSearchingIT {
     to `GAReferenceSet`s containing that same `GAReference`. If no reference is
     specified, all `GAReadGroup`s must be aligned to the same `GAReferenceSet`.
      */
+
+    /**
+    In any ReadsTests response, the alignedSequence field can only contain [ACTGN]+.
+    No spaces, no other letters, no lowercase, no null. This is dataset specific
+    at this point, but we might be able to extend it to all datasets later - Jeltje email
+    */
     @Test
     @Parameters({
             "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
@@ -70,12 +72,10 @@ public class ReadsSearchingIT {
                 .setReadGroupIds(Arrays.asList(rgid))
                 .build();
         GASearchReadsResponse grtn = client.searchReads(gsrr);
-        log.info("send SearchReadsRequest <" + gsrr.toString() + "> RTN is < " + grtn);
         // GASearchReadsResponse
-        //  array<GAReadAlignment> alignments = [];
-        //     GAReadAlignement field alignedSequence
+        //    array<GAReadAlignment> alignments = [];
+        //       GAReadAlignement field alignedSequence is null || string
 
-        // List<GAReadAlignment> alignments = grtn.getAlignments();
         for (GAReadAlignment gar : grtn.getAlignments()) {
             assertThat(gar.getAlignedSequence()).isNotNull()
                     .matches("[ACTGN]+");
