@@ -2,6 +2,8 @@ package org.ga4gh.ctk.api.reads;
 
 import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.ga4gh.GAReadAlignment;
 import org.ga4gh.GASearchReadsRequest;
 import org.ga4gh.GASearchReadsResponse;
 import org.ga4gh.ctk.control.testcategories.API.ReadsTests;
@@ -14,13 +16,15 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * <p>Verify data returned from reads/search queries
  * meet expectations.</p>
- *
+ * <p>
  * <p>Created by Wayne Stidolph on 6/7/2015.</p>
  */
 @Category(ReadsTests.class)
@@ -29,33 +33,11 @@ public class ReadsSearchingIT {
     private static org.slf4j.Logger log = getLogger(ReadsSearchingIT.class);
 
     private static ReadsProtocolClient client;
-     /*
+     /* per Jeltje:
     In any ReadsTests response, the alignedSequence field can only contain [ACTGN]+.
     No spaces, no other letters, no lowercase, no null. This is dataset specific
     at this point, but we might be able to extend it to all datasets later
      */
-
-    /*
-    If a reference is specified, all queried `GAReadGroup`s must be aligned
-    to `GAReferenceSet`s containing that same `GAReference`. If no reference is
-    specified, all `GAReadGroup`s must be aligned to the same `GAReferenceSet`.
-     */
-    @Test
-    public void readsResponseMatchesACTGNPattern() throws Exception {
-        // do a readsearch
-        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .build();
-        GASearchReadsResponse grtn = client.searchReads(gsrr);
-        log.info("send SearchReadsRequest <" + gsrr.toString() + "> RTN is < "+ grtn );
-
-
-/*
-        assertThat(grtn.getAlignments())
-                .extracting("alignedSequence")
-                .matches("[ACTGN]+");
-*/
-
-    }
 
     @BeforeClass
     public static void setupTransport() throws Exception {
@@ -68,8 +50,35 @@ public class ReadsSearchingIT {
 
     @AfterClass
     public static void shutdownTransport() throws Exception {
-        for(Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()){
-            log.info("ReadMethodIT TRAFFIC:" + cell.getRowKey() + " " + cell.getColumnKey() + " " +cell.getValue());
+        for (Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()) {
+            log.info("ReadMethodIT TRAFFIC:" + cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
+        }
+    }
+
+    /*
+    If a reference is specified, all queried `GAReadGroup`s must be aligned
+    to `GAReferenceSet`s containing that same `GAReference`. If no reference is
+    specified, all `GAReadGroup`s must be aligned to the same `GAReferenceSet`.
+     */
+    @Test
+    @Parameters({
+            "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
+    })
+    public void readsResponseMatchesACTGNPattern(String rgid) throws Exception {
+        // do a readsearch
+        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
+                .setReadGroupIds(Arrays.asList(rgid))
+                .build();
+        GASearchReadsResponse grtn = client.searchReads(gsrr);
+        log.info("send SearchReadsRequest <" + gsrr.toString() + "> RTN is < " + grtn);
+        // GASearchReadsResponse
+        //  array<GAReadAlignment> alignments = [];
+        //     GAReadAlignement field alignedSequence
+
+        // List<GAReadAlignment> alignments = grtn.getAlignments();
+        for (GAReadAlignment gar : grtn.getAlignments()) {
+            assertThat(gar.getAlignedSequence()).isNotNull()
+                    .matches("[ACTGN]+");
         }
     }
 }
