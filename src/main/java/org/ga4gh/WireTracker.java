@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.diff.JsonDiff;
+import com.google.gson.Gson;
 import org.ga4gh.ctk.transport.RespCode;
 import org.slf4j.Logger;
 
@@ -26,29 +27,45 @@ public class WireTracker {
     public String bodyReceived;
 
     RespCode responseStatus;
-
-
     // RANDOM CRAP HERE FROM START OF JSON COMPARISON
     // TODO REFACTOR INTO TEST UTIL (YAGNI?)
     JsonPatch expDiff;
     JsonPatch refDiff;
-
     // keep as String from the test definition
     String expJsonStr;
     JsonNode expJsonNode;
-
     // JSON from the outside word is just a String, no type assumptions
     String refJsonStr;
     JsonNode refJsonNode;
-
     String actJsonStr;
     JsonNode actJsonNode;
-
     boolean shouldDoRefCompare = false;
+    private GAException gae;
+    private String message;
+    private int errorCode;
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public GAException getGae() {
+        if (responseStatus != RespCode.OK) {
+            // parse the received body
+            Gson gson = new Gson();
+            gae = gson.fromJson(bodyReceived, GAException.class);
+            message = gae.getMessage();
+            errorCode = gae.getErrorCode();
+        }
+        return gae;
+    }
 
     /**
      * Gets difference between the actual (rcd) and expected JSON.
-     *
+     * <p>
      * If the expDiff has already been calculated, it is returned; if
      * it hasn't been calculated, then then it is calculated and stored first.
      *
