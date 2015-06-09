@@ -304,7 +304,7 @@
                     <excludes>
                         <!-- surefire for unit tests, so skip the integration tests -->
                         <!-- they will be run by the 'failsafe' plugin -->
-                        <exclude>%regex[.*.api.*]</exclude>
+                        <exclude>%regex[.*.systests.*]</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -318,7 +318,7 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
-                            <includes>%regex[.*.api.*]</includes>
+                            <includes>%regex[.*.systests.*]</includes>
                             <!-- disable forking for easy debugging -->
                             <!-- TODO make a mvn profile 'devel' for this, enable parallel in prod -->
                             <forkCount>0</forkCount>
@@ -365,6 +365,7 @@
                         <configuration>
                             <sources>
                                 <source>src/main/assertj-assertions</source>
+                                <source>src/systests/java</source>
                             </sources>
                         </configuration>
                     </execution>

@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.testsuites;
+package org.ga4gh.ctk.systests;
 
 import org.ga4gh.ctk.control.testcategories.CTK.CoreTests;
 import org.junit.experimental.categories.Categories;

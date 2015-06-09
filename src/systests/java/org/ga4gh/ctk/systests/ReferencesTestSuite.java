@@ -1,4 +1,4 @@
-package org.ga4gh.ctk;
+package org.ga4gh.ctk.systests;
 
 import com.googlecode.junittoolbox.IncludeCategories;
 import com.googlecode.junittoolbox.SuiteClasses;

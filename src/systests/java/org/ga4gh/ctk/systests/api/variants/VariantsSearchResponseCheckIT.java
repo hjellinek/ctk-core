@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.api.variants;
+package org.ga4gh.ctk.systests.api.variants;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;

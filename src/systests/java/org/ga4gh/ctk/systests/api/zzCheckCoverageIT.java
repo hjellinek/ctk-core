@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.api;
+package org.ga4gh.ctk.systests.api;
 
 import org.junit.Test;
 

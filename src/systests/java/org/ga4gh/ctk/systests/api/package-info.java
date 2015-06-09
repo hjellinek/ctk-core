@@ -23,5 +23,5 @@
  * Created by Wayne Stidolph on 6/2/2015.
  * </p>
  */
-package org.ga4gh.ctk.api;
+package org.ga4gh.ctk.systests.api;
 

@@ -1,8 +1,8 @@
-package org.ga4gh.ctk.testsuites;
+package org.ga4gh.ctk.systests;
 
 import org.ga4gh.ctk.control.testcategories.CTK.TransportTests;
-import org.ga4gh.ctk.transport.avrojson.AvroMakerTest;
-import org.ga4gh.ctk.transport.avrojson.JsonMakerTest;
+import org.ga4gh.ctk.systests.transport.avrojson.AvroMakerTest;
+import org.ga4gh.ctk.systests.transport.avrojson.JsonMakerTest;
 import org.junit.experimental.categories.Categories;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

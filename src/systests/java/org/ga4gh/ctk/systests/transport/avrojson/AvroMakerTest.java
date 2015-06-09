@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.transport.avrojson;
+package org.ga4gh.ctk.systests.transport.avrojson;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -6,7 +6,9 @@ import org.apache.avro.generic.GenericDatumWriter;
 import org.ga4gh.GASearchReadsResponse;
 import org.ga4gh.ctk.control.testcategories.CTK.AvroTests;
 import org.ga4gh.ctk.control.testcategories.CTK.TransportTests;
+import org.ga4gh.ctk.transport.avrojson.AvroMaker;
 import org.ga4gh.ctk.transport.avrojson.AvroMaker.DESER_MODE;
+import org.ga4gh.ctk.transport.avrojson.JsonMaker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

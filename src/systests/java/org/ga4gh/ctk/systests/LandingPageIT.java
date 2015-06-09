@@ -1,4 +1,4 @@
-package org.ga4gh.ctk;
+package org.ga4gh.ctk.systests;
 
 /**
  * <p>This test fetches the target server landing page as evidence of connectivity;
