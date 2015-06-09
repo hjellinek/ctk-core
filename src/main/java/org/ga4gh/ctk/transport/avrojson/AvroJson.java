@@ -11,7 +11,7 @@ import org.apache.avro.io.DatumWriter;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.http.HttpStatus;
-import org.ga4gh.ctk.control.WireTracker;
+import org.ga4gh.WireTracker;
 import org.ga4gh.ctk.transport.RespCode;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -168,14 +168,9 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
 
         // no request object to build, just GET from the endpoint with route param
         httpResp = jsonGet(urlRoot + path, id);
-        if(wireTracker != null){
-            wireTracker.setResponseStatus(RespCode.fromInt(httpResp.getStatus()));
-            //wireTracker.setActJson(json);
-        }
+
         if (httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
-            if (wireTracker != null) wireTracker.setActJson(json);
-
             theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path + "/" + id, deserMode);
         }
         // track all message types sent/received for simple "test coverage" indication
@@ -202,6 +197,12 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         if (log.isDebugEnabled()) {
             log.debug("exit jsonPost to " + theURL + " with status " + jsonResponse.getStatusText());
         }
+        if (wireTracker != null) {
+            wireTracker.theUrl = theURL;
+            wireTracker.bodySent = jsonStr;
+            wireTracker.bodyReceived = jsonResponse.getBody().toString();
+            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse.getStatus()));
+        }
         return jsonResponse;
     }
 
@@ -223,7 +224,10 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
             log.debug("exit jsonGet to " + theUrl + " id=" + id + " with status " + jsonResponse.getStatusText());
         }
         if (wireTracker != null) {
-            wireTracker.setActJson(jsonResponse.getBody().toString());
+            wireTracker.theUrl = theUrl + "/ " + id;
+            wireTracker.bodySent = "";
+            wireTracker.bodyReceived = jsonResponse.getBody().toString();
+            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse.getStatus()));
         }
         return jsonResponse;
     }

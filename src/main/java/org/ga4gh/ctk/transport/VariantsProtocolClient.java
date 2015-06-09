@@ -2,7 +2,7 @@ package org.ga4gh.ctk.transport;
 
 import org.apache.avro.AvroRemoteException;
 import org.ga4gh.*;
-import org.ga4gh.ctk.control.WireTracker;
+import org.ga4gh.WireTracker;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
 
 /**
