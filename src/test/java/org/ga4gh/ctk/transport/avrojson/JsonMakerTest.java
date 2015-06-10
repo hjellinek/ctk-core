@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.systests.transport.avrojson;
+package org.ga4gh.ctk.transport.avrojson;
 
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumWriter;
@@ -9,7 +9,6 @@ import org.ga4gh.GASearchReadsRequest;
 import org.ga4gh.GASearchVariantsRequest;
 import org.ga4gh.ctk.control.testcategories.CTK.AvroTests;
 import org.ga4gh.ctk.control.testcategories.CTK.TransportTests;
-import org.ga4gh.ctk.transport.avrojson.JsonMaker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

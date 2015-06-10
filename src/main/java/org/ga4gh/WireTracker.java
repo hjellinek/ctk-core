@@ -13,7 +13,7 @@ import java.io.IOException;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Control and transfer of wire-difference measurement and results.
+ * Tracking and measurement of the on-the-wore transaction.
  * <p>
  * Used to signal need for wire-format difference measurement
  * of the Avro-defined objects used in a given interaction

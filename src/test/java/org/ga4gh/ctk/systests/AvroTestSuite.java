@@ -1,15 +1,17 @@
 package org.ga4gh.ctk.systests;
 
-import org.ga4gh.ctk.systests.transport.avrojson.AvroMakerTest;
-import org.ga4gh.ctk.systests.transport.avrojson.JsonMakerTest;
+import org.ga4gh.ctk.transport.avrojson.AvroMakerTest;
+import org.ga4gh.ctk.transport.avrojson.JsonMakerTest;
 import org.ga4gh.ctk.control.testcategories.CTK.AvroTests;
 import org.junit.experimental.categories.Categories;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * Tests closely connected to Avro behavior.
- * Created by Wayne Stidolph on 6/7/2015.
+ * <p>Tests closely connected to Avro behavior. Putting the Suite
+ * in 'systests' for the moment so it's reassuringly in the report,
+ * but probably belongs outside systests, as a CTK unit test</p>
+ * <p>Created by Wayne Stidolph on 6/7/2015.</p>
  */
 @RunWith(Categories.class)
 @Categories.IncludeCategory(AvroTests.class)

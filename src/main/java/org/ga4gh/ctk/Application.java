@@ -1,4 +1,4 @@
-package org.ga4gh;
+package org.ga4gh.ctk;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
