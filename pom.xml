@@ -352,7 +352,7 @@
                         <!-- assert about the GA4GH data exchanged -->
                         <param>org\.ga4gh\.GA*.*</param>
                         <!-- assert about the state of a wire transaction -->
-                        <param>org\.ga4gh\.WireTracker.*</param>
+                        <param>org\.ga4gh\.ctk\.WireTracker.*</param>
                     </includes>
                     <entryPointClassPackage>org.ga4gh.ctk.asserts</entryPointClassPackage>
                     <targetDir>src/main/assertj-assertions</targetDir>

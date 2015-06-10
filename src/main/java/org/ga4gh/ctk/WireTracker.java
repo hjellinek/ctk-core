@@ -1,10 +1,11 @@
-package org.ga4gh;
+package org.ga4gh.ctk;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.diff.JsonDiff;
 import com.google.gson.Gson;
+import org.ga4gh.GAException;
 import org.ga4gh.ctk.transport.RespCode;
 import org.slf4j.Logger;
 
