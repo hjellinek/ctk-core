@@ -19,10 +19,46 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <name>CTK</name>
+    <description>Conformance Test Kit to verify a GA4GH data server implementation</description>
+
     <groupId>org.ga4gh</groupId>
     <artifactId>ctk-core</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <organization>
+        <name>Global Alliance for Genomics and Health</name>
+        <url>http://genomicsandhealth.org</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <!--
+    <scm>
+        <connection>scm:git:https://github.com/ga4gh/...</connection>
+        <developerConnection>scm:git:https://github.com/ga4gh/schemas</developerConnection>
+        <url>https://github.com/ga4gh/schemas</url>
+    </scm>
+    -->
+
+    <developers>
+        <developer>
+            <id>wstidolph</id>
+            <name>Wayne Stidolph</name>
+            <email>wayne@stidolph.com</email>
+            <url>http://wayne.stidolph.com</url>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Jeltje van Baren</name>
+            <email>jeltje.van.baren@gmail.com</email>
+        </contributor>
+    </contributors>
+
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -30,13 +66,7 @@
         <version>1.2.4.RELEASE</version>
     </parent>
 
-    <!--
-        <modules>
-            <module>schemas</module>
-        </modules>
-    -->
 
-    <name>CTK</name>
 
     <properties>
 
@@ -224,13 +254,13 @@
             <version>2.1</version>
         </dependency>
         <!-- TypeTools for easier reflective work with the generated Avro types -->
-<!--
-        <dependency>
-            <groupId>net.jodah</groupId>
-            <artifactId>typetools</artifactId>
-            <version>${typetools.version}</version>
-        </dependency>
--->
+        <!--
+                <dependency>
+                    <groupId>net.jodah</groupId>
+                    <artifactId>typetools</artifactId>
+                    <version>${typetools.version}</version>
+                </dependency>
+        -->
 
         <!-- the prebuilt avro schemas for GA4GH -->
         <dependency>
@@ -267,34 +297,10 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>
-                <groupId>org.apache.avro</groupId>
-                <artifactId>avro-maven-plugin</artifactId>
-                <version>${avro.version}</version>
-                <configuration>
-                    <stringType>String</stringType>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>protocol</goal>
-                            <goal>idl-protocol</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.avro</groupId>
-                        <artifactId>avro-ipc</artifactId>
-                        <version>${avro.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>
-
                 <configuration>
                     <useFile>false</useFile>
                     <includes>
@@ -318,7 +324,17 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
-                            <includes>%regex[.*.systests.*]</includes>
+                            <testSourceDirectory>src/systests/java</testSourceDirectory>
+                            <!-- the systests compile into the regular classes, not the
+                            default test-classes, so we tell failsafe where to find them.
+                            The systests package and *IT naming convention will still
+                            restrict surefire to just the system tests. -->
+                            <testClassesDirectory>target/classes</testClassesDirectory>
+                            <!--
+                            <includes>
+                                <include>%regex[.*.systests.*IT.*]</include>
+                            </includes>
+                            -->
                             <!-- disable forking for easy debugging -->
                             <!-- TODO make a mvn profile 'devel' for this, enable parallel in prod -->
                             <forkCount>0</forkCount>
@@ -361,12 +377,27 @@
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>add-source</goal>
+                            <goal>add-test-source</goal>
                         </goals>
                         <configuration>
                             <sources>
                                 <source>src/main/assertj-assertions</source>
                                 <source>src/systests/java</source>
                             </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/assertj-assertions</source>
+                                <source>src/systests/java</source>
+                            </sources>
+
                         </configuration>
                     </execution>
                 </executions>
@@ -379,6 +410,30 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.18.1</version>
+                <reportSets>
+                    <reportSet>
+                        <id>integration-tests</id>
+                        <reports>
+                            <report>
+                                failsafe-report-only
+                            </report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.1</version>
+
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+
+                </configuration>
             </plugin>
         </plugins>
     </reporting>
