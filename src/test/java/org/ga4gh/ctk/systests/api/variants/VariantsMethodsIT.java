@@ -6,7 +6,7 @@ import org.ga4gh.GASearchVariantSetsRequest;
 import org.ga4gh.GASearchVariantsRequest;
 import org.ga4gh.GASearchVariantsResponse;
 import org.ga4gh.GASearchVariantsResponseAssert;
-import org.ga4gh.WireTracker;
+import org.ga4gh.ctk.WireTracker;
 import org.ga4gh.ctk.control.testcategories.API.VariantsTests;
 import org.ga4gh.ctk.transport.RespCode;
 import org.ga4gh.ctk.transport.VariantsProtocolClient;

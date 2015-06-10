@@ -11,7 +11,7 @@ import org.apache.avro.io.DatumWriter;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.http.HttpStatus;
-import org.ga4gh.WireTracker;
+import org.ga4gh.ctk.WireTracker;
 import org.ga4gh.ctk.transport.RespCode;
 
 import static org.slf4j.LoggerFactory.getLogger;
