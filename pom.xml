@@ -324,17 +324,9 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
-                            <testSourceDirectory>src/systests/java</testSourceDirectory>
-                            <!-- the systests compile into the regular classes, not the
-                            default test-classes, so we tell failsafe where to find them.
-                            The systests package and *IT naming convention will still
-                            restrict surefire to just the system tests. -->
-                            <testClassesDirectory>target/classes</testClassesDirectory>
-                            <!--
                             <includes>
-                                <include>%regex[.*.systests.*IT.*]</include>
+                                <include>%regex[org.ga4gh.ctk.systests.*IT.*]</include>
                             </includes>
-                            -->
                             <!-- disable forking for easy debugging -->
                             <!-- TODO make a mvn profile 'devel' for this, enable parallel in prod -->
                             <forkCount>0</forkCount>
@@ -377,16 +369,14 @@
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>add-source</goal>
-                            <goal>add-test-source</goal>
                         </goals>
                         <configuration>
                             <sources>
                                 <source>src/main/assertj-assertions</source>
-                                <source>src/systests/java</source>
                             </sources>
                         </configuration>
                     </execution>
-                    <execution>
+                    <!--<execution>
                         <id>add-test-source</id>
                         <phase>generate-sources</phase>
                         <goals>
@@ -395,11 +385,10 @@
                         <configuration>
                             <sources>
                                 <source>src/main/assertj-assertions</source>
-                                <source>src/systests/java</source>
                             </sources>
 
                         </configuration>
-                    </execution>
+                    </execution>-->
                 </executions>
             </plugin>
         </plugins>
