@@ -3,13 +3,10 @@ package org.ga4gh.ctk.systests.api.reads;
 import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.ga4gh.GAReadGroupSet;
-import org.ga4gh.GASearchReadGroupSetsRequest;
-import org.ga4gh.GASearchReadGroupSetsResponse;
-import org.ga4gh.GASearchReadGroupSetsResponseAssert;
+import org.ga4gh.*;
 import org.ga4gh.ctk.control.testcategories.API.ReadsTests;
-import org.ga4gh.ctk.transport.protocols.ReadsProtocolClient;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
+import org.ga4gh.ctk.transport.protocols.ReadsProtocolClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -24,7 +21,7 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * <p>Validates data reurned by readgroupsets/search.</p>
+ * <p>Validates data returned by readgroupsets/search.</p>
  * <p>Created by Wayne Stidolph on 6/7/2015.</p>
  */
 @Category(ReadsTests.class)
@@ -34,68 +31,41 @@ public class ReadGroupSetsSearchIT {
 
     private static ReadsProtocolClient client;
 
+    @Ignore("ReadGroupSets not yet supported, and returned 'name' is null")
     @Test
     @Parameters({
             "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522",
             "low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522",
             "low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
     })
-    public void goodReadgroupNameShouldRetrieveMatchingReadGroupSet(String rgName) throws Exception {
+    public void goodReadgroupSetsNameShouldRetrieveMatchingReadGroupSets(String rgName) throws Exception {
         // IDL: "Only return read group sets for which a substring of the name
         // matches this string.
-        log.info("");
+
+        // build a substring of the input name
+        String substr = "CHS"; //rgName.substring(3, 9);
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
-                .setName(rgName)
-                .build();
-
-        log.info("SearchReadGroupSetsRequest: " + reqb.toString());
-        GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
-        log.info("searchReadGroupSets " + rgName + " returned: " + String.valueOf(rtnVal));
-
-        List<GAReadGroupSet> rgs = rtnVal.getReadGroupSets();
-
-        //org.ga4gh.GASearchReadGroupSetsResponset(rtnVal).hasName("low-coverage");
-
-                /*
-                rgs.get(0))
-
-                .isNotNull()
-                .hasName(rgName);
-                */
-    }
-
-    @Test
-    @Parameters({
-            "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
-    })
-    public void goodReadgroupsetsNameShouldRetrieveMatchingReadGroupSet(String rgName) throws Exception {
-        // IDL: "Only return read group sets for which a substring of the name
-        // matches this string.
-        GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
-                .setName(rgName)
+                .setName(substr)
                 .build();
 
         log.debug("SearchReadGroupSetsRequest: " + reqb.toString());
         GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
         log.debug("searchReadGroupSets " + rgName + " returned: " + String.valueOf(rtnVal));
 
-        List<GAReadGroupSet> rgs = rtnVal.getReadGroupSets();
-
-        //org.ga4gh.GASearchReadGroupSetsResponset(rtnVal).hasName("low-coverage");
-
-                /*
-                rgs.get(0))
-
-                .isNotNull()
-                .hasName(rgName);
-                */
+        for (GAReadGroupSet rgs : rtnVal.getReadGroupSets()) {
+                org.assertj.core.api.Assertions.assertThat(rgs.getName())
+                        .matches(".*"+substr+".*");
+        }
     }
-    // DATASETID tests
 
+
+    /* ****************************************** */
+    // DATASETID tests
+    /* ****************************************** */
     // commenting out @Test because the Runner seems to be ignoring @Ignore!
     @Ignore("datasetId not yet supported in v0.5.1 server")
-    // @Test
-    public void readgroupSetRepsonseForDumbDatasetidShouldBeEmpty() throws Exception {
+    @Test
+    public void readgroupSetResponseForDumbDatasetidShouldBeEmpty() throws Exception {
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
                 .setName(null)
                 .setDatasetIds(Arrays.asList("realyUnlikelyQQQ"))
