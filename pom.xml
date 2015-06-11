@@ -19,23 +19,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>CTK</name>
-    <description>Conformance Test Kit to verify a GA4GH data server implementation</description>
+    <name>CTK Aggregator</name>
+    <description>CTK Aggregation</description>
+    <modules>
+        <module>testpack</module>
+        <module>transport</module>
+    </modules>
 
     <groupId>org.ga4gh</groupId>
-    <artifactId>ctk-core</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <organization>
-        <name>Global Alliance for Genomics and Health</name>
-        <url>http://genomicsandhealth.org</url>
-    </organization>
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
+    <artifactId>ctk</artifactId>
+    <version>0.5.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+
     <!--
     <scm>
         <connection>scm:git:https://github.com/ga4gh/...</connection>
@@ -59,48 +55,6 @@
         </contributor>
     </contributors>
 
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.2.4.RELEASE</version>
-    </parent>
-
-
-
-    <properties>
-
-        <!--
-        <ga4gh.schema.version>0.6.0-SNAPSHOT</ga4gh.schema.version>
-        -->
-        <ga4gh.schema.local.version>0.5.2-SNAPSHOT</ga4gh.schema.local.version>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-
-        <assertj.core.version>3.0.0</assertj.core.version>
-        <assertj.generator.version>1.6.0</assertj.generator.version>
-        <avro.version>1.7.7</avro.version>
-        <gson.version>2.3.1</gson.version>
-        <guava.version>18.0</guava.version>
-        <httpasyncclient.version>4.1</httpasyncclient.version>
-        <httpclient.version>4.4.1</httpclient.version>
-        <httpmime.version>4.4.1</httpmime.version>
-
-        <jackson2.version>2.5.3</jackson2.version>
-        <json-patch.version>1.9</json-patch.version>
-        <jsonassert.version>1.2.3</jsonassert.version>
-        <junit.version>4.12</junit.version>
-        <junitparams.version>1.0.4</junitparams.version>
-        <junit-toolbox.version>2.1</junit-toolbox.version>
-        <log4j.version>2.3</log4j.version>
-        <org.json.json.version>20141113</org.json.json.version>
-        <slf4j.version>1.7.12</slf4j.version>
-        <!--<typetools.version>0.4.1</typetools.version>-->
-        <unirest-java.version>1.4.5</unirest-java.version>
-
-    </properties>
-
     <!-- add snapshot repos to try and move ahead to 1.3.0 quickly -->
     <repositories>
         <repository>
@@ -113,315 +67,63 @@
         </repository>
     </repositories>
 
-    <dependencies>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>${avro.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro-ipc</artifactId>
-            <version>${avro.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.jaxrs</groupId>
-            <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>${jackson2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-avro</artifactId>
-            <version>${jackson2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <!-- not needed, we get this with logback
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- junittoolbox gives us improved JUnit - things like wildcards in @SuiteClasses -->
-        <dependency>
-            <groupId>com.googlecode.junit-toolbox</groupId>
-            <artifactId>junit-toolbox</artifactId>
-            <version>${junit-toolbox.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj.core.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>pl.pragmatists</groupId>
-            <artifactId>JUnitParams</artifactId>
-            <version>${junitparams.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- HTTP/JSON communications -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpasyncclient</artifactId>
-            <version>${httpasyncclient.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpmime</artifactId>
-            <version>${httpmime.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>${org.json.json.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>${unirest-java.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.fge</groupId>
-            <artifactId>json-patch</artifactId>
-            <version>${json-patch.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
-            <version>${jsonassert.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Spock support -->
-        <dependency>
-            <groupId>org.spockframework</groupId>
-            <artifactId>spock-core</artifactId>
-            <version>1.0-groovy-2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.objenesis</groupId>
-            <artifactId>objenesis</artifactId>
-            <version>2.1</version>
-        </dependency>
-        <!-- TypeTools for easier reflective work with the generated Avro types -->
-        <!--
-                <dependency>
-                    <groupId>net.jodah</groupId>
-                    <artifactId>typetools</artifactId>
-                    <version>${typetools.version}</version>
-                </dependency>
-        -->
-
-        <!-- the prebuilt avro schemas for GA4GH -->
-        <dependency>
-            <groupId>org.ga4gh</groupId>
-            <artifactId>ga4gh-format</artifactId>
-            <version>${ga4gh.schema.local.version}</version>
-
-            <!-- example if you want to build with link to a local schema jar file -->
-            <!-- which I need to do since I can't find 0.1.0 externally -->
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/ga4gh-format-${ga4gh.schema.local.version}.jar
-            </systemPath>
-
-        </dependency>
-    </dependencies>
-
-    <build>
-        <defaultGoal>install</defaultGoal>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
-                <configuration>
-                    <useFile>false</useFile>
-                    <includes>
-                        <include>**/*Spec.java</include>
-                        <include>**/*Test.java</include>
-                    </includes>
-                    <excludes>
-                        <!-- surefire for unit tests, so skip the integration tests -->
-                        <!-- they will be run by the 'failsafe' plugin -->
-                        <exclude>%regex[.*.systests.*]</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.18.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                        <configuration>
-                            <!-- disable forking for easy debugging -->
-                            <!-- TODO make a mvn profile 'devel' for this, enable parallel in prod -->
-                            <forkCount>0</forkCount>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-assertions-generator-maven-plugin</artifactId>
-                <version>${assertj.generator.version}</version>
-                <configuration>
-                    <packages>
-                        <param>org.ga4gh</param>
-                    </packages>
-                    <includes>
-                        <!-- assert about the GA4GH data exchanged -->
-                        <param>org\.ga4gh\.GA*.*</param>
-                        <!-- assert about the state of a wire transaction -->
-                        <param>org\.ga4gh\.ctk\.WireTracker.*</param>
-                    </includes>
-                    <entryPointClassPackage>org.ga4gh.ctk.asserts</entryPointClassPackage>
-                    <targetDir>src/main/assertj-assertions</targetDir>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/main/assertj-assertions</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <!--<execution>
-                        <id>add-test-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/main/assertj-assertions</source>
-                            </sources>
-
-                        </configuration>
-                    </execution>-->
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.18.1</version>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.5</version>
                 <reportSets>
                     <reportSet>
-                        <id>integration-tests</id>
+                        <id>aggregate</id>
                         <reports>
-                            <report>
-                                failsafe-report-only
-                            </report>
+                            <report>aggregate</report>
+                            <report>test-aggregate</report>
                         </reports>
                     </reportSet>
                 </reportSets>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.1</version>
-
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.6</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.3</version>
                 <configuration>
-
+                   <aggregate>true</aggregate>
                 </configuration>
+                <reportSets>
+                    <reportSet>
+                        <id>non-aggregate</id>
+                        <configuration>
+                            <!-- Specific configuration for the non aggregate report -->
+
+                        </configuration>
+                        <reports>
+                            <report>javadoc</report>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <configuration>
+                            <!-- Specific configuration for the aggregate report -->
+                            <goals>
+                                <goal>aggregate</goal>
+                                <goal>test-aggregate</goal>
+                            </goals>
+                            <phase>site</phase>
+                        </configuration>
+                        <reports>
+                            <report>aggregate</report>
+                            <report>test-aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
         </plugins>
     </reporting>
