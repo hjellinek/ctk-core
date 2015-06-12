@@ -15,10 +15,15 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.Set;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
     private static String TESTPACKAGE = "org.ga4gh.ctk.systests";
+
+    private static org.slf4j.Logger log = getLogger(Application.class);
+    private static org.slf4j.Logger testlog = getLogger("SYSTEST");
 
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
@@ -36,13 +41,8 @@ public class Application implements CommandLineRunner {
         String matchStrSuite = ".*TestSuite/..*";
         Set<Class<?>> testCases = findTestClasses(matchStrIT);
 
-
         for (Class testCase : testCases) {
-            try {
                 runTestCase(testCase);
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
         }
     }
 
@@ -71,12 +71,12 @@ public class Application implements CommandLineRunner {
     }
 
     private static void runTestCase(Class testCase) {
-        JUnitCore junit = new JUnitCore();
 
+        JUnitCore junit = new JUnitCore();
         Result result = junit.run(testCase);
 
         for (Failure failure : result.getFailures()) {
-            System.out.println(failure.toString());
+           testlog.warn(failure.toString());
         }
     }
 }

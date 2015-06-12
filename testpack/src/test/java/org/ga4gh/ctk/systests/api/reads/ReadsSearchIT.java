@@ -29,8 +29,8 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 @Category(ReadsTests.class)
 @RunWith(JUnitParamsRunner.class)
-public class ReadsSearchingIT {
-    private static org.slf4j.Logger log = getLogger(ReadsSearchingIT.class);
+public class ReadsSearchIT {
+    private static org.slf4j.Logger log = getLogger(ReadsSearchIT.class);
 
     private static ReadsProtocolClient client;
 
@@ -51,17 +51,12 @@ public class ReadsSearchingIT {
         }
     }
 
-    /*
-    If a reference is specified, all queried `GAReadGroup`s must be aligned
-    to `GAReferenceSet`s containing that same `GAReference`. If no reference is
-    specified, all `GAReadGroup`s must be aligned to the same `GAReferenceSet`.
-     */
-
     /**
-    In any ReadsTests response, the alignedSequence field can only contain [ACTGN]+.
-    No spaces, no other letters, no lowercase, no null. This is dataset specific
-    at this point, but we might be able to extend it to all datasets later - Jeltje email
-     @param rgid the readgroup ID passed from Parameters
+     * <p>verify alignedSequences match pattern.</p>
+     * <p>In any ReadsTests response, the alignedSequence field can only contain [ACTGN]+.
+     * No spaces, no other letters, no lowercase, no null. This is dataset specific
+     * at this point, but we might be able to extend it to all datasets later - Jeltje email</p>
+     * @param rgid the readgroup ID
     */
     @Test
     @Parameters({

@@ -3,7 +3,7 @@ package org.ga4gh.ctk.systests;
 /**
  * <p>This test fetches the target server landing page as evidence of connectivity;
  * the test also scrapes the supplied HTML as fodder for the eventual report.</p>
- * Created by Wayne Stidolph on 6/7/2015.
+ * <p>Created by Wayne Stidolph on 6/7/2015.</p>
  */
 
 import junitparams.JUnitParamsRunner;
@@ -20,8 +20,11 @@ public class LandingPageIT {
 
     @Test
     @Category(WIP.class)
-    @Ignore("Placeholder until I integrate Spring support")
+    @Ignore("Placeholder, not yet written")
     public static void landingPagesShouldExist() throws Exception {
+        // TODO fetch page object and verify OK
+
+        // TODO verify correct data installed (scrape landing page)
 
     }
 }

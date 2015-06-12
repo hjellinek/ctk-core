@@ -1,8 +1,8 @@
 package org.ga4gh.ctk.systests.api.reads;
 
 import com.google.common.collect.Table;
-import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.assertj.core.api.JUnitSoftAssertions;
 import org.ga4gh.*;
 import org.ga4gh.ctk.control.testcategories.API.ReadsTests;
 import org.ga4gh.ctk.transport.RespCode;
@@ -12,9 +12,9 @@ import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.ga4gh.ctk.transport.protocols.ReadsProtocolClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
 import java.util.Arrays;
@@ -31,7 +31,11 @@ import static org.slf4j.LoggerFactory.getLogger;
  *
  * <p>The test invokes a search request with null, default, and error parameters
  * on the endpoint and verifies the response. For tests with more insight into
- * the data returned (complex queries, etc) refer to the ReadsSearchingIT tests.</p>
+ * the data returned (complex queries, etc) refer to the ReadsSearchIT tests.</p>
+ *
+ * <p>Note this is RunWith the default JUnit runner, which means we can (and do) use
+ * a JUnit4 @Rule to set up a JUnitSoftAssertions, which lets us make multiple
+ * asserts and have them all automatically checked and group-reported at the end of each test.</p>
  *
  * <p>As a demo, we show making an assertion about a field of the return (in {@code defaultReadsRequestGetsNullAlignments})
  * and simply making an assertion about the return itself (in {@code defaultReadgroupsetsRequestGetsResponse}). In each case,
@@ -41,12 +45,14 @@ import static org.slf4j.LoggerFactory.getLogger;
  * <p>Created by wstidolph on 5/20/15.</p>
  */
 @Category(ReadsTests.class)
-@RunWith(JUnitParamsRunner.class)
-public class ReadMethodsIT {
+public class ReadMethodsEndpointAliveIT {
 
-    private static org.slf4j.Logger log = getLogger(ReadMethodsIT.class);
+    private static org.slf4j.Logger log = getLogger(ReadMethodsEndpointAliveIT.class);
 
     private static ReadsProtocolClient client;
+
+    @Rule
+    public final JUnitSoftAssertions softly = new JUnitSoftAssertions();
 
     /**
      * <p>Show that a GASearchReadsRequest is accepted and

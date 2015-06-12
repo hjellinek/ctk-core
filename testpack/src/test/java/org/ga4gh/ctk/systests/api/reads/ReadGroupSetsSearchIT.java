@@ -38,7 +38,7 @@ public class ReadGroupSetsSearchIT {
             "low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522",
             "low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
     })
-    public void goodReadgroupSetsNameShouldRetrieveMatchingReadGroupSets(String rgName) throws Exception {
+    public void goodReadgroupSetsNameShouldRetrieveOnlyMatchingReadGroupSets(String rgName) throws Exception {
         // IDL: "Only return read group sets for which a substring of the name
         // matches this string.
 
