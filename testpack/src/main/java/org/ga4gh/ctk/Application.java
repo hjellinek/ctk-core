@@ -38,8 +38,8 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         String matchStrIT = ".*IT.*";
-        String matchStrSuite = ".*TestSuite/..*";
-        Set<Class<?>> testCases = findTestClasses(matchStrIT);
+        String matchStrSuite = ".*TestSuite.*";
+        Set<Class<?>> testCases = findTestClasses(matchStrSuite);
 
         for (Class testCase : testCases) {
                 runTestCase(testCase);
