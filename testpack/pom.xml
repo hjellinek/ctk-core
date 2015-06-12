@@ -56,7 +56,37 @@
         </contributor>
     </contributors>
 
+    <!-- (you don't need this if you are using a .RELEASE version) -->
+    <repositories>
+        <repository>
+            <id>spring-snapshots</id>
+            <url>http://repo.spring.io/snapshot</url>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <url>http://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <url>http://repo.spring.io/snapshot</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <url>http://repo.spring.io/milestone</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
+        <dependency>
+            <!-- Import dependency management from Spring Boot -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>1.3.0.M1</version>
+            <scope>import</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -119,19 +149,6 @@
     <build>
         <defaultGoal>install</defaultGoal>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>1.2.4.RELEASE</version>
-                <!-- repackage to be an executable jar as well as a goal for running -->
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!-- build a jar including all test classes and resources -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -154,7 +171,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+            <plugin> <!-- spring boot brings this in, too, but I need to exlude the systests -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>
@@ -181,6 +198,7 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
+                            <encoding>UTF-8</encoding>
                             <!-- disable forking for easy debugging -->
                             <!-- TODO make a mvn profile 'devel' for this, enable parallel in prod -->
                             <forkCount>0</forkCount>
@@ -202,11 +220,14 @@
     <reporting>
         <plugins>
             <plugin>
+
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.18.1</version>
                 <reportSets>
                     <reportSet>
+                        <!-- report on the 'failsafe' integration tests (the SYSTESTS -->
+                        <!-- assembles the reports, doesn't run the tests! -->
                         <id>integration-tests</id>
                         <reports>
                             <report>

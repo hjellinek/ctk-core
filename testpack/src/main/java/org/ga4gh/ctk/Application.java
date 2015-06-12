@@ -13,6 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -63,6 +64,12 @@ public class Application implements CommandLineRunner {
                 .setScanners(new SubTypesScanner(false)) // false means do NOT exclude direct child of Object
                 .filterInputsBy(new FilterBuilder().include(matchStr))
         );
+
+        boolean foundTests = reflections.getConfiguration().getUrls().size()>0;
+        if(!foundTests){
+            log.warn("No tests found on classpath, looking for classes in package: " + TESTPACKAGE);
+            return new HashSet<Class<?>>(); // just toss back an empty set
+        }
 
         Set<Class<? extends Object>> testClasses =
                 reflections.getSubTypesOf(Object.class);

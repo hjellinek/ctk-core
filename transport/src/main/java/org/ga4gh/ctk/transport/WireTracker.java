@@ -1,137 +1,78 @@
 package org.ga4gh.ctk.transport;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.diff.JsonDiff;
 import com.google.gson.Gson;
 import org.ga4gh.GAException;
-import org.ga4gh.ctk.transport.RespCode;
 import org.slf4j.Logger;
-
-import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Tracking and measurement of the on-the-wore transaction.
- * <p>
- * Used to signal need for wire-format difference measurement
- * of the Avro-defined objects used in a given interaction
- * Created by Wayne Stidolph on 5/27/2015.
+ * <p>Tracking and measurement of the on-the-wire transaction.</p>
+ * <p>Used to signal need for wire-format difference measurement
+ * of the Avro-defined objects used in a given interaction</p>
+ * <p>Created by Wayne Stidolph on 5/27/2015.</p>
  */
 public class WireTracker {
     final static Logger log = getLogger(WireTracker.class);
 
+    /**
+     * <p>The target url with which this WireTracker communicated.</p>
+     */
     public String theUrl;
+    /**
+     * <p>The string BODY sent to the target.</p>
+     */
     public String bodySent;
+    /**
+     * <p>The string BODY received from the target</p>
+     */
     public String bodyReceived;
+    private GAException gae;
+    private String gaeMessage; // convenience and in case non-parseable
+    private int gaeErrorCode; // convenience and in case non-parseable
+
+    /**
+     * <p>Returns true if and only if a GAE was received on this interaction,
+     * AND it was parsable.</p>
+     * <p>If it's non-parseable then the gaeMessage field
+     * will hold the returned BODY (same as the bodyReceived field) and the
+     * gaeErrorCode will be set to -1</p>
+     *
+     * @return boolean that an error body is parsed
+     */
+    public boolean gotParseableGAE(){
+        return getGae() instanceof GAException;
+    }
+
+    private boolean parseableGae = false;
 
     RespCode responseStatus;
-    // RANDOM CRAP HERE FROM START OF JSON COMPARISON
-    // TODO REFACTOR INTO TEST UTIL (YAGNI?)
-    JsonPatch expDiff;
-    JsonPatch refDiff;
-    // keep as String from the test definition
-    String expJsonStr;
-    JsonNode expJsonNode;
-    // JSON from the outside word is just a String, no type assumptions
-    String refJsonStr;
-    JsonNode refJsonNode;
-    String actJsonStr;
-    JsonNode actJsonNode;
-    boolean shouldDoRefCompare = false;
-    private GAException gae;
-    private String message;
-    private int errorCode;
 
     public int getErrorCode() {
-        return errorCode;
+        return gaeErrorCode;
     }
 
     public String getMessage() {
-        return message;
+        return gaeMessage;
     }
 
     public GAException getGae() {
         if (responseStatus != RespCode.OK) {
             // parse the received body
             Gson gson = new Gson();
-            gae = gson.fromJson(bodyReceived, GAException.class);
-            message = gae.getMessage();
-            errorCode = gae.getErrorCode();
+            try {
+                gae = gson.fromJson(bodyReceived, GAException.class);
+                gaeMessage = gae.getMessage();
+                gaeErrorCode = gae.getErrorCode();
+            }catch (Exception e){
+                log.warn("Parse failure on GAException: " + e.toString());
+                gaeErrorCode = -1;
+                gaeMessage = bodyReceived;
+                parseableGae = false;
+                gae = null;
+            }
         }
         return gae;
-    }
-
-    /**
-     * Gets difference between the actual (rcd) and expected JSON.
-     * <p>
-     * If the expDiff has already been calculated, it is returned; if
-     * it hasn't been calculated, then then it is calculated and stored first.
-     *
-     * @return the exp diff
-     */
-    public JsonPatch getExpDiff() {
-        if (expDiff == null) {
-            expDiff = JsonDiff.asJsonPatch(getActJsonNode(), getExpJsonNode());
-        }
-        return expDiff;
-    }
-
-    public JsonPatch getRefDiff() {
-        if (refDiff == null) {
-            refDiff = JsonDiff.asJsonPatch(getActJsonNode(), getRefJsonNode());
-        }
-        return refDiff;
-    }
-
-    public JsonNode getRefJsonNode() {
-        if (refJsonStr == null) {
-            // TODO get reference server json
-            // didn't arrive yet, block here until refJson available
-            // or times out and returns null
-            log.warn("NO REF STRING TO COMPARE");
-        }
-        refJsonNode = makeJsonNode(refJsonStr);
-        return refJsonNode;
-    }
-
-    public boolean isShouldDoRefCompare() {
-        return shouldDoRefCompare;
-    }
-
-    public void setShouldDoRefCompare(boolean shouldDoRefCompare) {
-        this.shouldDoRefCompare = shouldDoRefCompare;
-    }
-
-    public void setActJson(String theJson) {
-        actJsonStr = theJson;
-    }
-
-    public JsonNode getExpJsonNode() {
-        if (expJsonNode == null) {
-            expJsonNode = makeJsonNode(expJsonStr);
-        }
-        return expJsonNode;
-    }
-
-    public JsonNode getActJsonNode() {
-        if (actJsonNode == null) {
-            actJsonNode = makeJsonNode(actJsonStr);
-        }
-        return actJsonNode;
-    }
-
-    private JsonNode makeJsonNode(String jsonStr) {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rtnNode = null;
-        try {
-            rtnNode = mapper.readTree(jsonStr);
-        } catch (IOException e) {
-            log.warn("could not make JsonNode from string " + jsonStr, e);
-        }
-        return rtnNode;
     }
 
     public RespCode getResponseStatus() {

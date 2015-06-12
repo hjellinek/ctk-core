@@ -44,6 +44,10 @@ public class VariantsMethodsEndpointAliveIT {
 
     private static org.slf4j.Logger log = getLogger(VariantsMethodsEndpointAliveIT.class);
 
+    static String TRAFFICLOG="SYSTEST.TRAFFIC";
+    private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
+
+
     private static VariantsProtocolClient client;
 
     @Before
@@ -111,8 +115,8 @@ public class VariantsMethodsEndpointAliveIT {
         GASearchVariantsResponse response = client.searchVariants(request, mywt);
 
         // the JUnit4 Rule creates a SoftAssertion and we can do multiple asserts cleanly!
-        softly.assertThat(mywt.getResponseStatus()).isEqualTo(RespCode.NOT_IMPLEMENTED);
-        softly.assertThat(response).isNotNull();
+        assertThat(mywt.getResponseStatus()).isEqualTo(RespCode.NOT_IMPLEMENTED);
+        assertThat(response).isNotNull();
     }
 
     /**
@@ -125,7 +129,7 @@ public class VariantsMethodsEndpointAliveIT {
 
         GASearchCallSetsResponse response = client.searchCallSets(scsr);
 
-        softly.assertThat(response).isNotNull();
+        assertThat(response).isNotNull();
     }
 
     /**
@@ -139,8 +143,8 @@ public class VariantsMethodsEndpointAliveIT {
         WireTracker mywt = new WireTracker();
         GASearchCallSetsResponse response = client.searchCallSets(scsr, mywt);
 
-        softly.assertThat(response).isNotNull();
-        softly.assertThat(mywt.getResponseStatus()).isEqualTo(RespCode.NOT_IMPLEMENTED);
+        assertThat(response).isNotNull();
+        assertThat(mywt.getResponseStatus()).isEqualTo(RespCode.NOT_IMPLEMENTED);
     }
 
     @BeforeClass
@@ -158,7 +162,7 @@ public class VariantsMethodsEndpointAliveIT {
     public static void shutdownTransport() throws Exception {
         for(Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()){
             // TODO either filter this to just this Test or move the extraction to zzCheckCoverage
-            log.info("VariantsMethodIT TRAFFIC:" + cell.getRowKey() + " " + cell.getColumnKey() + " " +cell.getValue());
+            trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " +cell.getValue());
         }
     }
 
