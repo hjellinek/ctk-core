@@ -65,7 +65,9 @@
         <repository>
             <id>spring-snapshots</id>
             <url>http://repo.spring.io/snapshot</url>
-            <snapshots><enabled>true</enabled></snapshots>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>spring-milestones</id>
@@ -83,26 +85,65 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
+        <!--   if we were going to be a 'normal' spring boot app
+               but I want to depend on the ctk parent to ensure same versions
+               of JSON libs etc across the CTK so we comment this out and just
+               use spring boot dependency management
+               <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-parent</artifactId>
+                    <version>${spring.boot.version}</version>
+                </dependency>-->
         <dependency>
-            <!-- Import dependency management from Spring Boot -->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-parent</artifactId>
-            <version>${spring.boot.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-
-        <dependency>
+            <!-- The core Spring Boot starter, including
+            auto-configuration support, logging and YAML -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
             <version>${spring.boot.version}</version>
+            <!-- std logging for Spring Boot is logback, but I
+            want to use log4j2 in the CTK so we exclude the default logging
+            here and add in log4j2 later -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
+            <!-- Support for common test dependencies, including JUnit, Hamcrest
+            and Mockito along with the spring-test module. -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
+        <!-- turn on @ConfigurationProcessor so we can have ctk.* automatic naming -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- CTK uses log4j2, some of the tooling is more common than Logback -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
@@ -123,16 +164,23 @@
         </dependency>
 
         <dependency>
+            <!-- lots of utility stuff! -->
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
         <dependency>
+            <!-- provide the google JSON support, easier than
+            Jackson for handling the 'normal' JSON to Avro class
+            deserialization -->
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
         </dependency>
         <dependency>
+            <!-- transitively brings in jackson-databind, so this
+            triggers log4j2 support for log4j2.json and log4j2.jsm config,
+            as well as providing Jackson-based JSON processing if we want it -->
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
         </dependency>
@@ -142,10 +190,10 @@
         </dependency>
 
         <!-- bring in the GA4GH schema -->
-<!--        <dependency>
-            <groupId>org.ga4gh</groupId>
-            <artifactId>ga4gh-format</artifactId>
-        </dependency>-->
+        <!--        <dependency>
+                    <groupId>org.ga4gh</groupId>
+                    <artifactId>ga4gh-format</artifactId>
+                </dependency>-->
         <dependency> <!-- also provides ga4gh schema we run against -->
             <groupId>org.ga4gh</groupId>
             <artifactId>ctk-transport</artifactId>
@@ -156,6 +204,11 @@
     <build>
         <defaultGoal>install</defaultGoal>
         <plugins>
+            <plugin>
+                <!-- make the jar executable -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <!-- build a jar including all test classes and resources -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -178,7 +231,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin> <!-- spring boot brings this in, too, but I need to exlude the systests -->
+            <plugin> <!-- spring boot brings this in, too, but I need to exclude the systests -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>

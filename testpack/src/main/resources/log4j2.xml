@@ -1,7 +1,12 @@
-<Configuration status="DEBUG">
-
+<Configuration status="WARN">
+    <!-- use status="TRACE" to get more log4j2 details if need to troubleshoot logging config -->
     <Appenders>
-        <Console name="STDOUT" target="SYSTEM_OUT"/>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <!-- see https://logging.apache.org/log4j/2.x/manual/layouts.html -->
+                <PatternLayout pattern="[%c{1.}] %m%n"/>
+        </Console>
+        <!-- this appender writes to a log-tracker I use in the intelij IDE,
+        should we drop it in 'production'? -->
         <Socket name="LF5_SOCKET" host="localhost" port="4454" protocol="TCP" reconnectionDelay="5000"/>
     </Appenders>
 
