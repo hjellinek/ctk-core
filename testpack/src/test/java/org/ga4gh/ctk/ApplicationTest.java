@@ -25,7 +25,7 @@ public class ApplicationTest {
     }
 
     /**
-     * Method: main(String[] args)
+     * Method: main(String[] args) shows Application booted
      */
     @Test
     public void testMain() throws Exception {
