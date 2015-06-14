@@ -1,5 +1,7 @@
 package org.ga4gh.ctk;
 
+import com.google.common.collect.Table;
+import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
@@ -30,13 +32,15 @@ public class Application implements CommandLineRunner {
 
     private static org.slf4j.Logger log = getLogger(Application.class);
     private static org.slf4j.Logger testlog = getLogger("SYSTEST");
+    static String TRAFFICLOG="SYSTEST.TRAFFIC";
+    private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
 
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
     }
 
     /**
-     * Callback used to execute test cases.
+     * Callback used to execute the actual app (run the CTK tests).
      *
      * @param args incoming main method arguments
      * @throws Exception on error
@@ -44,12 +48,12 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        // log some path-debug info for "why aren't my tests seen?"
         URL location = Application.class.getProtectionDomain().getCodeSource().getLocation();
-        log.warn("Application launched from " + location.getFile());
+        log.debug("Application launched from " + location.getFile());
         log.debug("command line args: " + Arrays.toString(args));
 
-
-
+        // temp hack until I add cmd-line param or use the props
         String matchStrIT = ".*IT.*";
         String matchStrSuite = ".*TestSuite.*";
 
@@ -59,18 +63,19 @@ public class Application implements CommandLineRunner {
         Set<Class<?>> testClasses = findTestClasses(matchStr);
 
         for (Class testClass : testClasses) {
-                runTestClass(testClass);
+                runTestClass(testClass); // will also output Failures to SYSTEST log
+        }
+
+        // just log the traffic, until I get the coverage-tests written
+        for(Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()){
+            // TODO either filter this to just this Test or move the extraction to zzCheckCoverage
+            trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
         }
     }
 
-    /*
-    -Dsuite=<foo> matches <foo>TestSuite
-    -Dcategory=<foo> matches any org.ga4gh.ctk.systests test annotated with @Test and @<foo>.class
-    -Dtest=<foo> matches org.ga4gh.ctk.systests/<0 or more dirs>/<foo>
-     */
 
     /**
-     * find test classes (classes in org.ga4gh.ctk.systests/** with name ending in IT
+     * find test classes based on name pattern-match
     */
     private static Set<Class<?>> findTestClasses(String matchStr) {
 
@@ -87,10 +92,8 @@ public class Application implements CommandLineRunner {
         if(!foundTests){
             log.warn("No tests found on classpath, looking for classes in package: " + TESTPACKAGE);
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
-
             URL[] allurls = ((URLClassLoader)cl).getURLs();
             for(URL url : allurls) log.debug("URL " + url.toString());
-
             testlog.warn("Didn't do any testing");
 
             return new HashSet<Class<?>>(); // just toss back an empty set
@@ -103,7 +106,6 @@ public class Application implements CommandLineRunner {
     }
 
     private static void runTestClass(Class testClass) {
-        // old style
 
         JUnitCore junit = new JUnitCore();
         Request req = Request.aClass(testClass);

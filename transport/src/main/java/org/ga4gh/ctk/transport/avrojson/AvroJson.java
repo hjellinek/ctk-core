@@ -17,8 +17,27 @@ import org.ga4gh.ctk.transport.WireTracker;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Provide Avro/Json communications layer specific to GA4GH and with extensive logging in support of CTK use.
- * Created by Wayne Stidolph on 5/22/2015.
+ * <p>Provide Avro/Json communications layer specific to GA4GH and with extensive logging in support of CTK use.</p>
+ * <p>This class is paramaterized on the Avro reQuest (Q) and resPonse (P) type it handles.
+ * Each instance handles one interaction, issuing a request and returning the response.</p>
+ * <p>This class:<ul>
+ *     <li>invokes the serializer/deserializer,</li>
+ *     <li>invokes the HTTP interaction,</li>
+ *      <li>tracks the data sent/received (via a WireTracker), and</li>
+ *      <li>captures the traffic summary in a static table named 'messages'</li></ul></p>
+ * <p>The class accepts the request and response objects, the URL root and path strings, and
+ * an (optional) WireTracker (which will collect the JSON as sent/received on the wire).</p>
+ * <p>Usage: </p>
+ * <pre>
+ *  {@code
+ *  String path = URLMAPPING.getSearchReads();
+ *  GASearchReadsResponse response = new GASearchReadsResponse();
+ *  AvroJson aj =
+ *    new AvroJson<>(request, response, URLMAPPING.getUrlRoot(), path, wireTracker);
+ *  response = (GASearchReadsResponse) aj.doPostResp();
+ * }
+ * </pre>
+ * <p>Created by Wayne Stidolph on 5/22/2015.</p>
  */
 public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase> {
     private static org.slf4j.Logger log;

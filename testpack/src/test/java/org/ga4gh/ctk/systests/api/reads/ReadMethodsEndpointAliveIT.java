@@ -1,6 +1,5 @@
 package org.ga4gh.ctk.systests.api.reads;
 
-import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.assertj.core.api.JUnitSoftAssertions;
@@ -12,7 +11,6 @@ import org.ga4gh.ctk.control.testcategories.API.ReadsTests;
 import org.ga4gh.ctk.transport.RespCode;
 import org.ga4gh.ctk.transport.WireTracker;
 import org.ga4gh.ctk.transport.WireTrackerAssert;
-import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.ga4gh.ctk.transport.protocols.ReadsProtocolClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -50,9 +48,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ReadMethodsEndpointAliveIT {
 
     private static org.slf4j.Logger log = getLogger(ReadMethodsEndpointAliveIT.class);
-
-    static String TRAFFICLOG = "SYSTEST.TRAFFIC";
-    private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
 
     private static ReadsProtocolClient client;
 
@@ -128,9 +123,7 @@ public class ReadMethodsEndpointAliveIT {
 
     @AfterClass
     public static void shutdownTransport() throws Exception {
-        for (Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()) {
-            trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
-        }
+
     }
 
 }

@@ -15,8 +15,6 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
 
     private org.slf4j.Logger log = getLogger(ReadsProtocolClient.class);
 
-    public String urlRoot = URLMAPPING.urlRoot; //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
-
     public WireTracker wireTracker;
 
     public ReadsProtocolClient() {
@@ -36,10 +34,10 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
      */
     @Override
     public GASearchReadsResponse searchReads(GASearchReadsRequest request) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.searchReads;
+        String path = URLMAPPING.getSearchReads();
         GASearchReadsResponse response = new GASearchReadsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireTracker);
+                new AvroJson<>(request, response, URLMAPPING.getUrlRoot(), path, wireTracker);
         response = (GASearchReadsResponse) aj.doPostResp();
         return response;
     }
@@ -69,13 +67,13 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
      */
     @Override
     public GASearchReadGroupSetsResponse searchReadGroupSets(GASearchReadGroupSetsRequest request) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.searchReadGroupSets;
+        String path = URLMAPPING.getSearchReadGroupSets();
         // we use an empty concrete response class to pass into the Parameterized AvroJson
         // as a quickway to get the class name and such; this bject actually gets replaced
         // with the filled-in Repsonse object constructed in AvroJson and passed back
         GASearchReadGroupSetsResponse response = new GASearchReadGroupSetsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireTracker);
+                new AvroJson<>(request, response, URLMAPPING.getUrlRoot(), path, wireTracker);
         //aj.setDeserMode(AvroJson.DESER_MODE.AVRO_DIRECT);
         response = (GASearchReadGroupSetsResponse) aj.doPostResp();
 

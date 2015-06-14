@@ -1,12 +1,10 @@
 package org.ga4gh.ctk.systests.api.variants;
 
-import com.google.common.collect.Table;
 import org.assertj.core.api.JUnitSoftAssertions;
 import org.ga4gh.*;
 import org.ga4gh.ctk.control.testcategories.API.VariantsTests;
 import org.ga4gh.ctk.transport.RespCode;
 import org.ga4gh.ctk.transport.WireTracker;
-import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.ga4gh.ctk.transport.protocols.VariantsProtocolClient;
 import org.junit.*;
 import org.junit.experimental.categories.Category;
@@ -44,8 +42,7 @@ public class VariantsMethodsEndpointAliveIT {
 
     private static org.slf4j.Logger log = getLogger(VariantsMethodsEndpointAliveIT.class);
 
-    static String TRAFFICLOG="SYSTEST.TRAFFIC";
-    private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
+
 
 
     private static VariantsProtocolClient client;
@@ -160,10 +157,7 @@ public class VariantsMethodsEndpointAliveIT {
 
     @AfterClass
     public static void shutdownTransport() throws Exception {
-        for(Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()){
-            // TODO either filter this to just this Test or move the extraction to zzCheckCoverage
-            trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " +cell.getValue());
-        }
+
     }
 
 } 

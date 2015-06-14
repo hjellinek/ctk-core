@@ -12,7 +12,7 @@ import org.ga4gh.ctk.transport.avrojson.AvroJson;
 public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
 
 
-    public String urlRoot = URLMAPPING.urlRoot; //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
+    public String urlRoot = URLMAPPING.getUrlRoot(); //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
 
     public WireTracker wireTracker = null;
 
@@ -35,7 +35,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      */
     @Override
     public GASearchVariantSetsResponse searchVariantSets(GASearchVariantSetsRequest request) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.searchVariantSets;
+        String path = URLMAPPING.getSearchVariantSets();
         GASearchVariantSetsResponse response = new GASearchVariantSetsResponse();
         AvroJson aj =
                 new AvroJson<>(request, response, urlRoot, path, wireTracker);
@@ -68,7 +68,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      */
     @Override
     public GASearchVariantsResponse searchVariants(GASearchVariantsRequest request) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.searchVariants;
+        String path = URLMAPPING.getSearchVariants();
         GASearchVariantsResponse response = new GASearchVariantsResponse();
         AvroJson aj =
                 new AvroJson<>(request, response, urlRoot, path, wireTracker);
@@ -101,7 +101,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
          */
     @Override
     public GASearchCallSetsResponse searchCallSets(GASearchCallSetsRequest request) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.searchCallsets;
+        String path = URLMAPPING.getSearchCallsets();
         GASearchCallSetsResponse response = new GASearchCallSetsResponse();
         AvroJson aj =
                 new AvroJson<>(request, response, urlRoot, path, wireTracker);

@@ -1,13 +1,11 @@
 package org.ga4gh.ctk.systests.api.reads;
 
-import com.google.common.collect.Table;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.ga4gh.GAReadAlignment;
 import org.ga4gh.GASearchReadsRequest;
 import org.ga4gh.GASearchReadsResponse;
 import org.ga4gh.ctk.control.testcategories.API.ReadsTests;
-import org.ga4gh.ctk.transport.avrojson.AvroJson;
 import org.ga4gh.ctk.transport.protocols.ReadsProtocolClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -46,9 +44,7 @@ public class ReadsSearchIT {
 
     @AfterClass
     public static void shutdownTransport() throws Exception {
-        for (Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()) {
-            log.info("ReadMethodIT TRAFFIC:" + cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
-        }
+
     }
 
     /**
