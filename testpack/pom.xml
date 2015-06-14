@@ -214,6 +214,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
+                <configuration>
+                    <!-- add the test classes to the config so that mavn spring-boot:run
+                         finds them without having to build the jars and use that loader! -->
+                    <folders>
+                        <folder>${project.build.testOutputDirectory}</folder>
+                    </folders>
+                </configuration>
 
                 <executions>
                     <execution>
@@ -228,7 +235,7 @@
                             append to the classpath (containing file resources
                             and/or nested archives in *.jar or *.zip) -->
                             <layout>ZIP</layout>
-                            <classifier>exec</classifier>
+                            <!-- <classifier>exec</classifier> -->
                         </configuration>
                     </execution>
                 </executions>

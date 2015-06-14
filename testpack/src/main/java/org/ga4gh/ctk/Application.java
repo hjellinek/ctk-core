@@ -1,6 +1,7 @@
 package org.ga4gh.ctk;
 
 import org.junit.runner.JUnitCore;
+import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.reflections.Reflections;
@@ -13,7 +14,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,17 +43,23 @@ public class Application implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception {
+
+        URL location = Application.class.getProtectionDomain().getCodeSource().getLocation();
+        log.warn("Application launched from " + location.getFile());
         log.debug("command line args: " + Arrays.toString(args));
+
+
+
         String matchStrIT = ".*IT.*";
         String matchStrSuite = ".*TestSuite.*";
 
         String matchStr = matchStrIT;
         log.debug("seeking test classes that match < " + matchStr + " >");
 
-        Set<Class<?>> testCases = findTestClasses(matchStr);
+        Set<Class<?>> testClasses = findTestClasses(matchStr);
 
-        for (Class testCase : testCases) {
-                runTestCase(testCase);
+        for (Class testClass : testClasses) {
+                runTestClass(testClass);
         }
     }
 
@@ -64,9 +74,11 @@ public class Application implements CommandLineRunner {
     */
     private static Set<Class<?>> findTestClasses(String matchStr) {
 
+        Collection<URL> urls = ClasspathHelper.forPackage(TESTPACKAGE);
+
         Reflections reflections =
                 new Reflections(new ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forPackage(TESTPACKAGE))
+                .setUrls(urls)
                 .setScanners(new SubTypesScanner(false)) // false means do NOT exclude direct child of Object
                 .filterInputsBy(new FilterBuilder().include(matchStr))
         );
@@ -74,7 +86,13 @@ public class Application implements CommandLineRunner {
         boolean foundTests = reflections.getConfiguration().getUrls().size()>0;
         if(!foundTests){
             log.warn("No tests found on classpath, looking for classes in package: " + TESTPACKAGE);
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
+            URL[] allurls = ((URLClassLoader)cl).getURLs();
+            for(URL url : allurls) log.debug("URL " + url.toString());
+
             testlog.warn("Didn't do any testing");
+
             return new HashSet<Class<?>>(); // just toss back an empty set
         }
 
@@ -84,10 +102,12 @@ public class Application implements CommandLineRunner {
         return testClasses;
     }
 
-    private static void runTestCase(Class testCase) {
+    private static void runTestClass(Class testClass) {
+        // old style
 
         JUnitCore junit = new JUnitCore();
-        Result result = junit.run(testCase);
+        Request req = Request.aClass(testClass);
+        Result result = junit.run(req);
 
         for (Failure failure : result.getFailures()) {
            testlog.warn(failure.toString());
