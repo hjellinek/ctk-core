@@ -1,6 +1,10 @@
 package org.ga4gh.ctk;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 /**
  * <p>Configuration entry point for the runtime environment.</p>
@@ -11,19 +15,27 @@ import org.springframework.context.annotation.Configuration;
  * e.g., --server.url=192.168.2.115:8000 creates or overrides a
  * property 'server.url)</li>
  * <li>NDI attributes from java:comp/env</li>
- * <li>Java System properties (System.getProperties())</li>
+ * <li>JVM System properties (System.getProperties())</li>
  * <li>OS environment variables</li>
  * <li>A RandomValuePropertySource that only has properties in random.*</li>
  * <li>Profile-specific application properties outside of the packaged jar
  * (application-{profile}.properties and YAML variants</li>
  * <li>Profile-specific application properties packaged inside the jar
  * (application-{profile}.properties and YAML variants)</li>
- * <li>Application properties outside of your packaged jar
+ * <li>Application properties outside of the jars
  * (application.properties and YAML variants)</li>
- * <li>Application properties packaged inside your jar
+ * <li>Application properties packaged inside the jars
  * (application.properties and YAML variants)</li>
  * <li>@PropertySource annotations on @Configuration classes (such as this class)</li>
  * <li>Default properties (specified using SpringApplication.setDefaultProperties)</li>
+ * </ul>
+ *
+ * <p>Property/YAML files can be in 4 locations:</p>
+ * <ul>
+ *     <li>(highest priority) externally, in the {@code /config} directory under the app's start dir</li>
+ *     <li>externally, directly in the app's start dir</li>
+ *     <li>internally, in the /config package (not used in the CTK)</li>
+ *     <li>(lowest priority) internally at the root of the classpath (from the "resources/" dir in the source tree)</li>
  * </ul>
  *
  * <p>YAML files seem to take precedence over .properties files of the same name.</p>
@@ -32,5 +44,10 @@ import org.springframework.context.annotation.Configuration;
  * <p>Created by Wayne Stidolph on 6/13/2015.</p>
  */
 @Configuration
+@EnableAutoConfiguration
+@ConfigurationProperties(prefix="ctk")
 public class Config {
+    @Autowired
+    Environment env;
+
 }

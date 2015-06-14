@@ -179,10 +179,14 @@
         </dependency>
         <dependency>
             <!-- transitively brings in jackson-databind, so this
-            triggers log4j2 support for log4j2.json and log4j2.jsm config,
+            triggers log4j2 support for hide_log4j2.json and log4j2.jsm config,
             as well as providing Jackson-based JSON processing if we want it -->
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -204,28 +208,39 @@
     <build>
         <defaultGoal>install</defaultGoal>
         <plugins>
+
+            <!-- make the jar executable -->
             <plugin>
-                <!-- make the jar executable -->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <!-- ZIP layout uses the PropertiesLauncher
+                            so in addition to looking in lib/ for jars the launcher
+                            also looks wherever the 'loader.path' property points to
+                            (loader.path: a comma-separated list of directories to
+                            append to the classpath (containing file resources
+                            and/or nested archives in *.jar or *.zip) -->
+                            <layout>ZIP</layout>
+                            <classifier>exec</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <!-- build a jar including all test classes and resources -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>org.ga4gh.ctk.Application</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>jar</goal>
                             <goal>test-jar</goal>
                         </goals>
                     </execution>

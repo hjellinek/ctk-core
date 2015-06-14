@@ -13,6 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,9 +39,14 @@ public class Application implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception {
+        log.debug("command line args: " + Arrays.toString(args));
         String matchStrIT = ".*IT.*";
         String matchStrSuite = ".*TestSuite.*";
-        Set<Class<?>> testCases = findTestClasses(matchStrSuite);
+
+        String matchStr = matchStrIT;
+        log.debug("seeking test classes that match < " + matchStr + " >");
+
+        Set<Class<?>> testCases = findTestClasses(matchStr);
 
         for (Class testCase : testCases) {
                 runTestCase(testCase);
@@ -68,6 +74,7 @@ public class Application implements CommandLineRunner {
         boolean foundTests = reflections.getConfiguration().getUrls().size()>0;
         if(!foundTests){
             log.warn("No tests found on classpath, looking for classes in package: " + TESTPACKAGE);
+            testlog.warn("Didn't do any testing");
             return new HashSet<Class<?>>(); // just toss back an empty set
         }
 
