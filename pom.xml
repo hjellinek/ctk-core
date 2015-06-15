@@ -31,6 +31,25 @@
     <version>0.5.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <developers>
+        <developer>
+            <id>wstidolph</id>
+            <name>Wayne Stidolph</name>
+            <email>wayne@stidolph.com</email>
+            <url>http://wayne.stidolph.com</url>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Jeltje van Baren</name>
+            <email>jeltje.van.baren@gmail.com</email>
+        </contributor>
+        <contributor>
+            <name>Mark Diekhans</name>
+            <email>markd@soe.ucsc.edu</email>
+        </contributor>
+    </contributors>
+
     <reporting>
         <plugins>
             <plugin>
