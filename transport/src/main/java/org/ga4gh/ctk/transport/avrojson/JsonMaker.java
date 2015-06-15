@@ -21,11 +21,10 @@ public class JsonMaker<T> {
     private static org.slf4j.Logger log = getLogger(JsonMaker.class);
 
     /**
-     * Avro to json bytes.
+     * <p>Serialize an Avro object to json in a bytestream.</p>
      *
-     * Use Avro to generate JSON; produces field values that are
-     * {"<type>":"<value>"} which the Jackson deserializer doesn't
-     * handle by default.
+     * <p>Use Avro to generate JSON; note that this produces field values that are
+     * {"type":"value"} which the Jackson deserializer doesn't handle by default.</p>
      *
      * @param dw the dw
      * @param schema the schema

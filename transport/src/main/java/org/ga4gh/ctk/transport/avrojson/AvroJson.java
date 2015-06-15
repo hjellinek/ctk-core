@@ -23,8 +23,9 @@ import static org.slf4j.LoggerFactory.getLogger;
  * <p>This class:<ul>
  *     <li>invokes the serializer/deserializer,</li>
  *     <li>invokes the HTTP interaction,</li>
- *      <li>tracks the data sent/received (via a WireTracker), and</li>
- *      <li>captures the traffic summary in a static table named 'messages'</li></ul></p>
+ *     <li>tracks the data sent/received (via a WireTracker), and</li>
+ *     <li>captures the traffic summary in a static table named 'messages'</li>
+ * </ul></p>
  * <p>The class accepts the request and response objects, the URL root and path strings, and
  * an (optional) WireTracker (which will collect the JSON as sent/received on the wire).</p>
  * <p>Usage: </p>
@@ -132,7 +133,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     /**
      * Setter for the WireTracker (if present, tiggers JSON collection).
      *
-     * @param wireTracker
+     * @param wireTracker holds wire info for this single transaction
      */
     public void setWireTracker(WireTracker wireTracker) {
         this.wireTracker = wireTracker;
@@ -172,11 +173,12 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
 
     /**
      * Perform GET (according the data stored in this object at construction).
-     * <p>
-     * If this object has a WireTracker then the return JSON (if any) is copied into that.
+     * <p>If this object has a WireTracker then the return JSON (if any) is copied into that.
      * This method also tracks all message types sent and received, in the 'messages' Table. The
      * 'sent' message type (the Request type) is meaningless, except that it sets the target URL
-     * during object construction - the Request type avro object isn't actually serialized.
+     * during object construction - the Request type avro object isn't actually serialized.</p>
+     *
+     * @param id string to be used as route param to the URL
      *
      * @return an instance of the response type (as set during onbject construction), can be null.
      */
