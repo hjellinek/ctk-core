@@ -36,6 +36,7 @@
 
     <properties>
 
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!--
         <ga4gh.schema.version>0.6.0-SNAPSHOT</ga4gh.schema.version>
         -->
