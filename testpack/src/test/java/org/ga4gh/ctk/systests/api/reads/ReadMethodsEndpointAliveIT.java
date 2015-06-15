@@ -70,6 +70,12 @@ public class ReadMethodsEndpointAliveIT {
     }
 
 
+    /**
+     * <p>Show that a GASearchReadGroupSetsRequest is accepted and
+     * returns a parseable Response.</p>
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void defaultReadgroupsetsRequestGetsResponse() throws Exception {
         GASearchReadGroupSetsRequest gsrgs = GASearchReadGroupSetsRequest.newBuilder()
@@ -79,6 +85,12 @@ public class ReadMethodsEndpointAliveIT {
         assertThat(grtn).isNotNull();
     }
 
+    /**
+     * Unmatched GASearchReadsRequest elicits error msg.
+     *
+     * @param rgid the rgid
+     * @throws Exception the exception
+     */
     @Test
     @Parameters({
             "myNonsenseId", "foo", ""
@@ -98,10 +110,26 @@ public class ReadMethodsEndpointAliveIT {
         assertThat(mywt.gotParseableGAE()).isTrue();
     }
 
+    /**
+     * <p>Shows that attempting to supply more than 1 readgroup IDs in a GASearchReadsRequest are not accepted.</p>
+     * <p>This is tested with:</p>
+     * <ul>
+     *     <li>a pair of valid readgroups (which returns a <b>NOT IMPLEMENTED</b>)</li>
+     *     <li>one valid and one invalid readgroup</li>
+     *     <li>a pair of invalid readgroupID</li>
+     *     <li>a repeated set of valid readgroupID</li>
+     * </ul>
+     *
+     * @param rgid the rgid
+     * @param expStatus the exp status
+     * @throws Exception the exception
+     */
     @Test
-    @Parameters({ // we accept that the Ref Server behavior is determinative, but
-            "\"\", NOT_FOUND", // I'm not clear why this one is NOT_FOUND
-            "low-coverage:HG00534;low-coverage:HG00533, NOT_IMPLEMENTED" // vs this one is NOT_IMPLEMENTED
+    @Parameters({
+            "low-coverage:HG00534;low-coverage:HG00533, NOT_IMPLEMENTED",
+            "low-coverage:HG00534;BAD_ID, NOT_IMPLEMENTED",
+            "DUMB_ID;BAD_ID, NOT_IMPLEMENTED",
+            "low-coverage:HG00534;low-coverage:HG00533;low-coverage:HG00533, NOT_IMPLEMENTED"
     })
     public void multipleReadGroupsNotSupported(String rgid, RespCode expStatus) throws Exception {
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
@@ -112,6 +140,21 @@ public class ReadMethodsEndpointAliveIT {
         WireTrackerAssert.assertThat(mywt)
                 .hasResponseStatus(expStatus);
         assertThat(mywt.gotParseableGAE()).isTrue();
+    }
+
+    /**
+     * <p>Shows that attempting to supply 0 readgroup IDs in a GASearchReadsRequest is sanely NOT_FOUND.</p>
+     * @throws Exception the exception
+     */
+    @Test
+    public void emptyReadGroupIdIsNotFound() throws Exception {
+        GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
+                .setReadGroupIds(Arrays.asList(""))
+                .build();
+        WireTracker mywt = new WireTracker();
+        GASearchReadsResponse grtn = client.searchReads(gsrr, mywt);
+        WireTrackerAssert.assertThat(mywt)
+                .hasResponseStatus(RespCode.NOT_FOUND);
     }
 
     @BeforeClass
