@@ -28,9 +28,11 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
      * Gets a list of `GAReadAlignment` matching the search criteria.
      * <p>
      * `POST /reads/search` must accept a JSON version of `GASearchReadsRequest` as
-     * the post body and will return a JSON version of `GASearchReadsResponse`.
+     * the post body and will return a JSON version of `GASearchReadsResponse`.</p>
      *
-     * @param request
+     * @param request filled-in Avro object to be serialized as JSON to the server
+     * @throws AvroRemoteException
+     * @throws GAException
      */
     @Override
     public GASearchReadsResponse searchReads(GASearchReadsRequest request) throws AvroRemoteException, GAException {
@@ -46,10 +48,14 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
      * Gets a list of `GAReadAlignment` matching the search criteria.
      * <p>
      * `POST /reads/search` must accept a JSON version of `GASearchReadsRequest` as
-     * the post body and will return a JSON version of `GASearchReadsResponse`.
+     * the post body and will return a JSON version of `GASearchReadsResponse`.</p>
      *
-     * @param request
+     * @param request  filled-in Avro object to be serialized as JSON to the server
      * @param wt      {@code WireTracker} control whether WireDiffs are use for test support
+     *
+     * @return the server's response (deserialized into an Avro-defined object)
+     * @throws AvroRemoteException
+     * @throws GAException
      */
     public GASearchReadsResponse searchReads(GASearchReadsRequest request, WireTracker wt) throws AvroRemoteException, GAException {
         this.wireTracker = wt;
@@ -61,9 +67,11 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
      * <p>
      * `POST /readgroupsets/search` must accept a JSON version of
      * `GASearchReadGroupSetsRequest` as the post body and will return a JSON
-     * version of `GASearchReadGroupSetsResponse`.
+     * version of `GASearchReadGroupSetsResponse`.</p>
      *
-     * @param request
+     * @param request filled-in Avro object to be serialized as JSON to the server
+     * @throws AvroRemoteException
+     * @throws GAException
      */
     @Override
     public GASearchReadGroupSetsResponse searchReadGroupSets(GASearchReadGroupSetsRequest request) throws AvroRemoteException, GAException {
@@ -85,10 +93,12 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
      * <p>
      * `POST /readgroupsets/search` must accept a JSON version of
      * `GASearchReadGroupSetsRequest` as the post body and will return a JSON
-     * version of `GASearchReadGroupSetsResponse`.
+     * version of `GASearchReadGroupSetsResponse`.</p>
      *
-     * @param request
+     * @param request filled-in Avro object to be serialized as JSON to the server
      * @param wt      {@code WireTracker} control whether WireDiffs are use for test support
+     * @throws AvroRemoteException
+     * @throws GAException
      */
     public GASearchReadGroupSetsResponse searchReadGroupSets(GASearchReadGroupSetsRequest request, WireTracker wt) throws AvroRemoteException, GAException {
         this.wireTracker = wt;

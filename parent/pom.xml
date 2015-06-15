@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <!-- switched to explicit import to avoid getting spring boot
-        into the 'site' reports -->
+    <!-- switched to explicit import to avoid getting spring boot
+         into the 'site' reports -->
     <!--
    <parent>
         <groupId>org.springframework.boot</groupId>
@@ -17,10 +17,10 @@
     <version>0.5.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
-<!--    <modules>
-        <module>../transport</module>
-        <module>../testpack</module>
-    </modules>-->
+    <!--    <modules>
+            <module>../transport</module>
+            <module>../testpack</module>
+        </modules>-->
 
     <organization>
         <name>Global Alliance for Genomics and Health</name>
@@ -37,6 +37,7 @@
     <properties>
 
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <additionalparam>-Xdoclint:none</additionalparam>
         <!--
         <ga4gh.schema.version>0.6.0-SNAPSHOT</ga4gh.schema.version>
         -->
@@ -68,15 +69,15 @@
 
     <dependencyManagement>
         <dependencies>
-<!--
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
-                <version>1.3.0.M1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
--->
+            <!--
+                        <dependency>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-parent</artifactId>
+                            <version>1.3.0.M1</version>
+                            <type>pom</type>
+                            <scope>import</scope>
+                        </dependency>
+            -->
 
             <dependency>
                 <groupId>org.ga4gh</groupId>
@@ -138,11 +139,11 @@
             </dependency>
 
             <!-- yanl support for log4j2 config .. I wonder if snakeyaml would handle this? -->
-<!--            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>2.5.0</version>
-            </dependency>-->
+            <!--            <dependency>
+                            <groupId>com.fasterxml.jackson.dataformat</groupId>
+                            <artifactId>jackson-dataformat-yaml</artifactId>
+                            <version>2.5.0</version>
+                        </dependency>-->
 
             <dependency>
                 <groupId>org.assertj</groupId>
@@ -170,69 +171,95 @@
         </pluginManagement>
     </build>
 
+    <!-- parent sets plugin versions -->
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.5</version>
-                <configuration>
-                    <outputEncoding>UTF-8</outputEncoding>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <id>aggregate</id>
-                        <reports>
-                            <report>aggregate</report>
-                            <report>test-aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>2.6</version>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.3</version>
-                <configuration>
-                    <aggregate>true</aggregate>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <id>non-aggregate</id>
-                        <configuration>
-                            <!-- Specific configuration for the non aggregate report -->
-
-                        </configuration>
-                        <reports>
-                            <report>javadoc</report>
-                            <report>test-javadoc</report>
-                        </reports>
-                    </reportSet>
-
-                    <reportSet>
-                        <id>aggregate</id>
-                        <configuration>
-                            <!-- Specific configuration for the aggregate report -->
-                            <goals>
-                                <goal>aggregate</goal>
-                                <goal>test-aggregate</goal>
-                            </goals>
-                            <phase>site</phase>
-                        </configuration>
-                        <reports>
-                            <report>aggregate</report>
-                            <report>test-aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
             </plugin>
         </plugins>
     </reporting>
+    <!--
+        <reporting>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jxr-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <outputEncoding>UTF-8</outputEncoding>
+                    </configuration>
+                    <reportSets>
+                        <reportSet>
+                            <id>aggregate</id>
+                            <reports>
+                                <report>aggregate</report>
+                                <report>test-aggregate</report>
+                            </reports>
+                        </reportSet>
+                    </reportSets>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.6</version>
+                    <configuration>
+                        <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                        <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.3</version>
+                    <configuration>
+                        <aggregate>true</aggregate>
+                        <encoding>UTF-8</encoding>
+                        <failOnError>false</failOnError>
+                    </configuration>
+                    <reportSets>
+                        <reportSet>
+                            <id>non-aggregate</id>
+                            <configuration>
+                            </configuration>
+                            <reports>
+                                <report>javadoc</report>
+                                <report>test-javadoc</report>
+                            </reports>
+                        </reportSet>
+
+                        <reportSet>
+                            <id>aggregate</id>
+                            <configuration>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                    <goal>test-aggregate</goal>
+                                </goals>
+                                <phase>site</phase>
+                            </configuration>
+                            <reports>
+                                <report>aggregate</report>
+                                <report>test-aggregate</report>
+                            </reports>
+                        </reportSet>
+                    </reportSets>
+                </plugin>
+            </plugins>
+        </reporting>
+    -->
 
 </project>

@@ -25,7 +25,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  *     <li>invokes the HTTP interaction,</li>
  *     <li>tracks the data sent/received (via a WireTracker), and</li>
  *     <li>captures the traffic summary in a static table named 'messages'</li>
- * </ul></p>
+ * </ul>
  * <p>The class accepts the request and response objects, the URL root and path strings, and
  * an (optional) WireTracker (which will collect the JSON as sent/received on the wire).</p>
  * <p>Usage: </p>
@@ -42,6 +42,11 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase> {
     private static org.slf4j.Logger log;
+
+    /**
+     * <p>Holds the message traffic sent/received by AvroJson during the entire test run.
+     * Intended to support test quality/coverage reporting.</p>
+     */
     private static Table<String, String, Integer> messages;
 
     static {
@@ -99,15 +104,18 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
      * @param resp     an instance of the avro *Response method object
      * @param urlRoot  String the server base (often includes a version number)
      * @param path     String the request target path as identified in the avdl
-     * @param wireTracker {@code WireTracker} control and transfer of on-the-wire difference measure
+     * @param wireTracker {@code WireTracker} control and transfer of on-the-wire data
      */
     public AvroJson(Q req, P resp, String urlRoot, String path, WireTracker wireTracker) {
         this(req, resp, urlRoot, path);
         this.wireTracker = wireTracker;
     }
 
-    /*
-     * table cells are | request (class, post/get, body/id) | response class  | response status code|
+    /**
+     * <p>Access the message-traffic recording Table.</p>
+     * <p>Each target endpoint/parameter string becomes a key to a row in the table,
+     * and the row cells are:</p>
+     * <p>| request (class, post/get, body/id) | response class (msg type) | HTTP status code |</p>
      */
     public static Table<String, String, Integer> getMessages() {
         return messages;

@@ -25,6 +25,17 @@ import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * <p>The Application - this is the main entry point for the CTK for running the entire CTK
+ * from a command line or an IDE, and is the CTK entry point if running from the executable jar
+ * packaging.</p>
+ * <p>(You can also run the CTK using {@code mvn spring-boot:run}, or you can run tests/suites one at a time
+ * in your IDE.)</p>
+ * <p>This entry is a Spring Boot app, so you can refer to their documention for alternative run-methods.
+ * @see <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-running-your-application.html">
+ *     SpringBoot: Running Your Application</a></p>
+ * <p>Created by Wayne Stidolph</p>
+ */
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 

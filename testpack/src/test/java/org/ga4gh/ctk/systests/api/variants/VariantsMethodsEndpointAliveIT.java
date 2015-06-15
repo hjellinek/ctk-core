@@ -15,8 +15,9 @@ import static org.assertj.core.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * <p>Verifies basic reachability of the variants, variantsets, and callsets, search enpoints, and parseable default responses.</p>
- *
+ * <p>Verifies basic reachability of the Server's endpoints for variants, variantsets, and callsets.</p>
+ * <p>Tries default or basic search/get as appropriate and ensure teh response is parseable
+ * of the type expected according to the IDL.</p>
  * <p>The {@code VARIANTS} API methods (as defined in {@code variantmethods.avdl}) are:</p>
  * <ul>
  *     <li>POST /variants/search GASearchVariantsRequest yields GASearchVariantsResponse [{@code searchVariants()}]</li>
@@ -41,9 +42,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class VariantsMethodsEndpointAliveIT {
 
     private static org.slf4j.Logger log = getLogger(VariantsMethodsEndpointAliveIT.class);
-
-
-
 
     private static VariantsProtocolClient client;
 
@@ -149,10 +147,8 @@ public class VariantsMethodsEndpointAliveIT {
         InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
         client = new VariantsProtocolClient();
-        // TODO verify correct data installed
+        // TODO verify correct data installed? Maybe a null client to cause fast-fail and test-skipping?
 
-
-        //client.start(); start binary transceiver to Server Under Test
     }
 
     @AfterClass
