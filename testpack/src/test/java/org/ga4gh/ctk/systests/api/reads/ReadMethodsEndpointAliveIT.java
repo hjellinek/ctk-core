@@ -104,10 +104,6 @@ public class ReadMethodsEndpointAliveIT {
 
         WireTrackerAssert.assertThat(mywt)
                 .hasResponseStatus(RespCode.NOT_FOUND);
-
-        // getting the GAE will verify the response is parseable and fits the schema
-        // but we don't yet care what the actual error message or code is
-        assertThat(mywt.gotParseableGAE()).isTrue();
     }
 
     /**
