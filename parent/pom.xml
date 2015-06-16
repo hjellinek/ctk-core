@@ -64,6 +64,7 @@
         <log4j.version>2.3</log4j.version>
         <org.json.json.version>20141113</org.json.json.version>
         <slf4j.version>1.7.12</slf4j.version>
+        <tap4j-ext.version>4.1</tap4j-ext.version>
         <unirest-java.version>1.4.5</unirest-java.version>
     </properties>
 
@@ -113,13 +114,14 @@
                 <version>${junit-toolbox.version}</version>
             </dependency>
 
+            <!-- bring in a parameterized Runner -->
             <dependency>
                 <groupId>pl.pragmatists</groupId>
                 <artifactId>JUnitParams</artifactId>
                 <version>${junitparams.version}</version>
-                <scope>compile</scope>
             </dependency>
 
+            <!-- test assertion on JSON data -->
             <dependency>
                 <groupId>org.skyscreamer</groupId>
                 <artifactId>jsonassert</artifactId>
@@ -145,14 +147,21 @@
                             <version>2.5.0</version>
                         </dependency>-->
 
+            <!-- the best general assertions library :) -->
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.core.version}</version>
                 <scope>compile</scope>
             </dependency>
-        </dependencies>
 
+            <!-- tap4j ext will bring in tap4j for us -->
+            <dependency>
+                <groupId>org.tap4j</groupId>
+                <artifactId>tap4j-ext</artifactId>
+                <version>${tap4j-ext.version}</version>
+            </dependency>
+        </dependencies>
 
     </dependencyManagement>
 

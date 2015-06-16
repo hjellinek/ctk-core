@@ -60,6 +60,7 @@
         </contributor>
     </contributors>
 
+    <!-- TODO consider moving all the Spring stuff to its own POM -->
     <!-- (you don't need this if you are using a .RELEASE version) -->
     <repositories>
         <repository>
@@ -163,8 +164,14 @@
             <version>0.9.10</version>
         </dependency>
 
+        <!-- use tap4j to get Test Anything Protocol support -->
         <dependency>
-            <!-- lots of utility stuff! -->
+            <groupId>org.tap4j</groupId>
+            <artifactId>tap4j-ext</artifactId>
+        </dependency>
+
+        <!-- lots of utility stuff! -->
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
@@ -273,6 +280,19 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.18.1</version>
+                <configuration>
+                    <properties>
+                        <property>
+                            <!-- hook in the TAP framework for future reporting integration -->
+                            <name>listener</name>
+                            <value>org.tap4j.ext.junit.listener.TapListenerClass,org.tap4j.ext.junit.listener.TapListenerSuite
+                            </value>
+                        </property>
+                        <systemPropertyValues>
+                            <tap.junit.results>target/tap4j</tap.junit.results>
+                        </systemPropertyValues>
+                    </properties>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
