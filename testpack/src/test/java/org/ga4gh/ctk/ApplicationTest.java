@@ -30,7 +30,6 @@ public class ApplicationTest {
     @Test
     public void testMain() throws Exception {
 
-
     }
 
 } 
