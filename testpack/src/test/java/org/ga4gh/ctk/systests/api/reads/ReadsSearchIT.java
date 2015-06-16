@@ -15,6 +15,8 @@ import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -56,12 +58,15 @@ public class ReadsSearchIT {
     */
     @Test
     @Parameters({
-            "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
+            "VALID_READGROUPID"
     })
+    // We pass in a key to look up the readgroupId, rather than the readgroupId itself,
+    // so teh TAP framework can make a valid filename out of the parameter string
     public void readsResponseMatchesACTGNPattern(String rgid) throws Exception {
+        String replacedRgid = rgidMap.get(rgid);
         // do a readsearch
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .setReadGroupIds(Arrays.asList(rgid))
+                .setReadGroupIds(Arrays.asList(replacedRgid))
                 .build();
         GASearchReadsResponse grtn = client.searchReads(gsrr);
         // GASearchReadsResponse
@@ -72,5 +77,11 @@ public class ReadsSearchIT {
             assertThat(gar.getAlignedSequence()).isNotNull()
                     .matches("[ACTGN]+");
         }
+    }
+
+    private static Map<String, String> rgidMap;
+    static {
+        rgidMap = new HashMap<>();
+        rgidMap.put("VALID_READGROUPID","low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
     }
 }
