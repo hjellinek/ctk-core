@@ -6,21 +6,15 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.tap4j.ext.junit.listener.TapListenerClass;
+import org.tap4j.ext.junit.listener.TapListenerSuite;
 
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -32,18 +26,17 @@ import static org.slf4j.LoggerFactory.getLogger;
  * <p>(You can also run the CTK using {@code mvn spring-boot:run}, or you can run tests/suites one at a time
  * in your IDE.)</p>
  * <p>This entry is a Spring Boot app, so you can refer to their documention for alternative run-methods.
+ *
  * @see <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-running-your-application.html">
- *     SpringBoot: Running Your Application</a></p>
+ * SpringBoot: Running Your Application</a></p>
  * <p>Created by Wayne Stidolph</p>
  */
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
-    private static String TESTPACKAGE = "org.ga4gh.ctk.systests";
-
     private static org.slf4j.Logger log = getLogger(Application.class);
     private static org.slf4j.Logger testlog = getLogger("SYSTEST");
-    static String TRAFFICLOG="SYSTEST.TRAFFIC";
+    static String TRAFFICLOG = "SYSTEST.TRAFFIC";
     private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
 
     public static void main(String[] args) {
@@ -68,62 +61,57 @@ public class Application implements CommandLineRunner {
         String matchStrIT = ".*IT.*";
         String matchStrSuite = ".*TestSuite.*";
 
-        String matchStr = matchStrIT;
+        String matchStr = matchStrSuite;
         log.debug("seeking test classes that match < " + matchStr + " >");
 
-        Set<Class<?>> testClasses = findTestClasses(matchStr);
+        TestFinder testFinder = new TestFinder();
+        Set<Class<?>> testClasses = testFinder.findTestClasses(matchStr);
 
-        for (Class testClass : testClasses) {
-                runTestClass(testClass); // will also output Failures to SYSTEST log
+        if (testClasses.isEmpty()) {
+            testlog.warn("Didn't do any testing");
+            System.exit(-1);
         }
 
+        runTestClasses(testClasses);
+
+        // post-Test reporting
+
         // just log the traffic, until I get the coverage-tests written
-        for(Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()){
-            // TODO either filter this to just this Test or move the extraction to zzCheckCoverage
+        for (Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()) {
             trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
         }
     }
 
-
     /**
-     * find test classes based on name pattern-match
-    */
-    private static Set<Class<?>> findTestClasses(String matchStr) {
-
-        Collection<URL> urls = ClasspathHelper.forPackage(TESTPACKAGE);
-
-        Reflections reflections =
-                new Reflections(new ConfigurationBuilder()
-                .setUrls(urls)
-                .setScanners(new SubTypesScanner(false)) // false means do NOT exclude direct child of Object
-                .filterInputsBy(new FilterBuilder().include(matchStr))
-        );
-
-        boolean foundTests = reflections.getConfiguration().getUrls().size()>0;
-        if(!foundTests){
-            log.warn("No tests found on classpath, looking for classes in package: " + TESTPACKAGE);
-            ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            URL[] allurls = ((URLClassLoader)cl).getURLs();
-            for(URL url : allurls) log.debug("URL " + url.toString());
-            testlog.warn("Didn't do any testing");
-
-            return new HashSet<Class<?>>(); // just toss back an empty set
-        }
-
-        Set<Class<? extends Object>> testClasses =
-                reflections.getSubTypesOf(Object.class);
-
-        return testClasses;
-    }
-
-    private static void runTestClass(Class testClass) {
+     * <p>Run the testClasses.</p>
+     * <p>Execute the test(s), and generate outputs.
+     * Any failures go to the testlog at a WARN level.
+     * All results are output using Test Anything Protocol listeners.</p>
+     *
+     * @param testClasses Classes to be executed using JUnit runners
+     * @see <a href="http://tap4j.org/tap4j-ext/junit_support.html">Test Anything Protocol tap4j extension</a>
+     */
+    private void runTestClasses(Set<Class<?>> testClasses) {
 
         JUnitCore junit = new JUnitCore();
-        Request req = Request.aClass(testClass);
+
+        Request req = Request.classes(
+                // the Request wants an array (a Vararg) of classes
+                testClasses.toArray(new Class[testClasses.size()]));
+
+        TapListenerSuite tapsuite = new TapListenerSuite();// TAP outputs per Suite
+        junit.addListener(tapsuite);
+
+        TapListenerClass tapclass = new TapListenerClass();// TAP outputs per class
+        junit.addListener(tapclass);
+
         Result result = junit.run(req);
 
+        testlog.info("Test run count: " + result.getRunCount());
+        testlog.info("Test ignore count: " + result.getIgnoreCount());
+        testlog.info("Test failure count: " + result.getFailureCount());
         for (Failure failure : result.getFailures()) {
-           testlog.warn(failure.toString());
+            testlog.warn(failure.toString());
         }
     }
 }
