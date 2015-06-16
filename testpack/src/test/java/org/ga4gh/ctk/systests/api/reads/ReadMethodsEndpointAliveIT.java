@@ -21,6 +21,8 @@ import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -121,21 +123,42 @@ public class ReadMethodsEndpointAliveIT {
      * @throws Exception the exception
      */
     @Test
+    // Normally we'd just pass in the strings here, but the parameters are used
+    // to create final TAP output streams, so the parameter values need to be
+    // legal filenames ... this means, no colons in the readGroupIds!
+    // The workaround is simple enough, and actually seems a bit more readable,
+    // so we'll pass in a (valid) key to a static Map (see rgidMap just below),
+    // and in the test method we'll look up the actual parameter.
     @Parameters({
-            "low-coverage:HG00534;low-coverage:HG00533, NOT_IMPLEMENTED",
-            "low-coverage:HG00534;BAD_ID, NOT_IMPLEMENTED",
-            "DUMB_ID;BAD_ID, NOT_IMPLEMENTED",
-            "low-coverage:HG00534;low-coverage:HG00533;low-coverage:HG00533, NOT_IMPLEMENTED"
+            "TWO_GOOD, NOT_IMPLEMENTED",
+            "ONE_GOOD_ONE_BAD, NOT_IMPLEMENTED",
+            "TWO_BAD, NOT_IMPLEMENTED",
+            "THREE_GOOD, NOT_IMPLEMENTED"
     })
     public void multipleReadGroupsNotSupported(String rgid, RespCode expStatus) throws Exception {
+        String replacedRgid = rgidMap.get(rgid);
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .setReadGroupIds(Arrays.asList(rgid.split(";")))
+                .setReadGroupIds(Arrays.asList(replacedRgid.split(";")))
                 .build();
         WireTracker mywt = new WireTracker();
         GASearchReadsResponse grtn = client.searchReads(gsrr, mywt);
         WireTrackerAssert.assertThat(mywt)
                 .hasResponseStatus(expStatus);
         assertThat(mywt.gotParseableGAE()).isTrue();
+    }
+
+    /**
+     * Map from string acceptable as a file name (for TAP) and the actual
+     * parameters string the test method wants, to get around problem that
+     * GA4GH readGroupID are not necessarily valid filenames
+     */
+    private static Map<String,String> rgidMap;
+    static {
+        rgidMap = new HashMap<String, String>();
+        rgidMap.put("TWO_GOOD","low-coverage:HG00534;low-coverage:HG00533");
+        rgidMap.put("ONE_GOOD_ONE_BAD","low-coverage:HG00534;BAD_ID");
+        rgidMap.put("TWO_BAD", "DUMB_ID;BAD_ID");
+        rgidMap.put("THREE_GOOD", "low-coverage:HG00534;low-coverage:HG00533;low-coverage:HG00533");
     }
 
     /**
