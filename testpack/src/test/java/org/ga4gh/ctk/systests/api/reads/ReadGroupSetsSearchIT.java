@@ -17,7 +17,9 @@ import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -35,16 +37,17 @@ public class ReadGroupSetsSearchIT {
     @Ignore("ReadGroupSets not yet supported, and returned 'name' is null")
     @Test
     @Parameters({
-            "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522",
-            "low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522",
-            "low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"
+            "LO_COV_533_CHS",
+            "LO_COV_096_GBR",
+            "LO_COV_534_CHS"
     })
     public void goodReadgroupSetsNameShouldRetrieveOnlyMatchingReadGroupSets(String rgName) throws Exception {
         // IDL: "Only return read group sets for which a substring of the name
         // matches this string.
 
+        String replacedRgName = stringmap.get(rgName);
         // build a substring of the input name
-        String substr = "CHS"; //rgName.substring(3, 9);
+        String substr = replacedRgName.substring(3, 9);
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
                 .setName(substr)
                 .build();
@@ -79,19 +82,31 @@ public class ReadGroupSetsSearchIT {
     }
 
 
+
+    /**
+     * <p>Bad readgroup id should return errors.</p>
+     * <p>This test verifies the Server returns an expected error (NOT_FOUND)
+     * for a syntactically valid but unused dataset ID</p>
+     * <p>Test using an empty String, and an unused String</p>
+     *
+     *
+     * @param datasetid the datasetid
+     * @throws Exception the exception
+     */
     @Ignore("datasetId not supported in v0.5.1 server")
     @Test
     @Parameters({
-            "",
+            "EMPTY",
             "foo"
     })
-    public void badReadgroupIdShouldReturnErrors(String datasetid) throws Exception {
+    public void badDatasetidInSearchReadGroupSetsRequestShouldReturnErrors(String datasetid) throws Exception {
         log.info("testing searchReadGroupSets");
 
         //  Builder does validation and sets defaults
         // this is based on  the example from the demo writeup:
         // curl --data '{"datasetIds":[], "name":null}' --header 'Content-Type: application/json' \
         //       http://localhost:8000/v0.5.1/readgroupsets/search
+        String replacedDatasetid = stringmap.get(datasetid);
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
                 .setName(null)
                 .setDatasetIds(Arrays.asList(datasetid.split(":")))
@@ -106,6 +121,16 @@ public class ReadGroupSetsSearchIT {
         List<GAReadGroupSet> rgs = rtnVal.getReadGroupSets();
 
         org.ga4gh.GAReadGroupSetAssert.assertThat(rgs.get(0)).hasDatasetId(datasetid);
+    }
+
+    private static Map<String, String> stringmap;
+    static {
+        stringmap = new HashMap<>();
+        stringmap.put("EMPTY", "");
+        stringmap.put("foo", "foo");
+        stringmap.put("LO_COV_533_CHS","low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
+        stringmap.put("LO_COV_096_GBR","low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522");
+        stringmap.put("LO_COV_534_CHS","low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
     }
 
     @BeforeClass
