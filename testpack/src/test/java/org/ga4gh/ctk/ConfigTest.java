@@ -2,7 +2,6 @@ package org.ga4gh.ctk;
 
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
@@ -50,18 +49,13 @@ public class ConfigTest {
 //TODO: Test goes here... 
     }
 
-    @Value("${ctk.testproperty")
-    String theprop;
 
     /**
      * Method: getTestproperty()
      */
     @Test
-    public void testGetTestproperty() throws Exception {
-
-        assertThat(config).isNotNull();
-        assertThat(theprop).isNotNull();
-
+    public void aPropertyCanBeRead() throws Exception {
+        assertThat(config.ctk_testpackage).isNotNull();
     }
 
     @Test

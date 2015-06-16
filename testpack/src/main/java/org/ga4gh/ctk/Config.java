@@ -10,8 +10,27 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 /**
  * <p>Configuration entry point for the runtime environment.</p>
- * <p>This class collects the config values supplied via Spring's
- * normal configuration precedence order:</p>
+ * <p>This class uses Spring @Value injection to get properties from the runtime
+ * environment into simple strings bound to the class; the instance can then be
+ * injected (by Spring) into ojects that want these control variables.</p>
+ *
+ * <p>To use the Config class, just inject it into your class, perhaps using a setter:</p>
+ * <pre>
+ * {@code
+ *    &#64;Autowired
+ *     Config cfg;
+ *     public void setCfg(Config cfg){this.cfg = cfg;}
+ * }
+ * </pre>
+ * <p>Your IDE will now autocomplete uses of 'cfg' (or whatever you name it) with
+ * the properties Config knows about.</p>
+ * <p>Note that the properties can be supplied with dots or underscores, but will be
+ * accessed via the java names (e.g., property "ctk.pattern.testclass"
+ * is injected into the variable named "ctk_pattern_testclass" - there's no
+ * mapping-magic here, this is a manual editing step you'll need to observe
+ * if you add new properties to this mechanism.</p>
+ * <p>This class collects the "ctk.*" config values supplied via Spring's
+ * normal configuration precedence order:
  * <ul>
  * <li>command line arguments (anything starting with double-dash,
  * e.g., --server.url=192.168.2.115:8000 creates or overrides a
@@ -31,15 +50,13 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  * <li>@PropertySource annotations on @Configuration classes (such as this class)</li>
  * <li>Default properties (specified using SpringApplication.setDefaultProperties)</li>
  * </ul>
- *
- * <p>Property/YAML files can be in 4 locations:</p>
+ * <p>Property/YAML files can be in 4 locations:
  * <ul>
- *     <li>(highest priority) externally, in the {@code /config} directory under the app's start dir</li>
- *     <li>externally, directly in the app's start dir</li>
- *     <li>internally, in the /config package (not used in the CTK)</li>
- *     <li>(lowest priority) internally at the root of the classpath (from the "resources/" dir in the source tree)</li>
+ * <li>(highest priority) externally, in the {@code /config} directory under the app's start dir</li>
+ * <li>externally, directly in the app's start dir</li>
+ * <li>internally, in the /config package (not used in the CTK)</li>
+ * <li>(lowest priority) internally at the root of the classpath (from the "resources/" dir in the source tree)</li>
  * </ul>
- *
  * <p>YAML files seem to take precedence over .properties files of the same name.</p>
  * <p>Profiles used in the CTK:</p>
  * <ul><li>none so far</li></ul>
@@ -47,16 +64,69 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  */
 @Configuration
 @EnableAutoConfiguration
-@ConfigurationProperties(prefix="ctk")
+@ConfigurationProperties(prefix = "ctk")
 @Data
 public class Config {
-    @Value("${ctk.testproperty}")
-    private String testproperty;
 
-    // NOTE getters and setters are provided for us by Lombok
+    // NOTE getters and setters, if needed, are provided for us by Lombok
+    // but public variables don't need them and seem (to me) cleaner here
+
+    @Value("${ctk.tgt.urlRoot}")
+    public String ctk_tgt_urlRoot;
+
+    @Value("${ctk.testpackage}")
+    public String ctk_testpackage;
+    @Value("${ctk.pattern.testclass}")
+    public String ctk_pattern_testclass;
+    @Value("${ctk.pattern.testsuite}")
+    public String ctk_pattern_testsuite;
+
+    /* search paths */
+    @Value("${ctk.tgt.searchReads}")
+    public String ctk_tgt_searchReads;
+    @Value("${ctk.tgt.searchReadGroupSets}")
+    public String ctk_tgt_searchReadGroupSets;
+    @Value("${ctk.tgt.searchReferencesets}")
+    public String ctk_tgt_searchReferencesets;
+    @Value("${ctk.tgt.searchVariantSets}")
+    public String ctk_tgt_searchVariantSets;
+    @Value("${ctk.tgt.searchVariants}")
+    public String ctk_tgt_searchVariants;
+    @Value("${ctk.tgt.searchCallsets}")
+    public String ctk_tgt_searchCallsets;
+    @Value("${ctk.tgt.getReadGroupSet}")
+    public String ctk_tgt_getReadGroupSet;
+    @Value("${ctk.tgt.getReferences}")
+    public String ctk_tgt_getReferences;
+    @Value("${ctk.tgt.getReferencesBases}")
+    public String ctk_tgt_getReferencesBases;
+    @Value("${ctk.tgt.searchReferences}")
+    public String ctk_tgt_searchReferences;
+    @Value("${ctk.tgt.getReferencesets}")
+    public String ctk_tgt_getReferencesets;
+    @Value("${ctk.tgt.getReadGroup}")
+    public String ctk_tgt_getReadGroup;
+    @Value("${ctk.tgt.searchDatasets}")
+    public String ctk_tgt_searchDatasets;
+    @Value("${ctk.tgt.getDataset}")
+    public String ctk_tgt_getDataset;
+    @Value("${ctk.tgt.getVariantSet}")
+    public String ctk_tgt_getVariantSet;
+    @Value("${ctk.tgt.getVariant}")
+    public String ctk_tgt_getVariant;
+    @Value("${ctk.tgt.searchAlleleCalls}")
+    public String ctk_tgt_searchAlleleCalls;
+    @Value("${ctk.tgt.searchAlleles}")
+    public String ctk_tgt_searchAlleles;
+    @Value("${ctk.tgt.getAllele}")
+    public String ctk_tgt_getAllele;
+    @Value("${ctk.tgt.getCallSet}")
+    public String ctk_tgt_getCallSet;
+    @Value("${ctk.tgt.searchCalls}")
+    public String ctk_tgt_searchCalls;
 
     @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(){
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
 }
