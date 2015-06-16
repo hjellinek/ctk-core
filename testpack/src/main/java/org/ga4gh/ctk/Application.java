@@ -6,6 +6,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,6 +40,12 @@ public class Application implements CommandLineRunner {
     static String TRAFFICLOG = "SYSTEST.TRAFFIC";
     private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
 
+    @Autowired
+    Config cfg;
+    public void setCfg(Config cfg){
+        this.cfg = cfg;
+    }
+
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
     }
@@ -61,7 +68,7 @@ public class Application implements CommandLineRunner {
         String matchStrIT = ".*IT.*";
         String matchStrSuite = ".*TestSuite.*";
 
-        String matchStr = matchStrSuite;
+        String matchStr = matchStrIT;
         log.debug("seeking test classes that match < " + matchStr + " >");
 
         TestFinder testFinder = new TestFinder();

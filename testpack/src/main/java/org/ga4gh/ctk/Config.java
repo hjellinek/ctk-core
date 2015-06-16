@@ -1,10 +1,12 @@
 package org.ga4gh.ctk;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 /**
  * <p>Configuration entry point for the runtime environment.</p>
@@ -46,8 +48,15 @@ import org.springframework.core.env.Environment;
 @Configuration
 @EnableAutoConfiguration
 @ConfigurationProperties(prefix="ctk")
+@Data
 public class Config {
-    @Autowired
-    Environment env;
+    @Value("${ctk.testproperty}")
+    private String testproperty;
 
+    // NOTE getters and setters are provided for us by Lombok
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(){
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 }

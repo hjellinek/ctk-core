@@ -184,6 +184,14 @@
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
         </dependency>
+
+        <!-- lombok saves us some typing in the COnfig class -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.4</version>
+        </dependency>
+
         <dependency>
             <!-- transitively brings in jackson-databind, so this
             triggers log4j2 support for hide_log4j2.json and log4j2.jsm config,
@@ -285,7 +293,8 @@
                         <property>
                             <!-- hook in the TAP framework for future reporting integration -->
                             <name>listener</name>
-                            <value>org.tap4j.ext.junit.listener.TapListenerClass,org.tap4j.ext.junit.listener.TapListenerSuite
+                            <value>
+                                org.tap4j.ext.junit.listener.TapListenerClass,org.tap4j.ext.junit.listener.TapListenerSuite
                             </value>
                         </property>
                         <systemPropertyValues>
