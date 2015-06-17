@@ -1,24 +1,20 @@
 package org.ga4gh.ctk;
 
-import com.google.common.collect.Table;
-import org.ga4gh.ctk.transport.avrojson.AvroJson;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Request;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.tap4j.ext.junit.listener.TapListenerClass;
-import org.tap4j.ext.junit.listener.TapListenerSuite;
+import com.google.common.collect.*;
+import org.ga4gh.ctk.config.*;
+import org.ga4gh.ctk.transport.avrojson.*;
+import org.junit.runner.*;
+import org.junit.runner.notification.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.*;
+import org.springframework.boot.autoconfigure.*;
+import org.springframework.context.*;
+import org.tap4j.ext.junit.listener.*;
 
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Set;
+import java.net.*;
+import java.util.*;
 
-import static org.slf4j.LoggerFactory.getLogger;
+import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>The Application - this is the main entry point for the CTK for running the entire CTK
@@ -41,9 +37,15 @@ public class Application implements CommandLineRunner {
     private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
 
     @Autowired
-    Config cfg;
-    public void setCfg(Config cfg){
-        this.cfg = cfg;
+    private Props props;
+    public void setProps(Props props){
+        this.props = props;
+    }
+
+    @Autowired
+    private TestFinder testFinder;
+    public void setTestFinder(TestFinder testFinder) {
+        this.testFinder = testFinder;
     }
 
     public static void main(String[] args) {
@@ -59,19 +61,21 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        // log some path-debug info for "why aren't my tests seen?"
+        // log some startup path-debug info for "why aren't my tests seen?"
         URL location = Application.class.getProtectionDomain().getCodeSource().getLocation();
         log.debug("Application launched from " + location.getFile());
         log.debug("command line args: " + Arrays.toString(args));
 
-        // temp hack until I add cmd-line param or use the props
-        String matchStrIT = ".*IT.*";
-        String matchStrSuite = ".*TestSuite.*";
+        // run a 'before' script if it exists
+        String scriptBefore = props.ctk_scripts_before;
+        if(scriptBefore != null && !scriptBefore.isEmpty()){
+            scriptRunner(scriptBefore);
+        }
 
-        String matchStr = matchStrIT;
+        String matchStr = props.ctk_pattern_testclass; // default is run-all-tests-classes
         log.debug("seeking test classes that match < " + matchStr + " >");
 
-        TestFinder testFinder = new TestFinder();
+        //TestFinder testFinder = new TestFinder();
         Set<Class<?>> testClasses = testFinder.findTestClasses(matchStr);
 
         if (testClasses.isEmpty()) {
@@ -120,5 +124,10 @@ public class Application implements CommandLineRunner {
         for (Failure failure : result.getFailures()) {
             testlog.warn(failure.toString());
         }
+    }
+
+    private void scriptRunner(String str){
+
+        // use Apache Commons Exec, launch in seperate thread (non-block)
     }
 }

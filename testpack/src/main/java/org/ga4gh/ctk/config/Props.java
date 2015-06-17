@@ -1,29 +1,28 @@
-package org.ga4gh.ctk;
+package org.ga4gh.ctk.config;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.boot.context.properties.*;
+import org.springframework.context.annotation.*;
+import org.springframework.context.support.*;
+import org.springframework.stereotype.*;
 
 /**
- * <p>Configuration entry point for the runtime environment.</p>
+ * <p>Access to runtime environment properties.</p>
  * <p>This class uses Spring @Value injection to get properties from the runtime
  * environment into simple strings bound to the class; the instance can then be
  * injected (by Spring) into ojects that want these control variables.</p>
  *
- * <p>To use the Config class, just inject it into your class, perhaps using a setter:</p>
+ * <p>To use the Props class, just inject it into your class, perhaps using a setter:</p>
  * <pre>
  * {@code
  *    &#64;Autowired
- *     Config cfg;
- *     public void setCfg(Config cfg){this.cfg = cfg;}
+ *     Props props;
+ *     public void setProps(Props cfg){this.cfg = cfg;}
  * }
  * </pre>
- * <p>Your IDE will now autocomplete uses of 'cfg' (or whatever you name it) with
- * the properties Config knows about.</p>
+ * <p>Your IDE will now autocomplete uses of 'props' (or whatever you name it) with
+ * the properties Props knows about.</p>
  * <p>Note that the properties can be supplied with dots or underscores, but will be
  * accessed via the java names (e.g., property "ctk.pattern.testclass"
  * is injected into the variable named "ctk_pattern_testclass" - there's no
@@ -62,11 +61,11 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  * <ul><li>none so far</li></ul>
  * <p>Created by Wayne Stidolph on 6/13/2015.</p>
  */
-@Configuration
-@EnableAutoConfiguration
+@Component
 @ConfigurationProperties(prefix = "ctk")
+@PropertySource("classpath:application.properties")
 @Data
-public class Config {
+public class Props {
 
     // NOTE getters and setters, if needed, are provided for us by Lombok
     // but public variables don't need them and seem (to me) cleaner here
@@ -80,6 +79,10 @@ public class Config {
     public String ctk_pattern_testclass;
     @Value("${ctk.pattern.testsuite}")
     public String ctk_pattern_testsuite;
+    @Value("${ctk.scripts.before}")
+    public String ctk_scripts_before;
+    @Value("${ctk.scripts.after}")
+    public String ctk_scripts_after;
 
     /* search paths */
     @Value("${ctk.tgt.searchReads}")

@@ -54,7 +54,7 @@ public class URLMAPPING {
         endpoints.put("searchCalls","calls/search");
         endpoints.put("searchAlleleCalls", "allelecalls/search");
 
-        loadProps("UrlMapping.properties");
+        propsFromFile = loadProps("UrlMapping.properties");
         if(propsFromFile != null){
             mergePropertiesIntoMap(propsFromFile, endpoints);
         }
