@@ -11,13 +11,14 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.GetRequest;
 import junitparams.JUnitParamsRunner;
 import org.ga4gh.ctk.control.testcategories.CoreTests;
-import org.ga4gh.ctk.transport.URLMAPPING;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.net.URL;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.ga4gh.ctk.transport.URLMAPPING.getUrlRoot;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Category(CoreTests.class)
@@ -35,7 +36,7 @@ public class LandingPageIT {
      */
     @Test
     public static void landingPagesShouldExist() throws Exception {
-        String theUrlString = URLMAPPING.getUrlRoot();
+        String theUrlString = getUrlRoot();
 
         URL url = new URL(theUrlString);
         String finalUrl = url.getProtocol() + "://" + url.getAuthority();
@@ -43,7 +44,7 @@ public class LandingPageIT {
         log.debug("Fetch from " + finalUrl);
         GetRequest request = Unirest.get(finalUrl);
         HttpResponse<String> response = request.asString();
-        org.assertj.core.api.Assertions.assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatus()).isEqualTo(200);
     }
 
 }
