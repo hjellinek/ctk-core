@@ -186,6 +186,13 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-assertions-generator-maven-plugin</artifactId>
                 <version>${assertj.generator.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-assertions</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <packages>
                         <param>org.ga4gh</param>
