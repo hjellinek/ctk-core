@@ -32,9 +32,9 @@ import static org.slf4j.LoggerFactory.*;
 public class Application implements CommandLineRunner {
 
     private static org.slf4j.Logger log = getLogger(Application.class);
-    @Value("${ctk.logging.systest}") static String SYSLOG;
-    private static org.slf4j.Logger testlog = getLogger(SYSLOG);
-    @Value("${ctk.logging.systest.traffic}") static String TRAFFICLOG;
+    static String SYSTEST = "TESTLOG";
+    private static org.slf4j.Logger testlog = getLogger(SYSTEST);
+    static String TRAFFICLOG=SYSTEST + ".TRAFFIC";
     private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
 
     @Autowired
