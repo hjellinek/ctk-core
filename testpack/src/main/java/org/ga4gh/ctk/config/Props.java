@@ -81,10 +81,14 @@ public class Props {
     public String ctk_pattern_testclass;
     @Value("${ctk.pattern.testsuite}")
     public String ctk_pattern_testsuite;
+
+    /* pre/post scripts are a planned capability, not yet connected */
     @Value("${ctk.scripts.before}")
     public String ctk_scripts_before;
     @Value("${ctk.scripts.after}")
     public String ctk_scripts_after;
+
+    /* logging control (name of the test/traffic logs) not yet working */
     @Value("${ctk.logging.systest}")
     public String ctk_logging_systest;
     @Value("${ctk.logging.systest.traffic}")
