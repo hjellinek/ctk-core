@@ -73,6 +73,8 @@ public class Props {
     @Value("${ctk.tgt.urlRoot}")
     public String ctk_tgt_urlRoot;
 
+    @Value("${ctk.matchstr}")
+    public String ctk_matchstr;
     @Value("${ctk.testpackage}")
     public String ctk_testpackage;
     @Value("${ctk.pattern.testclass}")
@@ -83,6 +85,10 @@ public class Props {
     public String ctk_scripts_before;
     @Value("${ctk.scripts.after}")
     public String ctk_scripts_after;
+    @Value("${ctk.logging.systest}")
+    public String ctk_logging_systest;
+    @Value("${ctk.logging.systest.traffic}")
+    public String ctk_logging_systest_traffic;
 
     /* search paths */
     @Value("${ctk.tgt.searchReads}")

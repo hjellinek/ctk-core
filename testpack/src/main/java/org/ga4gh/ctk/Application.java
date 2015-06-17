@@ -32,8 +32,9 @@ import static org.slf4j.LoggerFactory.*;
 public class Application implements CommandLineRunner {
 
     private static org.slf4j.Logger log = getLogger(Application.class);
-    private static org.slf4j.Logger testlog = getLogger("SYSTEST");
-    static String TRAFFICLOG = "SYSTEST.TRAFFIC";
+    @Value("${ctk.logging.systest}") static String SYSLOG;
+    private static org.slf4j.Logger testlog = getLogger(SYSLOG);
+    @Value("${ctk.logging.systest.traffic}") static String TRAFFICLOG;
     private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
 
     @Autowired
@@ -72,19 +73,22 @@ public class Application implements CommandLineRunner {
             scriptRunner(scriptBefore);
         }
 
-        String matchStr = props.ctk_pattern_testclass; // default is run-all-tests-classes
-        log.debug("seeking test classes that match < " + matchStr + " >");
+        String matchStr = props.ctk_matchstr;
+        log.debug("matchstr: " + matchStr);
 
-        //TestFinder testFinder = new TestFinder();
-        Set<Class<?>> testClasses = testFinder.findTestClasses(matchStr);
+        // work through each clause one at a time, even though it might mean re-run tests
+        // alternative is to get the classes all into a Set and run that
+        for(String mstr : matchStr.split(",")) {
+            log.debug("seeking test classes that match < " + mstr + " >");
 
-        if (testClasses.isEmpty()) {
-            testlog.warn("Didn't do any testing");
-            System.exit(-1);
+            Set<Class<?>> testClasses = testFinder.findTestClasses(mstr);
+
+            if (testClasses.isEmpty()) {
+                testlog.warn("Didn't do any testing for matchStr " + mstr);
+            } else {
+                runTestClasses(testClasses);
+            }
         }
-
-        runTestClasses(testClasses);
-
         // post-Test reporting
 
         // just log the traffic, until I get the coverage-tests written
