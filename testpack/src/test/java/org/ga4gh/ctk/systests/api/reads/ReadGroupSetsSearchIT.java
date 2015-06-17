@@ -34,9 +34,20 @@ public class ReadGroupSetsSearchIT {
 
     private static ReadsProtocolClient client;
 
+    /**
+     * <p>Good readgroup sets name should retrieve only matching read group sets.</p>
+     * <p>IDL says a GASearchReadGroupSetsRequest should match based on a substring:</p>
+     * <cite>"Only return read group sets for which a substring of the name matches this string.</cite>
+     * <p>This test accepts a key, looks up the long readgroup name for a static map,
+     * extracts a substring from that valid name, and uses the subsctring in a search then verifies that
+     * all the returned ReadGroupSets match the substring.</p>
+     *
+     * @param rgName the rg name key
+     * @throws Exception the exception
+     */
     @Ignore("ReadGroupSets not yet supported, and returned 'name' is null")
     @Test
-    @Parameters({
+    @Parameters({ // key iinto the 'stringmap' variable
             "LO_COV_533_CHS",
             "LO_COV_096_GBR",
             "LO_COV_534_CHS"
@@ -62,11 +73,17 @@ public class ReadGroupSetsSearchIT {
         }
     }
 
-
-    /* ****************************************** */
+    /**
+     * <p>Readgroup set response for a dumb datasetid should be empty.</p>
+     *
+     * <p>Pass in a syntactically valid but non-matching datasetID to a GASearchReadGroupSetsRequest
+     * expect a valid GASearchReadGroupSetsResponse with no ReadGroupSets in it.</p>
+     *
+     * @throws Exception the exception
+     */
+/* ****************************************** */
     // DATASETID tests
     /* ****************************************** */
-    // commenting out @Test because the Runner seems to be ignoring @Ignore!
     @Ignore("datasetId not yet supported in v0.5.1 server")
     @Test
     public void readgroupSetResponseForDumbDatasetidShouldBeEmpty() throws Exception {
@@ -82,16 +99,15 @@ public class ReadGroupSetsSearchIT {
     }
 
 
-
     /**
-     * <p>Bad readgroup id should return errors.</p>
+     * <p>Bad datasetID should return errors.</p>
      * <p>This test verifies the Server returns an expected error (NOT_FOUND)
      * for a syntactically valid but unused dataset ID</p>
      * <p>Test using an empty String, and an unused String</p>
      *
      *
-     * @param datasetid the datasetid
-     * @throws Exception the exception
+     * @param datasetid the datasetid (actually, a key to the static 'stringmap')
+     * @throws Exception possible exception, keep compiler happy
      */
     @Ignore("datasetId not supported in v0.5.1 server")
     @Test
