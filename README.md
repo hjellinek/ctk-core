@@ -53,14 +53,27 @@ Installed Java 8, Maven 3, git 1.8+
 - `git submodule update` (to clone the schema from git; you may want to cd into the schema directory and check out a specific branch or tag such as `git checkout v0.5.1` to develop tests against)
 - `mvn clean install` (this will run the clean and package maven goals from the aggregator POM in ctk-core, which will then run those goals in the `schema`, `transport` and `testpack` modules for you; this puts the resulting artifacts into your local Maven repository. When those modules run they will pick up dependency and plugin information from `parent`)
 
+(Temporary workaround: if you run into a compile problem with the assertion generator,
+cd into the `transport` directory and run `mvn package install` directly from there.)
+
 ### Writing A Test
 
 some text
 
+### Configuring the CTK
+
+Edit `testpack\src\main\resources\application.properties`
+
+or, extract that file from the packaged jar file and have it in the dir where the jar runs from
+(`jar zvf ctk-testpack-v.0.5.1-SNAPSHOT.jar application.properties`)
+
+
 ### Running A Test
+extract
 some text
 
 #### Run From Maven
+cd into testpack
 `mvn failsafe:integration-test` runs the collection of all CTK tests of the target GA4GH server. (Modify the command line using Maven, or the `application.properties` file,  to alter which tests are run by default. Modify `log4j2.xml` to alter logging behavior.)
 
 #### Run From IDE
