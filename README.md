@@ -65,7 +65,7 @@ some text
 Edit `testpack\src\main\resources\application.properties`
 
 or, extract that file from the packaged jar file and have it in the dir where the jar runs from
-(`jar zvf ctk-testpack-v.0.5.1-SNAPSHOT.jar application.properties`)
+(`jar xvf ctk-testpack-v.0.5.1-SNAPSHOT.jar application.properties`)
 
 
 ### Running A Test
@@ -82,6 +82,11 @@ Each test class can be run as a standalone JUnit test, each TestSuite can be run
 ### Reviewing Results
 
 ### Adding A New API
+Create a new FooProtocolClient
+implement FooMethods to get messages stubbed
+Add a java package `org.ga4gh.ctk.systests.api.Foo`
+
+Add a test class in that package (see examples)
 
 ## Using The Executable Jars
 
