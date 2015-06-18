@@ -48,7 +48,7 @@ Installed Java 8, Maven 3, git 1.8+
 
 ### Installation
 
-- checkout the CTK project with `git clone https://github.com/wstidolph/ctk-core.git`
+- `git clone https://github.com/wstidolph/ctk-core.git` (checkout this project)
 - `cd ctk-core`
 - `git submodule init` (to register the `schemas` directory as a git submodule)
 - `git submodule update` (to clone the schema from git; you may want to cd into the schema directory and check out a specific branch or tag such as `git checkout v0.5.1` to develop tests against)
@@ -85,11 +85,22 @@ After the integration tests run, see the `ctk-core\testpack\target\failsafe-repo
 run the mvn site command from the top directory, launch the site from `ctk-core\target\site` and see the
  surefire reports.
 
-### Adding A New API
-- Create a new FooProtocolClient
-- implement FooMethods to get messages stubbed
-- Add a java package `org.ga4gh.ctk.systests.api.Foo`
-- Add a test class in that package (see examples)
+### Adding a New Test
+
+some text about adding JUnit @Test methods, and `MyNewTestClassIT.java` ... and advice on choosing the right JUnit Runner (default, params runner, etc). Also notes about using Spring for dependency injection if desired.
+
+### Adding A New API Foo
+Creating a new API has two major steps - creating the ProtocolClient which communicates with the new endpoints, and creating the classes and/or interfaces that hold and control the actual tests,
+#### Creating a FooProtocolClient
+The FooProtocolClient exists in the `transport` package
+- Create a new `org.ga4gh.ctk.transport.FooProtocolClient` in `transport` module (don't forget to add description to `package-info.java`)
+- implement FooMethods to get messages stubbed (mostly generated and repetitive code)
+#### Creating Infrastructure for Foo
+Tests (and infrastructure) go in the **test* subtree of the `testpack` module. This is the suggested (but not mandatory) )pattern:
+- Add a java package `org.ga4gh.ctk.systests.api.Foo` in the **test** tree of the `testpack` module
+- Add a test class `FooMethodsEndpointAliveIT.java` in that package (see examples) to verify the Foo endpoint is reachale and responsive
+- optionally create marker interface for test control, in the **test** tree of `testpack` at `org.ga4gh.ctk.control.API.FooTests.java`
+- optionally create `org.ga4gh.ctk.systests.FooTestSuite.java`
 
 ## Using The Executable Jars
 some text
