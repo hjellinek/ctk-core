@@ -5,10 +5,9 @@ A Conformance Test Kit for evaluating a GA4GH Server against the data and messag
 ```java
 
     public void readsResponseMatchesACTGNPattern(String rgid) throws Exception {
-        String replacedRgid = rgidMap.get(rgid);
         // do a readsearch
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .setReadGroupIds(Arrays.asList(replacedRgid))
+                .setReadGroupIds(Arrays.asList(rgid))
                 .build();
         GASearchReadsResponse grtn = client.searchReads(gsrr);
 
