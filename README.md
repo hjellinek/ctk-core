@@ -43,8 +43,10 @@ javadoc and source for the framework and for server tests but the result is defa
 machine.
 
 ## Getting Started as a test writer
+
 ### Prerequisites
 Installed Java 8, Maven 3, git 1.8+
+
 ### Installation
 
 - checkout the CTK project with `git clone https://github.com/wstidolph/ctk-core.git`
@@ -80,15 +82,18 @@ cd into testpack
 Each test class can be run as a standalone JUnit test, each TestSuite can be run as a standalone JUnit TestSuite.
 
 ### Reviewing Results
+After the integration tests run, see the `ctk-core\testpack\target\failsafe-reports` directory for HTML reports. Or
+run the mvn site command from the top directory, launch the site from `ctk-core\target\site` and see the
+ surefire reports.
 
 ### Adding A New API
-Create a new FooProtocolClient
-implement FooMethods to get messages stubbed
-Add a java package `org.ga4gh.ctk.systests.api.Foo`
-
-Add a test class in that package (see examples)
+- Create a new FooProtocolClient
+- implement FooMethods to get messages stubbed
+- Add a java package `org.ga4gh.ctk.systests.api.Foo`
+- Add a test class in that package (see examples)
 
 ## Using The Executable Jars
+some text
 
 ## Design Overview
 The CTK is structured as a set of Maven modules:
