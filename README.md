@@ -54,7 +54,7 @@ javadoc and source for the framework and for server tests but the result is defa
 machine.
 
 ## Build Status
-(For building the CTK/CTS, not referrinmg to the results of a Server "integration test" run of compliance)
+(For building the CTK/CTS, not referring to the results of a Server "integration test" run of compliance)
 [![Build Status](https://travis-ci.org/wstidolph/ctk-core.svg?branch=SplitOutFramework)](https://travis-ci.org/wstidolph/ctk-core)
 
 ## Getting Started as a test writer
