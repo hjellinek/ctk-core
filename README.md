@@ -54,8 +54,8 @@ javadoc and source for the framework and for server tests but the result is defa
 machine.
 
 ## Build Status
-(For building the CTK/CTS, not referring to the results of a Server "integration test" run of compliance)
-[![Build Status](https://travis-ci.org/wstidolph/ctk-core.svg?branch=SplitOutFramework)](https://travis-ci.org/wstidolph/ctk-core)
+
+The CTK/CTS build status is [![Build Status](https://travis-ci.org/wstidolph/ctk-core.svg?branch=SplitOutFramework)](https://travis-ci.org/wstidolph/ctk-core)
 
 ## Getting Started as a test writer
 
@@ -123,22 +123,34 @@ run the mvn site command from the top directory, launch the site from `ctk-core\
 some text about adding JUnit @Test methods, and `MyNewTestClassIT.java` ... and advice on choosing the right JUnit Runner (default, params runner, etc). Also notes about using Spring for dependency injection if desired.
 
 ### Adding A New API Foo
-Creating a new API has two major steps - creating the ProtocolClient which communicates with the new endpoints, and creating the classes and/or interfaces that hold and control the actual tests,
+Creating a new API has two major steps - creating the FooProtocolClient which communicates with the new endpoints, and creating the classes and/or interfaces that hold and control the actual tests,
+
 #### Creating a FooProtocolClient
-The FooProtocolClient exists in the `transport` package
-- Create a new `org.ga4gh.ctk.transport.FooProtocolClient` in `transport` module (don't forget to add description to `package-info.java`)
-- implement FooMethods to get messages stubbed (mostly generated and repetitive code)
+Yes, this could be code-gened, but it doesn't seem worth the overhead for the few clients we'll need...
+
+The FooProtocolClient exists in the `transport` package:
+
+- Create a new `org.ga4gh.ctk.transport.FooProtocolClient` in `transport` module, in `org.ga4gh.ctk.transport.protocols` (don't forget to add description to `package-info.java`)
+- FooProtocolClient should `implements org.ga4gh.GAFooMethods`
+(hint - your IDE will probably offer implement the defined methods to get messages stubbed; after you fill
+these in, don't forget to create an overload method for each that takes the additional WireAssert parameter,
+as you see in ReadsProtocolClient or VariantsProtocolClient)
+
 #### Creating Infrastructure for Foo
-Tests (and infrastructure) go in the **test* subtree of the `testpack` module. This is the suggested (but not mandatory) )pattern:
+
+Tests (and infrastructure) go in the **test* subtree of the `testpack` module. This is the suggested (but not mandatory) pattern:
+
 - Add a java package `org.ga4gh.ctk.systests.api.Foo` in the **test** tree of the `testpack` module
 - Add a test class `FooMethodsEndpointAliveIT.java` in that package (see examples) to verify the Foo endpoint is reachale and responsive
 - optionally create marker interface for test control, in the **test** tree of `testpack` at `org.ga4gh.ctk.control.API.FooTests.java`
 - optionally create `org.ga4gh.ctk.systests.FooTestSuite.java`
 
 ## Using The Executable Jars
+
 some text
 
 ## Design Overview
+
 The CTK is structured as a set of Maven modules:
 
 - **parent** is the common dependency management POM module
