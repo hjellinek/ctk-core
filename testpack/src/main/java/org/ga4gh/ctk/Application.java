@@ -79,13 +79,15 @@ public class Application implements CommandLineRunner {
         // work through each clause one at a time, even though it might mean re-run tests
         // alternative is to get the classes all into a Set and run that
         for(String mstr : matchStr.split(",")) {
-            log.debug("seeking test classes that match < " + mstr + " >");
+            log.info("seeking test classes that match < " + mstr + " >");
 
             Set<Class<?>> testClasses = testFinder.findTestClasses(mstr);
 
             if (testClasses.isEmpty()) {
                 testlog.warn("Didn't do any testing for matchStr " + mstr);
             } else {
+                testlog.info("matched count: " + testClasses.size());
+                testlog.debug(testClasses.toString());
                 runTestClasses(testClasses);
             }
         }
@@ -120,8 +122,11 @@ public class Application implements CommandLineRunner {
         TapListenerClass tapclass = new TapListenerClass();// TAP outputs per class
         junit.addListener(tapclass);
 
+        long starttime = System.currentTimeMillis();
         Result result = junit.run(req);
+        long endtime = System.currentTimeMillis();
 
+        testlog.info("test run took (ms): " + (endtime - starttime));
         testlog.info("Test run count: " + result.getRunCount());
         testlog.info("Test ignore count: " + result.getIgnoreCount());
         testlog.info("Test failure count: " + result.getFailureCount());
