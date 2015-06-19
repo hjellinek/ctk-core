@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ctk-parent</artifactId>
+        <groupId>org.ga4gh</groupId>
+        <version>0.5.1-SNAPSHOT</version>
+        <relativePath>../parent</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>cts-java</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.ga4gh</groupId>
+            <artifactId>ctk-testpack</artifactId>
+            <version>0.5.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ga4gh</groupId>
+            <artifactId>ctk-transport</artifactId>
+            <version>0.5.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ga4gh</groupId>
+            <artifactId>ga4gh-format</artifactId>
+            <version>0.5.2-SNAPSHOT</version>
+        </dependency>
+
+        <!-- bring in the Spring stuff -->
+        <dependency>
+            <!-- The core Spring Boot starter, including
+            auto-configuration support, logging and YAML -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <!-- std logging for Spring Boot is logback, but I
+            want to use log4j2 in the CTK so we exclude the default logging
+            here and add in log4j2 later -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- CTK uses log4j2, some of the tooling is more common than Logback -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <!-- Support for common test dependencies, including JUnit, Hamcrest
+            and Mockito along with the spring-test module. -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
+        <!-- turn on @ConfigurationProcessor so we can have ctk.* automatic naming -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <properties>
+                        <property>
+                            <!-- hook in the TAP framework for future reporting integration -->
+                            <name>listener</name>
+                            <value>
+                                org.tap4j.ext.junit.listener.TapListenerClass,org.tap4j.ext.junit.listener.TapListenerSuite
+                            </value>
+                        </property>
+                        <systemPropertyValues>
+                            <tap.junit.results>target/tap4j</tap.junit.results>
+                        </systemPropertyValues>
+                    </properties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <!-- disable forking for easy debugging -->
+                            <!-- TODO make a mvn profile 'devel' for this, enable parallel in prod -->
+                            <forkCount>0</forkCount>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

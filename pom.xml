@@ -25,6 +25,7 @@
         <module>testpack</module>
         <module>transport</module>
         <module>schemas</module>
+        <module>cts-java</module>
     </modules>
 
     <groupId>org.ga4gh</groupId>

@@ -1,6 +1,6 @@
 package org.ga4gh.ctk;
 
-import org.ga4gh.ctk.control.testcategories.CoreTests;
+import org.ga4gh.ctk.testcategories.CoreTests;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

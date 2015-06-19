@@ -159,6 +159,11 @@
             </systemPath>
             -->
         </dependency>
+        <!-- do we want to put slf4j-log4j12.jar on the path? or is OK it's supplied at runtime?-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
