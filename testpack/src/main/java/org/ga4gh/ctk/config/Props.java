@@ -43,9 +43,9 @@ import org.springframework.stereotype.*;
  * <li>Profile-specific application properties packaged inside the jar
  * (application-{profile}.properties and YAML variants)</li>
  * <li>Application properties outside of the jars
- * (transport.properties and YAML variants)</li>
+ * (defaulttransport.properties and YAML variants)</li>
  * <li>Application properties packaged inside the jars
- * (transport.properties and YAML variants)</li>
+ * (defaulttransport.properties and YAML variants)</li>
  * <li>@PropertySource annotations on @Configuration classes (such as this class)</li>
  * <li>Default properties (specified using SpringApplication.setDefaultProperties)</li>
  * </ul>

@@ -73,20 +73,7 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.18.1</version>
-                <configuration>
-                    <properties>
-                        <property>
-                            <!-- hook in the TAP framework for future reporting integration -->
-                            <name>listener</name>
-                            <value>
-                                org.tap4j.ext.junit.listener.TapListenerClass,org.tap4j.ext.junit.listener.TapListenerSuite
-                            </value>
-                        </property>
-                        <systemPropertyValues>
-                            <tap.junit.results>target/tap4j</tap.junit.results>
-                        </systemPropertyValues>
-                    </properties>
-                </configuration>
+
                 <executions>
                     <execution>
                         <goals>
@@ -94,7 +81,19 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
-
+                            <properties>
+                                <property>
+                                    <!-- hook in the TAP framework for future reporting integration -->
+                                    <name>listener</name>
+                                    <value>
+                                        org.tap4j.ext.junit.listener.TapListenerClass,org.tap4j.ext.junit.listener.TapListenerSuite
+                                    </value>
+                                </property>
+                                <systemPropertyVariables>
+                                    <ctk.tgt.urlRoot>http://192.168.2.115:8000/v0.5.1/</ctk.tgt.urlRoot>
+                                    <tap.junit.results>target/tap4j</tap.junit.results>
+                                </systemPropertyVariables>
+                            </properties>
                             <encoding>UTF-8</encoding>
                             <!-- disable forking for easy debugging -->
                             <!-- TODO make a mvn profile 'devel' for this, enable parallel in prod -->

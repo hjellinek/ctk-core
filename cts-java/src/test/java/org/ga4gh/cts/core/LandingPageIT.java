@@ -37,7 +37,6 @@ public class LandingPageIT {
     @Test
     public void landingPagesShouldExist() throws Exception {
         String theUrlString = URLMAPPING.getUrlRoot();
-        System.out.println("theUrlString is " + theUrlString);
 
         URL url = new URL(theUrlString);
         String finalUrl = url.getProtocol() + "://" + url.getAuthority();
