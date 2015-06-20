@@ -1,4 +1,4 @@
-# Conformance Test Kit (CTK) for a GA4GH Server
+# Conformance Test Kit (CTK)/Compliance Test Suite (CTS) for a GA4GH Server
 ## Purpose
 A Conformance Test Kit for evaluating a GA4GH Server against the data and messages defined
 in the IDL of the schemas repository. CTK tests are currently written as JUnit/Java tests using a
@@ -7,6 +7,8 @@ customized to the GA4GH domain objects, like this:
 
 ```java
 
+	@Test
+    @Parameters({{"low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522"})
     public void readsResponseMatchesACTGNPattern(String rgid) throws Exception {
         // do a readsearch
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
@@ -19,19 +21,18 @@ customized to the GA4GH domain objects, like this:
                     .matches("[ACTGN]+");
 ```
 
-(The design is intended to allow for other JVM test frameworks such as [Spock](https://code.google.com/p/spock/).
-
-The CTK communicates with a running target server (it doesn't manage the target server's lifecycle). The CTK outputs:
+The CTK communicates with a running target server, but it doesn't (currently) manage the target server's lifecycle). The CTK outputs:
 
 - common [xUnit]() output text files (.txt,.xml) and .tap (for [Test Anything Protocol](https://testanything.org/) users)
 - console output (including any test logs until you configure them to accumulate in files)
 - HTML files of test results, linked to test source/javadoc
 - HTML 'site' of contributor, dependency reports, source code, javadoc, etc
 
-
 The name "CTK" refers to the test framework and transport layers.
 The term "CTS" (for "Compliance Test Suite") refers to the actual server-communicating tests. These tests are in
 a maven module specific to the implementationlanguage (so far, we have only "cts-java")
+
+(The design is intended to allow for other JVM test frameworks such as [Spock](https://code.google.com/p/spock/).
 
 ### Use Cases
 This effort has two primary use cases:

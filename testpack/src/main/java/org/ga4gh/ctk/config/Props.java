@@ -43,9 +43,9 @@ import org.springframework.stereotype.*;
  * <li>Profile-specific application properties packaged inside the jar
  * (application-{profile}.properties and YAML variants)</li>
  * <li>Application properties outside of the jars
- * (application.properties and YAML variants)</li>
+ * (transport.properties and YAML variants)</li>
  * <li>Application properties packaged inside the jars
- * (application.properties and YAML variants)</li>
+ * (transport.properties and YAML variants)</li>
  * <li>@PropertySource annotations on @Configuration classes (such as this class)</li>
  * <li>Default properties (specified using SpringApplication.setDefaultProperties)</li>
  * </ul>
@@ -70,8 +70,10 @@ public class Props {
     // NOTE getters and setters, if needed, are provided for us by Lombok
     // but public variables don't need them and seem (to me) cleaner here
 
+/*
     @Value("${ctk.tgt.urlRoot}")
     public String ctk_tgt_urlRoot;
+*/
 
     @Value("${ctk.matchstr}")
     public String ctk_matchstr;
@@ -95,6 +97,7 @@ public class Props {
     public String ctk_logging_systest_traffic;
 
     /* search paths */
+/*  Do through transport's static URLMAPPING class
     @Value("${ctk.tgt.searchReads}")
     public String ctk_tgt_searchReads;
     @Value("${ctk.tgt.searchReadGroupSets}")
@@ -137,6 +140,7 @@ public class Props {
     public String ctk_tgt_getCallSet;
     @Value("${ctk.tgt.searchCalls}")
     public String ctk_tgt_searchCalls;
+*/
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {

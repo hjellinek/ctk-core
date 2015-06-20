@@ -94,6 +94,7 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
+
                             <encoding>UTF-8</encoding>
                             <!-- disable forking for easy debugging -->
                             <!-- TODO make a mvn profile 'devel' for this, enable parallel in prod -->

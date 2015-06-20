@@ -6,20 +6,19 @@ package org.ga4gh.cts.core;
  * <p>Created by Wayne Stidolph on 6/7/2015.</p>
  */
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.request.GetRequest;
-import junitparams.JUnitParamsRunner;
-import org.ga4gh.ctk.testcategories.CoreTests;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import com.mashape.unirest.http.*;
+import com.mashape.unirest.request.*;
+import junitparams.*;
+import org.ga4gh.ctk.testcategories.*;
+import org.ga4gh.ctk.transport.*;
+import org.junit.*;
+import org.junit.experimental.categories.*;
+import org.junit.runner.*;
 
-import java.net.URL;
+import java.net.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.ga4gh.ctk.transport.URLMAPPING.getUrlRoot;
-import static org.slf4j.LoggerFactory.getLogger;
+import static org.slf4j.LoggerFactory.*;
 
 @Category(CoreTests.class)
 @RunWith(JUnitParamsRunner.class)
@@ -34,9 +33,11 @@ public class LandingPageIT {
      *
      * @throws Exception the exception
      */
+
     @Test
-    public static void landingPagesShouldExist() throws Exception {
-        String theUrlString = getUrlRoot();
+    public void landingPagesShouldExist() throws Exception {
+        String theUrlString = URLMAPPING.getUrlRoot();
+        System.out.println("theUrlString is " + theUrlString);
 
         URL url = new URL(theUrlString);
         String finalUrl = url.getProtocol() + "://" + url.getAuthority();

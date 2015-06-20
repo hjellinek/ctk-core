@@ -13,7 +13,6 @@ import java.util.Properties;
  */
 
 public class URLMAPPING {
-    public static String urlRoot = "http://192.168.2.115:8000/v0.5.1/";
     /**
      * <p>Map IDL message name to target server endpoint.</p>
      * <p>This Map,is initialized inn code with defaults from the
@@ -83,6 +82,9 @@ public class URLMAPPING {
     }
 
     public static String getUrlRoot() {
+        Map<String, String> env = System.getenv();
+        if(env.containsKey("ctk.tgt.urlRoot"))
+                return env.get("ctk.tgt.urlRoot");
         return endpoints.get("ctk.tgt.urlRoot");
     }
 
