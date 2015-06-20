@@ -11,6 +11,7 @@ import java.util.Properties;
  * <p>Mapping support to get from an IDL enpoint to an implementation endpoint.</p>
  * <p>Created by Wayne Stidolph on 5/25/2015.</p>
  */
+
 public class URLMAPPING {
     public static String urlRoot = "http://192.168.2.115:8000/v0.5.1/";
     /**
@@ -32,44 +33,36 @@ public class URLMAPPING {
 
     /* **** DEFAULT ENDPOINTS *** */
     static {
-        endpoints.put("searchReads","reads/search");
-        endpoints.put("searchReadGroupSets","readgroupsets/search");
-        endpoints.put("getReadGroupSet","readgroupsets/{id}");
-        endpoints.put("getReferences","references/{id}");
-        endpoints.put("searchReferencesets","referencesets/search");
-        endpoints.put("getReferencesBases","references/{id}/bases");
-        endpoints.put("searchReferences","references/search");
-        endpoints.put("getReferencesets","referencesets/{id}");
-        endpoints.put("getReadGroup","readgroups/{id}");
-        endpoints.put("searchDatasets","datasets/search");
-        endpoints.put("getDataset","datasets/{id}");
-        endpoints.put("searchVariantSets","variantsets/search");
-        endpoints.put("getVariantSet","variantsets/{id}");
-        endpoints.put("searchVariants","variants/search");
-        endpoints.put("getVariant","variants/{id}");
-        endpoints.put("searchAlleles","alleles/search");
-        endpoints.put("getAllele","alleles/{id}");
-        endpoints.put("getCallSet","callsets/{id}");
-        endpoints.put("searchCallsets","callsets/search");
-        endpoints.put("searchCalls","calls/search");
-        endpoints.put("searchAlleleCalls", "allelecalls/search");
+        endpoints.put("ctk.tgt.urlRoot","http://localhost:8000/v0.5.1");
+        endpoints.put("ctk.tgt.searchReadGroupSets","readgroupsets/search");
+        endpoints.put("ctk.tgt.searchReads","reads/search");
+        endpoints.put("ctk.tgt.getReadGroupSet","readgroupsets/{id}");
+        endpoints.put("ctk.tgt.getReferences","references/{id}");
+        endpoints.put("ctk.tgt.searchReferencesets","referencesets/search");
+        endpoints.put("ctk.tgt.getReferencesBases","references/{id}/bases");
+        endpoints.put("ctk.tgt.searchReferences","references/search");
+        endpoints.put("ctk.tgt.getReferencesets","referencesets/{id}");
+        endpoints.put("ctk.tgt.getReadGroup","readgroups/{id}");
+        endpoints.put("ctk.tgt.searchDatasets","datasets/search");
+        endpoints.put("ctk.tgt.getDataset","datasets/{id}");
+        endpoints.put("ctk.tgt.searchVariantSets","variantsets/search");
+        endpoints.put("ctk.tgt.getVariantSet","variantsets/{id}");
+        endpoints.put("ctk.tgt.searchVariants","variants/search");
+        endpoints.put("ctk.tgt.getVariant","variants/{id}");
+        endpoints.put("ctk.tgt.searchAlleles","alleles/search");
+        endpoints.put("ctk.tgt.getAllele","alleles/{id}");
+        endpoints.put("ctk.tgt.getCallSet","callsets/{id}");
+        endpoints.put("ctk.tgt.searchCallsets","callsets/search");
+        endpoints.put("ctk.tgt.searchCalls","calls/search");
+        endpoints.put("ctk.tgt.searchAlleleCalls", "allelecalls/search");
 
-        propsFromFile = loadProps("UrlMapping.properties");
+        propsFromFile = loadProps("transport.properties");
         if(propsFromFile != null){
             mergePropertiesIntoMap(propsFromFile, endpoints);
         }
     }
 
-    public static String getUrlRoot() {
-        return urlRoot;
-    }
-
-    public static void setUrlRoot(String urlRoot) {
-        URLMAPPING.urlRoot = urlRoot;
-    }
-
     public static Properties loadProps(String resName) {
-        String resourceName="UrlMapping.properties";
         Properties props = new Properties();
         InputStream instream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resName);
         if(instream != null) try {
@@ -89,54 +82,62 @@ public class URLMAPPING {
         }
     }
 
+    public static String getUrlRoot() {
+        return endpoints.get("ctk.tgt.urlRoot");
+    }
+
+    public static void setUrlRoot(String urlRoot) {
+        endpoints.put("ctk.tgt.urlRoot",urlRoot);
+    }
+
     // syntactic suger, mostly to help IDEs autocomplete
     // incomplete list, I just added them when I needed them. You can
     // always just do URLMAPPING.endpoints.get("getVariant") etc
     public static String getSearchReads() {
-        return endpoints.get("searchReads");
+        return endpoints.get("ctk.tgt.searchReads");
     }
 
     public static void setSearchReads(String searchReads) {
-        endpoints.put("searchReads",searchReads);
+        endpoints.put("ctk.tgt.searchReads",searchReads);
     }
 
     public static String getSearchReadGroupSets() {
-        return endpoints.get("searchReadGroupSets");
+        return endpoints.get("ctk.tgt.searchReadGroupSets");
     }
 
     public static void setSearchReadGroupSets(String searchReadGroupSets) {
-        endpoints.put("searchReadGroupSets",searchReadGroupSets);
+        endpoints.put("ctk.tgt.searchReadGroupSets",searchReadGroupSets);
     }
 
     public static String getSearchReferencesets() {
-        return endpoints.get("searchReferencesets");
+        return endpoints.get("ctk.tgt.searchReferencesets");
     }
 
     public static void setSearchReferencesets(String searchReferencesets) {
-        endpoints.put("searchReferencesets",searchReferencesets);
+        endpoints.put("ctk.tgt.searchReferencesets",searchReferencesets);
     }
 
     public static String getSearchVariantSets() {
-        return endpoints.get("searchVariantSets");
+        return endpoints.get("ctk.tgt.searchVariantSets");
     }
 
     public static void setSearchVariantSets(String searchVariantSets) {
-        endpoints.put("searchVariantSets",searchVariantSets);
+        endpoints.put("ctk.tgt.searchVariantSets",searchVariantSets);
     }
 
     public static String getSearchVariants() {
-        return endpoints.get("searchVariants");
+        return endpoints.get("ctk.tgt.searchVariants");
     }
 
     public static void setSearchVariants(String searchVariants) {
-        endpoints.put("searchVariants",searchVariants);
+        endpoints.put("ctk.tgt.searchVariants",searchVariants);
     }
 
     public static String getSearchCallsets() {
-        return endpoints.get("searchCallsets");
+        return endpoints.get("ctk.tgt.searchCallsets");
     }
 
     public static void setSearchCallsets(String searchCallsets) {
-        endpoints.put("searchCallsets", searchCallsets);
+        endpoints.put("ctk.tgt.searchCallsets", searchCallsets);
     }
 }
