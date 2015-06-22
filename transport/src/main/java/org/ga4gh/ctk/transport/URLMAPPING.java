@@ -25,40 +25,77 @@ public class URLMAPPING {
      * This lets a test writer/API developer add or change URLs without having
      * to repackage the transport module.</p>
      */
-    public static Map<String, String> endpoints = new HashMap<>();
+    public static Map<String, String> endpoints;
+    public static Map<String, String> defaultendpoints;
 
     private static Properties tempProps;
 
     /* **** DEFAULT ENDPOINTS no matter what, we have these *** */
     static {
-        endpoints.put("ctk.tgt.urlRoot", "http://localhost:8000/v0.5.1");
-        endpoints.put("ctk.tgt.searchReadGroupSets", "readgroupsets/search");
-        endpoints.put("ctk.tgt.searchReads", "reads/search");
-        endpoints.put("ctk.tgt.getReadGroupSet", "readgroupsets/{id}");
-        endpoints.put("ctk.tgt.getReferences", "references/{id}");
-        endpoints.put("ctk.tgt.searchReferencesets", "referencesets/search");
-        endpoints.put("ctk.tgt.getReferencesBases", "references/{id}/bases");
-        endpoints.put("ctk.tgt.searchReferences", "references/search");
-        endpoints.put("ctk.tgt.getReferencesets", "referencesets/{id}");
-        endpoints.put("ctk.tgt.getReadGroup", "readgroups/{id}");
-        endpoints.put("ctk.tgt.searchDatasets", "datasets/search");
-        endpoints.put("ctk.tgt.getDataset", "datasets/{id}");
-        endpoints.put("ctk.tgt.searchVariantSets", "variantsets/search");
-        endpoints.put("ctk.tgt.getVariantSet", "variantsets/{id}");
-        endpoints.put("ctk.tgt.searchVariants", "variants/search");
-        endpoints.put("ctk.tgt.getVariant", "variants/{id}");
-        endpoints.put("ctk.tgt.searchAlleles", "alleles/search");
-        endpoints.put("ctk.tgt.getAllele", "alleles/{id}");
-        endpoints.put("ctk.tgt.getCallSet", "callsets/{id}");
-        endpoints.put("ctk.tgt.searchCallsets", "callsets/search");
-        endpoints.put("ctk.tgt.searchCalls", "calls/search");
-        endpoints.put("ctk.tgt.searchAlleleCalls", "allelecalls/search");
 
-        log.debug("process defaulttransport.properties");
-        tempProps = loadPropsFile("defaulttransport.properties");
-        if (!tempProps.isEmpty()) {
-            mergePropertiesIntoMap(tempProps, endpoints);
-        }
+        defaultendpoints = new HashMap<>();
+        defaultendpoints.put("ctk.tgt.urlRoot", "http://localhost:8000/v0.5.1");
+        defaultendpoints.put("ctk.tgt.searchReadGroupSets", "readgroupsets/search");
+        defaultendpoints.put("ctk.tgt.searchReads", "reads/search");
+        defaultendpoints.put("ctk.tgt.getReadGroupSet", "readgroupsets/{id}");
+        defaultendpoints.put("ctk.tgt.getReferences", "references/{id}");
+        defaultendpoints.put("ctk.tgt.searchReferencesets", "referencesets/search");
+        defaultendpoints.put("ctk.tgt.getReferencesBases", "references/{id}/bases");
+        defaultendpoints.put("ctk.tgt.searchReferences", "references/search");
+        defaultendpoints.put("ctk.tgt.getReferencesets", "referencesets/{id}");
+        defaultendpoints.put("ctk.tgt.getReadGroup", "readgroups/{id}");
+        defaultendpoints.put("ctk.tgt.searchDatasets", "datasets/search");
+        defaultendpoints.put("ctk.tgt.getDataset", "datasets/{id}");
+        defaultendpoints.put("ctk.tgt.searchVariantSets", "variantsets/search");
+        defaultendpoints.put("ctk.tgt.getVariantSet", "variantsets/{id}");
+        defaultendpoints.put("ctk.tgt.searchVariants", "variants/search");
+        defaultendpoints.put("ctk.tgt.getVariant", "variants/{id}");
+        defaultendpoints.put("ctk.tgt.searchAlleles", "alleles/search");
+        defaultendpoints.put("ctk.tgt.getAllele", "alleles/{id}");
+        defaultendpoints.put("ctk.tgt.getCallSet", "callsets/{id}");
+        defaultendpoints.put("ctk.tgt.searchCallsets", "callsets/search");
+        defaultendpoints.put("ctk.tgt.searchCalls", "calls/search");
+        defaultendpoints.put("ctk.tgt.searchAlleleCalls", "allelecalls/search");
+
+        doInit(""); // empty string will cause defaulttransport.properties to load
+
+        log.info("set URLMAPPING urlRoot to " + URLMAPPING.getUrlRoot());
+    }
+
+
+    /**
+     * Initialize URLMAPPING.
+     * <p>
+     * Given a resource name, this looks loads (in order):
+     * <p>
+     * a properties file of that name on the classpath
+     * a properties file of that name from the file system
+     * the operating system environment variables ("ctk.tgt.*)
+     * the java system properties (e.g., command line -D...) of "ctk.tgt.*"
+     * <p>
+     * If the resName is blank then the file/resource sought is "defaulttransport.properties"
+     * If the resName is given then the defaultproperties file is not loaded at all.
+     *
+     * @param resName the resource name to init from (if blank, uses 'defaulttransport.properties)
+     */
+    public static void doInit(String resName) {
+
+        endpoints = new HashMap<>(defaultendpoints); // start fresh using baked-in defaults
+
+        // load default file if it's available
+
+        // load the resource or file passed in by name
+
+        // process any env vars
+
+        // process java system props
+
+        if (resName == null || resName.isEmpty())
+            resName = "defaulttransport.properties";
+
+        log.debug("\nprocess resources/file" + resName);
+        loadPropsName(resName);
+
         log.debug("\nprocess Env");
         tempProps = loadPropsEnv("ctk.tgt.");
         if (!tempProps.isEmpty()) {
@@ -69,22 +106,35 @@ public class URLMAPPING {
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
         }
-        log.info("set URLMAPPING urlRoot to " + URLMAPPING.getUrlRoot());
+
     }
 
-    public static Properties loadPropsFile(String resName) {
-        Properties props = new Properties();
-        InputStream instream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resName);
+    public static void loadPropsName(String resName) {
 
-        if (instream != null) try {
-            props.load(instream);
-        } catch (IOException e) {
-            // maybe there's nothing to load, but that's OK we have the defaults already
+        Properties tempProps = new Properties();
+        InputStream instream;
+
+        // first we load anything on the classpath
+        instream = Thread.currentThread()
+                .getContextClassLoader()
+                .getResourceAsStream(resName);
+        try {
+            tempProps.load(instream);
+        } catch (IOException ioe) { // just ignore not-found
+            log.debug("Did not find resource "+ resName);
         }
-        else {
-            log.info("Did not find property file " + resName);
+
+        // then we try the same name on the file system
+        try {
+            instream = new FileInputStream(resName);
+            tempProps.load(instream);
+        } catch (IOException ioe) {
+            log.debug("Did not find property file " + resName);
         }
-        return props;
+
+        if (!tempProps.isEmpty()) {
+            mergePropertiesIntoMap(tempProps, endpoints);
+        }
     }
 
     public static Properties loadPropsSystem(String prefix) {
@@ -127,12 +177,11 @@ public class URLMAPPING {
     }
 
     public static void setUrlRoot(String urlRoot) {
-        if(urlRoot != null && !urlRoot.isEmpty()) {
-            if(!urlRoot.endsWith("/"))
+        if (urlRoot != null && !urlRoot.isEmpty()) {
+            if (!urlRoot.endsWith("/"))
                 urlRoot = urlRoot + "/";
             endpoints.put("ctk.tgt.urlRoot", urlRoot);
-        }
-        else {
+        } else {
             log.warn("setUrlRoot got null/empty argument, not making change");
         }
     }
