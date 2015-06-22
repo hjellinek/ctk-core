@@ -127,7 +127,14 @@ public class URLMAPPING {
     }
 
     public static void setUrlRoot(String urlRoot) {
-        endpoints.put("ctk.tgt.urlRoot", urlRoot);
+        if(urlRoot != null && !urlRoot.isEmpty()) {
+            if(!urlRoot.endsWith("/"))
+                urlRoot = urlRoot + "/";
+            endpoints.put("ctk.tgt.urlRoot", urlRoot);
+        }
+        else {
+            log.warn("setUrlRoot got null/empty argument, not making change");
+        }
     }
 
     // Syntactic suger, mostly to help IDEs autocomplete

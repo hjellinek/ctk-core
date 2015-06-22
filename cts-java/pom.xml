@@ -71,6 +71,18 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.18.1</version>
 
@@ -91,7 +103,7 @@
                                 </property>
                                 <systemPropertyVariables>
                                     <ctk.tgt.urlRoot>http://192.168.2.115:8000/v0.5.1/</ctk.tgt.urlRoot>
-                                    <tap.junit.results>target/tap4j</tap.junit.results>
+                                    <tap.junit.results>target/tap4j/</tap.junit.results>
                                 </systemPropertyVariables>
                             </properties>
                             <encoding>UTF-8</encoding>

@@ -58,26 +58,6 @@ machine.
 
 The CTK/CTS build status is [![Build Status](https://travis-ci.org/wstidolph/ctk-core.svg?branch=SplitOutFramework)](https://travis-ci.org/wstidolph/ctk-core)
 
-## Getting Started as a test writer
-
-### Prerequisites
-Installed Java 8, Maven 3, git 1.8+
-
-### Installation
-
-- `git clone https://github.com/wstidolph/ctk-core.git` (checkout this project)
-- `cd ctk-core`
-- `git submodule init` (to register the `schemas` directory as a git submodule)
-- `git submodule update` (to clone the schema from git; you may want to cd into the schema directory and check out a specific branch or tag such as `git checkout v0.5.1` to develop tests against)
-- `mvn clean install` (this will run the clean and package maven goals from the aggregator POM in ctk-core, which will then run those goals in the `schema`, `transport` and `testpack` modules for you; this puts the resulting artifacts into your local Maven repository. When those modules run they will pick up dependency and plugin information from `parent`)
-
-(Temporary workaround: if you run into a compile problem with the assertion generator,
-cd into the `transport` directory and run `mvn package install` directly from there.)
-
-### Writing A Test
-
-some text
-
 ### Configuring the CTK
 
 Edit `testpack/src/main/resources/application.properties`
@@ -90,18 +70,18 @@ or, extract that file from the packaged jar file and have it in the dir where th
 Note about classpaths being different in running from jar-on-command-line vs maven vs in an IDE.
 
 #### Run From Maven
-cd into cts-java
-`mvn failsafe:integration-test` runs the collection of all CTK tests of the target GA4GH server.
+
+Execute the failsafe plugin's "integration-test" goal to execute the test suite (either use your IDE  or build system maven runner, or cd into cts-java and execute 
+`mvn failsafe:integration-test` directly).
 
 Modify the command line using Maven, or the `application.properties` file,  to alter which tests are run by default.
+
 Modify `log4j2.xml` to alter logging behavior.
 
-#### Run From IDE
-Each test class can be run as a standalone JUnit test, each TestSuite can be run as a standalone JUnit TestSuite.
+For details see [RunningTests_maven](RunningTests_maven.md).
 
-Some IDEs have a Maven runner; in this case, run the `cts-java failsafe:integration-test`
-plugin goa to execute just the cts-java tests, or run the `ctk-core failsafe:integration-test` goal to execute all test
-packages'
+#### Run From IDE
+Each test class can be run as a standalone JUnit test, each TestSuite can be run as a standalone JUnit TestSuite. Some IDEs provide a dedicated JUnit runner to execute and report on the tests, and include support features like "re-run failed tests."
 
 ### Run From CLI
 You need two jars from the build process:
@@ -112,39 +92,8 @@ The tests jars (in this case, just `cts-java-0.5.1-SNAPSHOT.jar`) go in a `lib` 
 from which you execute:
 `java -jar ctk-testpack-0.5.1-SNAPSHOT.jar`
 
-<discussion of where to put application.properties>
+For details, see [RunningTests_CLI](RunningTests_CLI.md)
 
-### Reviewing Results
-After the integration tests run, see the `ctk-core\testpack\target\failsafe-reports` directory for HTML reports. Or
-run the mvn site command from the top directory, launch the site from `ctk-core\target\site` and see the
- surefire reports.
-
-### Adding a New Test
-
-some text about adding JUnit @Test methods, and `MyNewTestClassIT.java` ... and advice on choosing the right JUnit Runner (default, params runner, etc). Also notes about using Spring for dependency injection if desired.
-
-### Adding A New API Foo
-Creating a new API has two major steps - creating the FooProtocolClient which communicates with the new endpoints, and creating the classes and/or interfaces that hold and control the actual tests,
-
-#### Creating a FooProtocolClient
-Yes, this could be code-gened, but it doesn't seem worth the overhead for the few clients we'll need...
-
-The FooProtocolClient exists in the `transport` package:
-
-- Create a new `org.ga4gh.ctk.transport.FooProtocolClient` in `transport` module, in `org.ga4gh.ctk.transport.protocols` (don't forget to add description to `package-info.java`)
-- FooProtocolClient should `implements org.ga4gh.GAFooMethods`
-(hint - your IDE will probably offer implement the defined methods to get messages stubbed; after you fill
-these in, don't forget to create an overload method for each that takes the additional WireAssert parameter,
-as you see in ReadsProtocolClient or VariantsProtocolClient)
-
-#### Creating Infrastructure for Foo
-
-Tests (and infrastructure) go in the **test* subtree of the `testpack` module. This is the suggested (but not mandatory) pattern:
-
-- Add a java package `org.ga4gh.ctk.systests.api.Foo` in the **test** tree of the `testpack` module
-- Add a test class `FooMethodsEndpointAliveIT.java` in that package (see examples) to verify the Foo endpoint is reachale and responsive
-- optionally create marker interface for test control, in the **test** tree of `testpack` at `org.ga4gh.ctk.control.API.FooTests.java`
-- optionally create `org.ga4gh.ctk.systests.FooTestSuite.java`
 
 ## Using The Executable Jars
 

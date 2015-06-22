@@ -15,7 +15,11 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="SYSTEST" level="trace" additivity="false">
+        <Logger name="TESTLOG" level="info" additivity="false">
+            <AppenderRef ref="TESTLOG"/>
+        </Logger>
+        <!-- TRAFFIC is the <sent body, received class, status> tuple for coverage checking -->
+        <Logger name="TESTLOG.TRAFFIC" level="warn" additivity="false">
             <AppenderRef ref="TESTLOG"/>
         </Logger>
         <Root level="warn">
