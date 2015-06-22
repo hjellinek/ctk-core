@@ -2,11 +2,25 @@
 
 The CTK is controlled through properties to set up the target server information, and to control the test finding/selection mechanism. Logging is controlled by a standard log4j2.xml file.
 
+You configure the CTK via the properties used by the:
+
+- `transport` module to control target server URLS (see `/transport/src/main/resources/defaulttransport.properties/`
+- `testpack` module to control:
+	- test selection and some infrequently-changed items general operation (loader paths etc) (see `/testpack/src/main/resources/application.properties`)
+	- logging behavior (see `/testpack/src/main/resources/log4j2.xml`)
+- `cts-java` has its own copy of `defaulttransport.properties` to support running stand-alone tests under IDEs, this is still experimental and may be removed.
+
+
+If you're working with CTK/CTS source (in an IDE or for a maven build) it's easiest to just edit `testpack/src/main/resources/application.properties` and `testpack/src/main/resources/application.properties` but these changes will have no effect until you rebuild. But, you can make temporary changes to the text properties files directly in the output build tree.
+
+If you're working with the CTK/CTS at the command line, you can extract that file from the packaged jar file and have it in the dir where the jar runs from
+(`jar xvf ctk-testpack-v.0.5.1-SNAPSHOT.jar application.properties`)
+
 Note that individual test suites (`cts-java` etc) might have individual configuration mechanisms or properties files - refer to their documentation.
 
 ## Configuring Logging
 
-The logging subsystem is provided by `log4j2.xml`, so the [Apache Documentation](https://logging.apache.org/log4j/2.x/manual/configuration.html) applies. In a build or development environment it is wasy to edit the default log4j2.xml file (`testpack/src/main/resources/log4j2.xml`); in a command-line environment you can override the default at runtime by putting a replacement file in the `lib/` dir (see  [RunningTests_CLI](RunningTests_CLI.md)).
+The logging subsystem is provided by `log4j2.xml`, so the [Apache Documentation](https://logging.apache.org/log4j/2.x/manual/configuration.html) applies. In a build or development environment it is easy to edit the default log4j2.xml file (`testpack/src/main/resources/log4j2.xml`) before you recompile, or to directly edit the log4j2.xml file in your build classes tree if you want to make temporary changes that affect logging without having to recompile/repackage; in a command-line environment you can override the default at runtime by putting a replacement file in the `lib/` dir (see  [RunningTests_CLI](RunningTests_CLI.md)).
 
 The CTK logs to loggers configured by the log-using class' name (e.g., the class `org.ga4gh.ctk.transport.AvroJson` would log to a logger named "org.ga4gh,ctk.transport.AvroJson").
 
@@ -19,7 +33,7 @@ The CTK also sends test-specific data to special logs so you can redirect that o
 
 The Properties list is available by looking at the javadoc for the `transport/src/main/java/org.ga4gh/ctk/config/Props.java` class. 
 
-> **NOTE**: As of 19 June 2015 (but planned to change ***very*** soon) the target server endpoints set in the application.properties file are ignored; these values are currently controlled by a class `transport/src/main/java/org/ga4gh/ctk/transport/URLMAPPING.java` and changing the target server URL requires editing that class or putting a file UrlMapping.properties on the classpath. (*Sorry*)
+> **NOTE**: The target server endpoints are controlled by a class `transport/src/main/java/org/ga4gh/ctk/transport/URLMAPPING.java` which loads the target server URL from the `ctk.tgt.urlRoot` property, which is set in the `transport/src/main/resources/defaulttransport.properties` file and can be overriden by replacing the properties file or with an external config element like an environment variable or on a command line.
 
 ## How a property is set
 Properties can be set on the command line, from a properties file (in various locations), or from environment variables. The mechanism is provided by Spring, so all the alternatives described in Spring documentation on [Externalized Configuration](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html) are available. The important mechanisms for the CTS, in order of descending priority, are:
@@ -33,12 +47,11 @@ The easiest technique depends on whether you're using the CTK from a development
 
 ### Configuring in an IDE
 
-### Configuring Maven
-If you're going to run the CTK via Maven, you'll be invoking one of three goals:
+xxx
 
-1. [spring-boot: run](http://docs.spring.io/spring-boot/docs/current/maven-plugin/run-mojo.html) will run the main Application class, so you can pass command-line parameters like this
-2.   
-1. 
+### Configuring Maven
+
+
 To set properties as a command line variable (the highest priority) for a maven invocation
 
 ### Configuring a Command Line invocation

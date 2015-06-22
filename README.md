@@ -60,10 +60,6 @@ The CTK/CTS build status is [![Build Status](https://travis-ci.org/wstidolph/ctk
 
 ### Configuring the CTK
 
-Edit `testpack/src/main/resources/application.properties`
-
-or, extract that file from the packaged jar file and have it in the dir where the jar runs from
-(`jar xvf ctk-testpack-v.0.5.1-SNAPSHOT.jar application.properties`)
 
 
 ### Running A Test

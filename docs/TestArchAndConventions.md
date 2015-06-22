@@ -11,7 +11,7 @@ Tests are JUnit tests - there are test classes, and in each class there are one 
 Tests are grouped by "API" - e.g., the Reads, Variants, or References API. As a convention, each API gets a specific java test package, with a couple markers for test management. So, for the Reads API we have
 `org.ga4gh.cts.api.reads` and in that we have a marker interfaces for the tests, and a class to bring together the ReadsTestSuite:
 
-````
+```java
 
     ReadsTests.java:
     public interface ReadsTests { /* category marker */ }
@@ -22,13 +22,13 @@ Tests are grouped by "API" - e.g., the Reads, Variants, or References API. As a 
     @SuiteClasses({"**/*IT.class", "**/*Test.class"})
     public class ReadsTestSuite {}
 
-````
+```
 
 Note that here the `ReadsTestSuite` is configured to select all the test classes with an IT or Test name suffix, and from that group to include the tests marked with the `CoreTests` or the `ReadsTests` markers. You define markers and Suites in code, to suit yourself.
 
 Each API has a ProtocolClient class which is responsible for getting requests to the endpoints in the API and getting responses back. So, for example, there is a ReadsProtocolClient, which exposes methods such as `searchReads` taking a `GASearchReadsRequest` and returning a `GASearchReadsResponse.` A normal CTS test uses a @BeforeClass method to acquire the appropriate ProtocolClient as a class variable named 'client.'
 
-```
+```java
 
     private static ReadsProtocolClient client;
 
@@ -46,11 +46,12 @@ Test classes provide the normal object-oriented coherence/coupling tradeoffs: pu
 
 ### Runners
 
-When JUnit is told to run a class as a test class, it uses a "Runner" to do this; there is a default Runner, but there are alterbatives which give us varying extra capabilities ... but not all Runners have all capabilities. So, one way that test methods get grouped into different test classes is by the Runners they use. For example, the default JUnit Runner doesn't support parametrizing test methods with externally-supplied data, so we use a special runner by annotating the test class:
+When JUnit is told to run a class as a test class, it uses a "Runner" to do this; there is a default Runner, but there are alternatives which give us varying extra capabilities ... but not all Runners have all capabilities. So, one way that test methods get grouped into different test classes is by the Runners they use. For example, the default JUnit Runner doesn't support parametrizing test methods with externally-supplied data, so we use a special runner by annotating the test class:
 
+```java
     @RunWith(JUnitParamsRunner.class)
     public class ReadGroupSetsSearchIT { // ... }
-
+```
 
 The CTS currently uses these Runners:
 
@@ -61,7 +62,7 @@ The CTS currently uses these Runners:
 
 Within a test class, methods to be run as actual tests are marked with a @Test annotation; the standard JUnit runner requires the method take no parameters, while the JUnitParamsRunner allows parameters, e.g.,
 
-```
+```java
 
     @Test
     @Parameters({
@@ -71,6 +72,5 @@ Within a test class, methods to be run as actual tests are marked with a @Test a
         "1kg-phase1, 22, 16050408, 16052159, 16"
     })
     public void searchVariantsRequestResultSizeAsExpected(String vsetIds, String refName, long start, long end, int expLength) throws Exception { /* ... */ }
-
 
 ```
