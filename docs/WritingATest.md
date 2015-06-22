@@ -31,6 +31,6 @@ as you see in ReadsProtocolClient or VariantsProtocolClient)
 Tests (and infrastructure) go in the **test* subtree of the `testpack` module. This is the suggested (but not mandatory) pattern:
 
 - Add a java package `org.ga4gh.ctk.systests.api.Foo` in the **test** tree of the `testpack` module
-- Add a test class `FooMethodsEndpointAliveIT.java` in that package (see examples) to verify the Foo endpoint is reachale and responsive
+- Add a test class `FooMethodsEndpointAliveIT.java` in that package (see examples) to verify the Foo endpoint is reachable and responsive
 - optionally create marker interface for test control, in the **test** tree of `testpack` at `org.ga4gh.ctk.control.API.FooTests.java`
 - optionally create `org.ga4gh.ctk.systests.FooTestSuite.java`

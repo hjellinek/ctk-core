@@ -10,6 +10,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>CTS Java Server Tests</name>
+    <description>Tests of the GA4GH Server API Compliance</description>
     <artifactId>cts-java</artifactId>
     <packaging>jar</packaging>
 

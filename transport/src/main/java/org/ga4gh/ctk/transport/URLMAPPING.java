@@ -7,6 +7,10 @@ import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Mapping support to get from an IDL enpoint to an implementation endpoint.</p>
+ * <p>Probably this would be better-done using e.g., Apache Commons Configuration,
+ * but that seems to get more complicated than this code needs to be so I  just put
+ * this together fairly quick and only anecdotally tested it - so, don't have a lot
+ * of faith in this and feel free to swap in a robust solution!</p>
  * <p>Created by Wayne Stidolph on 5/25/2015.</p>
  */
 
@@ -82,20 +86,14 @@ public class URLMAPPING {
 
         endpoints = new HashMap<>(defaultendpoints); // start fresh using baked-in defaults
 
-        // load default file if it's available
-
-        // load the resource or file passed in by name
-
-        // process any env vars
-
-        // process java system props
-
         if (resName == null || resName.isEmpty())
             resName = "defaulttransport.properties";
 
         log.debug("\nprocess resources/file" + resName);
-        loadPropsName(resName);
-
+        tempProps = loadPropsName(resName);
+        if (!tempProps.isEmpty()) {
+            mergePropertiesIntoMap(tempProps, endpoints);
+        }
         log.debug("\nprocess Env");
         tempProps = loadPropsEnv("ctk.tgt.");
         if (!tempProps.isEmpty()) {
@@ -109,7 +107,16 @@ public class URLMAPPING {
 
     }
 
-    public static void loadPropsName(String resName) {
+    /**
+     * Do init, defaults.
+     *
+     * Just syntactic sugar for doInit("").
+     */
+    public static void doInit(){
+        doInit("");
+    }
+
+    public static Properties loadPropsName(String resName) {
 
         Properties tempProps = new Properties();
         InputStream instream;
@@ -120,6 +127,7 @@ public class URLMAPPING {
                 .getResourceAsStream(resName);
         try {
             tempProps.load(instream);
+            log.info("leaded props from classpath " + resName);
         } catch (IOException ioe) { // just ignore not-found
             log.debug("Did not find resource "+ resName);
         }
@@ -128,13 +136,12 @@ public class URLMAPPING {
         try {
             instream = new FileInputStream(resName);
             tempProps.load(instream);
+            log.info("loaded props from file " + resName);
         } catch (IOException ioe) {
             log.debug("Did not find property file " + resName);
         }
 
-        if (!tempProps.isEmpty()) {
-            mergePropertiesIntoMap(tempProps, endpoints);
-        }
+        return tempProps;
     }
 
     public static Properties loadPropsSystem(String prefix) {

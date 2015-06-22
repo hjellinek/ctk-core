@@ -2,6 +2,7 @@ package org.ga4gh.cts.api.reads;
 
 import junitparams.*;
 import org.ga4gh.*;
+import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;
 import org.junit.experimental.categories.*;
@@ -142,6 +143,7 @@ public class ReadGroupSetsSearchIT {
     public static void setupTransport() throws Exception {
         InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
+        URLMAPPING.doInit(); // reload defaults
         client = new ReadsProtocolClient();
 
         //client.start(); start binary transceiver to Server Under Test

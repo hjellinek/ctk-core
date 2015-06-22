@@ -68,12 +68,8 @@ import org.springframework.stereotype.*;
 public class Props {
 
     // NOTE getters and setters, if needed, are provided for us by Lombok
-    // but public variables don't need them and seem (to me) cleaner here
-
-/*
-    @Value("${ctk.tgt.urlRoot}")
-    public String ctk_tgt_urlRoot;
-*/
+    // if we make the field private, but public variables don't need them
+    // and seem (to me) cleaner here
 
     @Value("${ctk.matchstr}")
     public String ctk_matchstr;
@@ -91,56 +87,12 @@ public class Props {
     public String ctk_scripts_after;
 
     /* logging control (name of the test/traffic logs) not yet working */
+    /*
     @Value("${ctk.logging.systest}")
     public String ctk_logging_systest;
     @Value("${ctk.logging.systest.traffic}")
     public String ctk_logging_systest_traffic;
-
-    /* search paths */
-/*  Do through transport's static URLMAPPING class
-    @Value("${ctk.tgt.searchReads}")
-    public String ctk_tgt_searchReads;
-    @Value("${ctk.tgt.searchReadGroupSets}")
-    public String ctk_tgt_searchReadGroupSets;
-    @Value("${ctk.tgt.searchReferencesets}")
-    public String ctk_tgt_searchReferencesets;
-    @Value("${ctk.tgt.searchVariantSets}")
-    public String ctk_tgt_searchVariantSets;
-    @Value("${ctk.tgt.searchVariants}")
-    public String ctk_tgt_searchVariants;
-    @Value("${ctk.tgt.searchCallsets}")
-    public String ctk_tgt_searchCallsets;
-    @Value("${ctk.tgt.getReadGroupSet}")
-    public String ctk_tgt_getReadGroupSet;
-    @Value("${ctk.tgt.getReferences}")
-    public String ctk_tgt_getReferences;
-    @Value("${ctk.tgt.getReferencesBases}")
-    public String ctk_tgt_getReferencesBases;
-    @Value("${ctk.tgt.searchReferences}")
-    public String ctk_tgt_searchReferences;
-    @Value("${ctk.tgt.getReferencesets}")
-    public String ctk_tgt_getReferencesets;
-    @Value("${ctk.tgt.getReadGroup}")
-    public String ctk_tgt_getReadGroup;
-    @Value("${ctk.tgt.searchDatasets}")
-    public String ctk_tgt_searchDatasets;
-    @Value("${ctk.tgt.getDataset}")
-    public String ctk_tgt_getDataset;
-    @Value("${ctk.tgt.getVariantSet}")
-    public String ctk_tgt_getVariantSet;
-    @Value("${ctk.tgt.getVariant}")
-    public String ctk_tgt_getVariant;
-    @Value("${ctk.tgt.searchAlleleCalls}")
-    public String ctk_tgt_searchAlleleCalls;
-    @Value("${ctk.tgt.searchAlleles}")
-    public String ctk_tgt_searchAlleles;
-    @Value("${ctk.tgt.getAllele}")
-    public String ctk_tgt_getAllele;
-    @Value("${ctk.tgt.getCallSet}")
-    public String ctk_tgt_getCallSet;
-    @Value("${ctk.tgt.searchCalls}")
-    public String ctk_tgt_searchCalls;
-*/
+    */
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {

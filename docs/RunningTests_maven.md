@@ -8,25 +8,26 @@ You can run Maven from a command line, or from a maven runner in your build or d
 >
 The `ctk-core` module is an "aggregator" module, it takes a goal and invokes that goal on each of its submodules, then it aggregates the results of each of the submodules. It is mainly useful in running the `site` goal which tells each aggregated submodule to run its own `site` reports, then the `ctk-cre` combines those reports into a deployable "project website." We use this to create a CTK devloper-assistance site (cross-referenced source and javadoc for framework and for test code) and to include the most-recent server test report.
 >
-The `ctk-parent` module is a dependency management parent - the funtional modules (e.g., `transport`, `testpack`, `cts-java`) get plugin and dependency version information from the `parent` to ensure consistent information across the project. It doesn't have any independent goals to run.
+The `ctk-parent` module is a dependency management parent - the functional modules (e.g., `transport`, `testpack`, `cts-java`) get plugin and dependency version information from the `parent` to ensure consistent information across the project. It doesn't have any independent goals to run.
 
-If you're going to run the CTK via Maven, you'll be invoking one of three goals, in different modules:
+The CTS tests are hooked into the maven "integration-test" phase, not the earlier unit-level "test" phase.  This lets you build normal unit-style tests and run them as you want (including using the maven Surefire test runner). But, since the CTS tests are standard JUnit tests, we need to "hide" them from the unit test runner - to do this, the Surefire plugin in `cts-java` (where the server tests are located) is configured to ignore tests in classes with names starting or ending in "IT" - these are "Integration Tests" and will be picked up instead by the [Failsafe plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/) when it scans the test classes directory. Thus, in `cts-java` unit tests are run by the `mvn test` phase, under control of the Surefire plugin; while GA4GH tests are run in the integration-test phase, under control of the Failsafe plugin.
 
-1. `cts-java` module provides the [failsafe:integration-test](https://maven.apache.org/surefire/maven-failsafe-plugin/) goal as the primary entry point for running the tests; this goal requires you have already compiled the test source into test classes, so it won't work immediately after a `mvn clean` **TODO** set up test-compile bound to integration-test goal
-1. `testpack` [spring-boot: run](http://docs.spring.io/spring-boot/docs/current/maven-plugin/run-mojo.html) is essentially equivalent to running the CTK from the command line without having the tests installed in the `lib` dir; will run the main Application class, so it's useful for testing the fraework itself
-1.   `ctk-core` [site](https://maven.apache.org/plugins/maven-site-plugin/) or [failsafe:integration-test](https://maven.apache.org/surefire/maven-failsafe-plugin/)
+In order to run the server (CTS) integration tests, you need to ensure the test class files are in place, and then run the `failsafe:integration-test` goal, as you'll see in the example below.
 
-The CTS tests are hooked into the maven "integration test" goal, not the normal "test" goal. This lets you build normal unit-style tests and run them as you want, using the maven Surefire test runner. But, the Surefire plugin in `cts-java` (where the server tests are located) is configured to ignore tests in classes with names starting or ending in "IT" - these are "Integration Tests" and will be picked up by the [Failsafe plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/) when it scans the test classes directory.
+If you're going to run the CTK via Maven, you'll be invoking goals in your choice of three different modules:
 
-So, in order to run the server (CTS) tests, you need to ensure the test class files are in place, and then run the failsafe integration-test goal. The easiest way to do this depends on your setup (IDE vs command line) but at the command line you could:
+1. `cts-java` module provides the [failsafe:integration-test](https://maven.apache.org/surefire/maven-failsafe-plugin/) goal as the primary entry point for running the tests; this is a very nice place to start, it usually runs fast and it generates the output reports you probably need in various your IDE for a good summary. However, the integration-test phase requires you have already compiled the test source into test classes, so it won't work immediately after a `mvn clean` ... the best set of goals to run routinely is probably **`mvn clean test failsafe:integration-test`**
+. **TODO** set up test-compile bound to integration-test goal
+1. `testpack` [spring-boot: run](http://docs.spring.io/spring-boot/docs/current/maven-plugin/run-mojo.html) is essentially equivalent to running the CTK from the command line but since the testpack won't find any tests installed in the `lib` dir it's mainly useful for testing the framework itself. But, it can be a useful hack to start an integration test, just put the code in a package in the `test/` tree of `testpack` and use this goal to run the Application.
+1.   `ctk-core` has  [failsafe:integration-test](https://maven.apache.org/surefire/maven-failsafe-plugin/) to run integration tests in all the aggregtaed modules (including `cts-java`) and it has the [site](https://maven.apache.org/plugins/maven-site-plugin/) goal to build a report. So, in this directory a command like `mvn clean test integration-test site` will run and report on the tests and build out the reference site, unattended (it takes just over 2 minutes on a moderate laptop)
 
-```
+When the tests are done, the TAP reports will be in the top of the `cts-core/target` directory, and failsafe reports will be in `cts-core/target/failsafe-reports/` directory. If you elected to build out the site, you'll find it in `ctk-core/target/site`
 
-    cd cts-java
-    mvn test
-    mvn failsafe:integration-test
+## Reviewing Results
+After the integration tests run, see the `ctk-core/testpack/target/failsafe-reports` directory for reports. Or, there are a couple ways for you to see the nice HTML output report:
 
-```
+- run the report generator standalone, with `mvn surefire-report:report` in the `cts-java` directory, or
+- run the `mvn site` command from the `ctk-core` directory; this will take longer but then you can launch the site from `ctk-core/target/site/index.html` navigate to the Project Reports link and then the Surefire Reports link, for easily-readable HTML with cross-linking. (Or, you can navigate directly to `ctk-core/target/site/GA4GH Server CTS Test Results.html` within the generated site)
 
 ## Prerequisites
 
@@ -36,11 +37,6 @@ Java 8, Maven 3, [CTK source Installed](InstallingTheCTK.md)
 
 If you want to alter the test selection strings:
 
-**<TODO show altering maven POM>**
+**<TODO show altering maven POM to set properties>**
 
-
-When the tests are done, the TAP reports will be in the top of the `cts/target` dir, and failsafe reports will be in `target/failsafe-reports/` dir.
-
-## Reviewing Results
-After the integration tests run, see the `ctk-core/testpack/target/failsafe-reports` directory for reports. Or run the `mvn site` command from the `ctk-core` directory; this will take a few minutes but then you can launch the site from `ctk-core/target/site/index.html` navigate to the Project Reports link and then the Surefire Reports link, for easily-readable HTML. (Or navigate directly to `ctk-core/target/site/GA4GH Server CTS Test Results.html`
 
