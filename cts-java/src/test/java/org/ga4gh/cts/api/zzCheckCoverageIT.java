@@ -1,13 +1,10 @@
 package org.ga4gh.cts.api;
 
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
+import org.ga4gh.ctk.transport.*;
+import org.junit.*;
+import org.springframework.test.context.junit4.rules.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * <p>Stupidly named 'zz...' so it runs last, this test class will evaluate
@@ -39,7 +36,7 @@ public class zzCheckCoverageIT {
         // So the setup phase of this test is to collect all the messages,
         // defined in the IDL
 
-        assertEquals(1,1);
+        assertEquals(1, 1);
     }
 
     @Ignore("Unimplemented")
@@ -55,5 +52,13 @@ public class zzCheckCoverageIT {
         // plan is to attach the Tables of what-was-used to the
         // TestContext, then here to refer to that and make assertions
 
+    }
+
+    @BeforeClass
+    public static void setupTransport() throws Exception {
+        //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
+        // service = new SimpleOrderServiceEndpoint(endpointAddress);
+        URLMAPPING.doInit(); // reload defaults
+        //client = new VariantsProtocolClient();
     }
 }

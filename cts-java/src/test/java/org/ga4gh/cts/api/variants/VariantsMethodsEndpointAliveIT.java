@@ -1,17 +1,14 @@
 package org.ga4gh.cts.api.variants;
 
-import org.assertj.core.api.JUnitSoftAssertions;
+import org.assertj.core.api.*;
 import org.ga4gh.*;
-import org.ga4gh.ctk.transport.RespCode;
-import org.ga4gh.ctk.transport.WireTracker;
-import org.ga4gh.ctk.transport.protocols.VariantsProtocolClient;
+import org.ga4gh.ctk.transport.*;
+import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;
-import org.junit.experimental.categories.Category;
-
-import java.net.InetSocketAddress;
+import org.junit.experimental.categories.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.slf4j.LoggerFactory.getLogger;
+import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Verifies basic reachability of the Server's endpoints for variants, variantsets, and callsets.</p>
@@ -143,8 +140,9 @@ public class VariantsMethodsEndpointAliveIT {
 
     @BeforeClass
     public static void setupTransport() throws Exception {
-        InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
+        //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
+        URLMAPPING.doInit(); // reload defaults
         client = new VariantsProtocolClient();
         // TODO verify correct data installed? Maybe a null client to cause fast-fail and test-skipping?
 

@@ -8,4 +8,23 @@
 
 In the above we use git submodule init and update rather than recursive clone, for clarity and to make it obvious where to check in your own schemas module if you're working on an API change. But, you could also just use `git clone --recursive  https://github.com/wstidolph/ctk-core.git`
 
+
+
 Suggestion: create an environment variable "ctk.tgt.urlRoot" to point to your available GA4GH server, to save yourself having to add it to command lines and module POMs.
+
+## Installing your Schema Version
+The project as it sits in https://github.com/wstidolph/ctk-core.git loads schema from a particular version of schemas:
+
+```
+
+[submodule "schemas"]
+	path = schemas
+	url = https://github.com/wstidolph/schemas
+
+```
+
+This version of the schemas has some minor non-semantic changes (like using String instead of CharSequence for the strings, and swapping the order of some union fields to meet Avro requirements). 
+
+**This version of the Schema is not tracking changes to the real v0.5.1 Schema!**
+
+Nor, of course, does it track to your own version of the schema if you were changing that. So you need to use standard git mechanisms to ensure this git submodule is tracking the version/branch of Schema you care about.

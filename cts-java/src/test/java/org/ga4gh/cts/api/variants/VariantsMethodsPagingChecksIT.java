@@ -1,10 +1,9 @@
 package org.ga4gh.cts.api.variants;
 
+import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;
 import org.junit.experimental.categories.*;
-
-import java.net.*;
 
 import static org.slf4j.LoggerFactory.*;
 
@@ -35,8 +34,9 @@ public class VariantsMethodsPagingChecksIT {
 
     @BeforeClass
     public static void setupTransport() throws Exception {
-        InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
+        //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
+        URLMAPPING.doInit(); // reload defaults
         client = new VariantsProtocolClient();
 
     }

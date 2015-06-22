@@ -8,7 +8,6 @@ import org.junit.*;
 import org.junit.experimental.categories.*;
 import org.junit.runner.*;
 
-import java.net.*;
 import java.util.*;
 
 import static org.slf4j.LoggerFactory.*;
@@ -141,7 +140,7 @@ public class ReadGroupSetsSearchIT {
 
     @BeforeClass
     public static void setupTransport() throws Exception {
-        InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
+        //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
         URLMAPPING.doInit(); // reload defaults
         client = new ReadsProtocolClient();

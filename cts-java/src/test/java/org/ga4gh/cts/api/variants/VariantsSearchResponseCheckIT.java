@@ -1,21 +1,17 @@
 package org.ga4gh.cts.api.variants;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.ga4gh.GASearchVariantsRequest;
-import org.ga4gh.GASearchVariantsResponse;
+import junitparams.*;
+import org.ga4gh.*;
+import org.ga4gh.ctk.transport.*;
+import org.ga4gh.ctk.transport.protocols.*;
+import org.junit.*;
+import org.junit.experimental.categories.*;
+import org.junit.runner.*;
 
-import org.ga4gh.ctk.transport.protocols.VariantsProtocolClient;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
-
-import java.net.InetSocketAddress;
-import java.util.Arrays;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.slf4j.LoggerFactory.getLogger;
+import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Test the data returned in a GASearchVariantsResponse is as expected.</p>
@@ -60,8 +56,9 @@ public class VariantsSearchResponseCheckIT {
 
     @BeforeClass
     public static void setupTransport() throws Exception {
-        InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
+        //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
+        URLMAPPING.doInit(); // reload defaults
         client = new VariantsProtocolClient();
     }
 }

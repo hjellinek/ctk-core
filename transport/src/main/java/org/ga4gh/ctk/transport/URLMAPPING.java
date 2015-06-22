@@ -104,7 +104,6 @@ public class URLMAPPING {
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
         }
-
     }
 
     /**
