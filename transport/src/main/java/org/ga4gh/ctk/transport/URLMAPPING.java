@@ -126,6 +126,18 @@ public class URLMAPPING {
         doInit("");
     }
 
+    /**
+     * Load properties by resource or file name.
+     *
+     * <p>Looks on classpath for resource with provided name;
+     * if found, loads the included properties matcing prefix "ctk.tgt."</p>
+     *
+     * <p>Looks on file system for resource matching name; loads thos props
+     * (which allows for file system to override classpath.</p>
+     *
+     * @param resName the res name
+     * @return the properties
+     */
     public static Properties loadPropsName(String resName) {
 
         Properties tempProps = new Properties();
