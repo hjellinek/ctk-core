@@ -47,6 +47,14 @@ public class LandingPageIT {
         assertThat(response.getStatus()).isEqualTo(200);
     }
 
+    /**
+     * <p>Failing test should cross link.</p>
+     * <p>This test shows thattests can fail, and demonstrates the CTK
+     * capabilities of linking from the generated Surefire report directly
+     * to the failing line of test code, and to the test-specific javadoc.</p>
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void failingTestShouldCrossLink() throws Exception {
         assertThat(false).isTrue();

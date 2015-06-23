@@ -27,7 +27,12 @@ When the tests are done, the TAP reports will be in the top of the `cts-core/tar
 After the integration tests run, see the `ctk-core/testpack/target/failsafe-reports` directory for reports. Or, there are a couple ways for you to see the nice HTML output report:
 
 - run the report generator standalone, with `mvn surefire-report:report` in the `cts-java` directory, or
-- run the `mvn site` command from the `ctk-core` directory; this will take longer but then you can launch the site from `ctk-core/target/site/index.html` navigate to the Project Reports link and then the Surefire Reports link, for easily-readable HTML with cross-linking. (Or, you can navigate directly to `ctk-core/target/site/GA4GH Server CTS Test Results.html` within the generated site)
+- run the `mvn site` command from the `ctk-core` directory; this will take longer but then you can launch the site from `ctk-core/target/site/index.html` navigate to the Project Reports link and then the Surefire Reports link, for easily-readable HTML with cross-linking. (Or, you can navigate directly to `ctk-core/target/site/GA4GH Server CTS Test Results.html` within the generated site).
+
+The generated site report is nice too, in that the HTML page of test results includes a Failure Details section (at the bottom) showing the ignored or failed tests; failed tests show the one-line explanation, and have a link directly into the test sourcecode at the point of the failure (and from there, a link to the javadoc as well).
+
+To demonstrate this, there's an example of an **intentionally-failing** failing test in the `LandingPageIT` test class of the `org.ga4gh.cts.core` package.
+
 
 ## Prerequisites
 

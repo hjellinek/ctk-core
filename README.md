@@ -1,4 +1,7 @@
 # Conformance Test Kit (CTK)/Compliance Test Suite (CTS) for a GA4GH Server
+
+----------
+
 ## Purpose
 A Conformance Test Kit for evaluating a GA4GH Server against the data and messages defined
 in the IDL of the schemas repository. CTK tests are currently written as JUnit/Java tests using a
