@@ -35,6 +35,8 @@ The Properties list is available by looking at the javadoc for the `transport/sr
 
 > **NOTE**: The target server endpoints are controlled by a class `transport/src/main/java/org/ga4gh/ctk/transport/URLMAPPING.java` which loads the target server URL from the `ctk.tgt.urlRoot` property, which is set in the `transport/src/main/resources/defaulttransport.properties` file and can be overriden by replacing the properties file or with an external config element like an environment variable or on a command line.
 
+### Debugging URLMAPPER Initialization
+
 Because URLMAPPING initialization is a static action which might happen without logs being available, the URLMAPPING class has a special java system property property to cause it to dump all the static initialization actions directly to stdout:
 
 `java -Dctk.tgt.urlmapper.dump=true -jar ctk-testpack-0.5.1-SNAPSHOT.jar`

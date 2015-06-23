@@ -58,23 +58,28 @@ machine.
 
 The CTK/CTS build status is [![Build Status](https://travis-ci.org/wstidolph/ctk-core.svg?branch=SplitOutFramework)](https://travis-ci.org/wstidolph/ctk-core)
 
+>**This CTK defaults to using a slightly modified version of the GA4GH v0.5.1 Schema, which is not being updated; you need to point it at the Schema you care about, using standard git submodule techniques for the schema module.**
+
 ### Configuring the CTK
 
+See [Configuring the CTK](ConfigTheCTK.md)
 
-
-### Running A Test
-Note about classpaths being different in running from jar-on-command-line vs maven vs in an IDE.
+### Running Tests
+There are three primary ways to run the CTK (jar-on-command-line vs maven vs in an IDE) and they each raise different classpath and environment issues. I hope the notes in these docs help, but each environment seems to involve some peculiarities ...
 
 #### Run From Maven
 
-Execute the failsafe plugin's "integration-test" goal to execute the test suite (either use your IDE  or build system maven runner, or cd into cts-java and execute 
-`mvn failsafe:integration-test` directly).
-
-Modify the command line using Maven, or the `application.properties` file,  to alter which tests are run by default.
-
-Modify `log4j2.xml` to alter logging behavior.
-
 For details see [RunningTests_maven](RunningTests_maven.md).
+
+Short form:
+
+- in `ctk-core`execute `mvn clean install` then
+- in `cts-java` run `mvn failsafe:integration-test`
+
+Modify the behavior using properties set in the `cts-java` maven `pom.xml`, or on the command line using `mvn -D<property=<value`, or provide the `application.properties` and/or `defaulttransport.properties` files in  to alter which tests are run by default.
+
+To alter logging behavior: modify `log4j2.xml` in source/test for a build/run launch in your IDE or in maven, or modify `lib/log4j2.xml` for a command-line launch.
+
 
 #### Run From IDE
 Each test class can be run as a standalone JUnit test, each TestSuite can be run as a standalone JUnit TestSuite. Some IDEs provide a dedicated JUnit runner to execute and report on the tests, and include support features like "re-run failed tests."
