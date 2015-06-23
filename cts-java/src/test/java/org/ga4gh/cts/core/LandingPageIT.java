@@ -48,15 +48,19 @@ public class LandingPageIT {
     }
 
     /**
-     * <p>Failing test should cross link.</p>
-     * <p>This test shows thattests can fail, and demonstrates the CTK
+     * <p>Show that tests can fail.</p>
+     * <p>By querying for a system property "cts.demofail" this
+     * test shows that tests can fail. This optional failure thus demonstrates the CTK
      * capabilities of linking from the generated Surefire report directly
      * to the failing line of test code, and to the test-specific javadoc.</p>
      *
      * @throws Exception the exception
      */
     @Test
-    public void failingTestShouldCrossLink() throws Exception {
-        assertThat(false).isTrue();
+    public void propertyCanCauseTestFail() throws Exception {
+        if(Boolean.getBoolean("cts.demofail"))
+            assertThat(false).isTrue();
+        else
+            assertThat(false).isFalse();
     }
 }
