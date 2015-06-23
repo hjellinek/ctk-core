@@ -26,6 +26,7 @@
         <module>testpack</module>
         <module>transport</module>
         <module>schemas</module>
+        <module>dist</module>
     </modules>
 
     <groupId>org.ga4gh</groupId>
