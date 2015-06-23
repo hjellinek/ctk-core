@@ -17,11 +17,16 @@ And, you will may want to configure the test environment, so extract the control
 
 So you end up with:
 
-    <launch dir>/ctk-testpack-0.5.1-SNAPSHOT.jar
-      |          application.properties
-      | -- lib/cts-java-0.5.1-SNAPSHOT-tests.jar
-      |        log4j2.xml
-      | -- target/
+```
+    <launch dir>/
+      | - ctk-testpack-0.5.1-SNAPSHOT.jar
+      | - application.properties
+      | - lib/
+      |       |- cts-java-0.5.1-SNAPSHOT-tests.jar
+      |       |- log4j2.xml
+      | - target/
+
+```
 
 The simplest way to run is to simply execute all tests from the launch dir, passing in the address of your target server:
 
