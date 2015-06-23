@@ -33,9 +33,8 @@ The CTK communicates with a running target server, but it doesn't (currently) ma
 
 The name "CTK" refers to the test framework and transport layers.
 The term "CTS" (for "Compliance Test Suite") refers to the actual server-communicating tests. These tests are in
-a maven module specific to the implementationlanguage (so far, we have only "cts-java")
+a maven module specific to the implementation language (so far, we have only "cts-java")
 
-(The design is intended to allow for other JVM test frameworks such as [Spock](https://code.google.com/p/spock/).
 
 ### Use Cases
 This effort has two primary use cases:
@@ -51,7 +50,7 @@ server-sanity check. This approach generates test results to log files (defaulti
 exit status which indicates if all tests passed. It does not require a build tool, just java 8.
 
 ## Status
-(June 17 2015) The CTK is able to execute and report on tests written in Java against the v0.5.1 schema. The collection of tests is currently small, and only attempts to use the *reads*, *references*, and *variants* endpoints.
+(June 22 2015) The CTK is able to execute and report on tests written in Java against the v0.5.1 schema. The collection of tests is currently small, and only attempts to use the *reads*, *references*, and *variants* endpoints.
 The tests presume the server has been configured with a data set as described in the
 [GA4GH API Demo instructions](http://ga4gh-reference-implementation.readthedocs.org/en/stable/demo.html). The user can generate cross-referenced
 javadoc and source for the framework and for server tests but the result is default-styled and deployed on their local
