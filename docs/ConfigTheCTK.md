@@ -35,6 +35,12 @@ The Properties list is available by looking at the javadoc for the `transport/sr
 
 > **NOTE**: The target server endpoints are controlled by a class `transport/src/main/java/org/ga4gh/ctk/transport/URLMAPPING.java` which loads the target server URL from the `ctk.tgt.urlRoot` property, which is set in the `transport/src/main/resources/defaulttransport.properties` file and can be overriden by replacing the properties file or with an external config element like an environment variable or on a command line.
 
+Because URLMAPPING initialization is a static action which might happen without logs being available, the URLMAPPING class has a special java system property property to cause it to dump all the static initialization actions directly to stdout:
+
+`java -Dctk.tgt.urlmapper.dump=true -jar ctk-testpack-0.5.1-SNAPSHOT.jar`
+
+Note that many tests reinitialize the URLMAPPER in a @BeforeClass, so you may see the initialization get dumped multiple times.
+
 ## How a property is set
 Properties can be set on the command line, from a properties file (in various locations), or from environment variables. The mechanism is provided by Spring, so all the alternatives described in Spring documentation on [Externalized Configuration](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html) are available. The important mechanisms for the CTS, in order of descending priority, are:
 

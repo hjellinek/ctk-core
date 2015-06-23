@@ -30,12 +30,22 @@ public class URLMAPPING {
      * to repackage the transport module.</p>
      */
     public static Map<String, String> endpoints;
-    public static Map<String, String> defaultendpoints;
+    private static Map<String, String> defaultendpoints;
 
     private static Properties tempProps;
+    /**
+     * <p>dumpToStdOut is a property set at the java System level '-Dctk.tgt.urlmapper.dump=true`</p>
+     * <p>When this property is set, the URLMAPPER dumps directly to the stdout what actions it
+     * takes during the doInit() method (what
+     * 'ctk.tgt.*' properties it discovers and their values).
+     * This static method is invoked during class initialization, and by tests which
+     * want to ensure the transport environment is initialzied as they expect</p>
+     */
+    public static boolean dumpToStdOut = false;
 
     /* **** DEFAULT ENDPOINTS no matter what, we have these *** */
     static {
+        log = getLogger(URLMAPPING.class);
 
         defaultendpoints = new HashMap<>();
         defaultendpoints.put("ctk.tgt.urlRoot", "http://localhost:8000/v0.5.1");
@@ -61,6 +71,8 @@ public class URLMAPPING {
         defaultendpoints.put("ctk.tgt.searchCalls", "calls/search");
         defaultendpoints.put("ctk.tgt.searchAlleleCalls", "allelecalls/search");
 
+        dumpToStdOut = Boolean.getBoolean("ctk.tgt.urlmapper.dump"); // so, -Dctk.urlmapper.dump= true
+
         doInit(""); // empty string will cause defaulttransport.properties to load
 
         log.info("set URLMAPPING urlRoot to " + URLMAPPING.getUrlRoot());
@@ -68,19 +80,18 @@ public class URLMAPPING {
 
 
     /**
-     * Initialize URLMAPPING.
-     * <p>
-     * Given a resource name, this looks loads (in order):
-     * <p>
-     * a properties file of that name on the classpath
-     * a properties file of that name from the file system
-     * the operating system environment variables ("ctk.tgt.*)
-     * the java system properties (e.g., command line -D...) of "ctk.tgt.*"
-     * <p>
+     * <p>Initialize URLMAPPING.</p>
+     * <p>Given a resource name, this looks loads (in order):
+     * <ul>
+     * <li>a properties file of that name on the classpath</li>
+     * <li>a properties file of that name from the file system</li>
+     * <li>the operating system environment variables ("ctk.tgt.*)</li>
+     * <li>the java system properties (e.g., command line -D...) of "ctk.tgt.*"</li>
+     * </ul>
      * If the resName is blank then the file/resource sought is "defaulttransport.properties"
      * If the resName is given then the defaultproperties file is not loaded at all.
      *
-     * @param resName the resource name to init from (if blank, uses 'defaulttransport.properties)
+     * @param resName the resource name to init from (if blank, uses 'defaulttransport.properties')
      */
     public static void doInit(String resName) {
 
@@ -89,17 +100,17 @@ public class URLMAPPING {
         if (resName == null || resName.isEmpty())
             resName = "defaulttransport.properties";
 
-        log.debug("\nprocess resources/file" + resName);
+        if(dumpToStdOut) System.out.println("\nprocess resource/file " + resName);
         tempProps = loadPropsName(resName);
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
         }
-        log.debug("\nprocess Env");
+        if(dumpToStdOut)  System.out.println("\nprocess Env");
         tempProps = loadPropsEnv("ctk.tgt.");
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
         }
-        log.debug("\nprocess Sys");
+        if(dumpToStdOut)  System.out.println("\nprocess Sys");
         tempProps = loadPropsSystem("ctk.tgt.");
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
@@ -126,18 +137,18 @@ public class URLMAPPING {
                 .getResourceAsStream(resName);
         try {
             tempProps.load(instream);
-            log.info("leaded props from classpath " + resName);
-        } catch (IOException ioe) { // just ignore not-found
-            log.debug("Did not find resource "+ resName);
+            if(dumpToStdOut) System.out.println("loaded props from classpath " + resName);
+        } catch (Exception ioe) { // just ignore not-found
+            if(dumpToStdOut) System.out.println("Did not find resource " + resName);;
         }
 
         // then we try the same name on the file system
         try {
             instream = new FileInputStream(resName);
             tempProps.load(instream);
-            log.info("loaded props from file " + resName);
-        } catch (IOException ioe) {
-            log.debug("Did not find property file " + resName);
+            if(dumpToStdOut) System.out.println("loaded props from file " + resName);
+        } catch (Exception ioe) {
+            if(dumpToStdOut) System.out.println("Did not find property file " + resName);
         }
 
         return tempProps;
@@ -147,9 +158,12 @@ public class URLMAPPING {
         Properties props = new Properties();
         for (Object key : System.getProperties().keySet()) {
             String ks = key.toString();
-            log.trace("Sys prop has key " + ks);
-            if (ks.startsWith(prefix))
+
+            if (ks.startsWith(prefix)) {
+                if(dumpToStdOut) System.out.println("Sys prop has "
+                        + ks + " => " + System.getProperty(ks));
                 props.put(ks, System.getProperty(ks));
+            }
         }
         return props;
     }
@@ -159,9 +173,11 @@ public class URLMAPPING {
         // copy over the env vals with right name
         Properties props = new Properties();
         for (String key : env.keySet()) {
-            log.trace("env has " + key);
-            if (key.startsWith(prefix))
+
+            if (key.startsWith(prefix)) {
+                if (dumpToStdOut) System.out.println("env has " + key + " => " + env.get(key));
                 props.put(key, env.get(key));
+            }
         }
         return props;
 
@@ -172,7 +188,7 @@ public class URLMAPPING {
             for (Enumeration en = props.propertyNames(); en.hasMoreElements(); ) {
                 String key = (String) en.nextElement();
                 map.put(key, props.getProperty(key));
-                log.debug(key + " => " + props.getProperty(key));
+                if(dumpToStdOut) System.out.println("merging " + key + " => " + props.getProperty(key));
             }
         }
     }
@@ -188,7 +204,7 @@ public class URLMAPPING {
                 urlRoot = urlRoot + "/";
             endpoints.put("ctk.tgt.urlRoot", urlRoot);
         } else {
-            log.warn("setUrlRoot got null/empty argument, not making change");
+            log.debug("setUrlRoot got null/empty argument, not making change");
         }
     }
 
