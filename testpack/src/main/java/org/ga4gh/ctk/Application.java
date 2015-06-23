@@ -25,8 +25,18 @@ import static org.slf4j.LoggerFactory.*;
  * in your IDE.)</p>
  * <p>This entry is a Spring Boot app, so you can refer to their documention for alternative run-methods.
  *
+ * <p>Test tracking to TESTLOG is:
+ * <ul>
+ *     <li>warn: test failure reports</li>
+ *     <li>info: summary line (failed, passed, skipped, time)</li>
+ *     <li>debug: test name-matching info, count of test classes, count of test cases to run, test cases as they complete</li>
+ *     <li>trace: show test case start as well as complete (helpful if hang)</li>
+ * </ul>
+ * <p>Test Anything Protocol (TAP) files are output to target/ dir.</p>
  * @see <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-running-your-application.html">
- * SpringBoot: Running Your Application</a></p>
+ * SpringBoot: Running Your Application</a>
+ * @see <a href="https://testanything.org">Test Anything Protocol</a>
+ *
  * <p>Created by Wayne Stidolph</p>
  */
 @SpringBootApplication
@@ -49,6 +59,13 @@ public class Application implements CommandLineRunner {
     public void setTestFinder(TestFinder testFinder) {
         this.testFinder = testFinder;
     }
+
+    public void setTestExecListener(TestExecListener testExecListener) {
+        this.testExecListener = testExecListener;
+    }
+
+    @Autowired
+    private TestExecListener testExecListener;
 
     @Value("${ctk.tgt.urlRoot}")
     String urlroot;
@@ -88,7 +105,7 @@ public class Application implements CommandLineRunner {
         // work through each clause one at a time, even though it might mean re-run tests
         // alternative is to get the classes all into a Set and run that
         for(String mstr : matchStr.split(",")) {
-            log.info("seeking test classes that match < " + mstr + " >");
+            log.debug("seeking test classes that match < " + mstr + " >");
 
             Set<Class<?>> testClasses = testFinder.findTestClasses(mstr);
 
@@ -110,9 +127,8 @@ public class Application implements CommandLineRunner {
 
     /**
      * <p>Run the testClasses.</p>
-     * <p>Execute the test(s), and generate outputs.
-     * Any failures go to the testlog at a WARN level.
-     * All results are output using Test Anything Protocol listeners.</p>
+     * <p>Execute the test(s), and generate outputs.</p>
+
      *
      * @param testClasses Classes to be executed using JUnit runners
      * @see <a href="http://tap4j.org/tap4j-ext/junit_support.html">Test Anything Protocol tap4j extension</a>
@@ -130,6 +146,8 @@ public class Application implements CommandLineRunner {
 
         TapListenerClass tapclass = new TapListenerClass();// TAP outputs per class
         junit.addListener(tapclass);
+
+        junit.addListener(testExecListener); // attaches logging
 
         long starttime = System.currentTimeMillis();
         Result result = junit.run(req);
