@@ -26,7 +26,7 @@ Tests are grouped by "API" - e.g., the Reads, Variants, or References API. As a 
 
 Note that here the `ReadsTestSuite` is configured to select all the test classes with an IT or Test name suffix, and from that group to include the tests marked with the `CoreTests` or the `ReadsTests` markers. You define markers and Suites in code, to suit yourself.
 
-Each API has a ProtocolClient class which is responsible for getting requests to the endpoints in the API and getting responses back. So, for example, there is a ReadsProtocolClient, which exposes methods such as `searchReads` taking a `GASearchReadsRequest` and returning a `GASearchReadsResponse.` A normal CTS test uses a @BeforeClass method to acquire the appropriate ProtocolClient as a class variable named 'client.'
+Each API has a ProtocolClient class which is responsible for getting requests to the endpoints in the API and getting responses back. So, for example, there is a ReadsProtocolClient, which exposes methods such as `searchReads()` taking a `GASearchReadsRequest` and returning a `GASearchReadsResponse` object. A normal CTS test uses a @BeforeClass method to acquire the appropriate ProtocolClient as a class variable named 'client.'
 
 ```java
 
@@ -37,6 +37,10 @@ Each API has a ProtocolClient class which is responsible for getting requests to
     setupTransport() throws Exception {client = new ReadsProtocolClient();}
 
 ```
+
+The methods such as `searchRead(...) can generally take an optional WireTracker object; if it included, then when the method returns the provided WireTracker will be filled out with the actual "on the wire" JSON and the RespCode, for detailed evaluation.
+
+**TODO** add the entire HttpResponse to the WireTracker forfuture assertions about returned header data, cookies, etc.
 
 Each test class also hooks into the logging framework, with a class static:
 

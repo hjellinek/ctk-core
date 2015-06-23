@@ -77,4 +77,5 @@ public class ReadsSearchIT {
         rgidMap = new HashMap<>();
         rgidMap.put("VALID_READGROUPID","low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
     }
+
 }
