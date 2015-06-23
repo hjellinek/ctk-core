@@ -47,4 +47,8 @@ public class LandingPageIT {
         assertThat(response.getStatus()).isEqualTo(200);
     }
 
+    @Test
+    public void failingTestShouldCrossLink() throws Exception {
+        assertThat(false).isTrue();
+    }
 }
