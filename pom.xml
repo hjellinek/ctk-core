@@ -22,6 +22,7 @@
     <name>CTK Aggregator</name>
     <description>CTK Aggregation</description>
     <modules>
+        <module>cts-java</module>
         <module>testpack</module>
         <module>transport</module>
         <module>schemas</module>
@@ -110,12 +111,13 @@
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.18.1</version>
                 <configuration>
-                    <outputName>GA4GH CTK Test Results</outputName>
+                    <!-- Surefire (integration tests) only reports on the CTS results -->
+                    <outputName>GA4GH Server CTS Test Results</outputName>
                     <aggregate>true</aggregate>
-                    <linkXRef>true</linkXRef>
                 </configuration>
             </plugin>
             <plugin>
+                <!-- these are the left-nav reports -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>2.6</version>

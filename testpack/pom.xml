@@ -19,10 +19,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>testpack</name>
+    <name>CTK driver (testpack)</name>
     <description>tests to verify a GA4GH data server v0.5.1 implementation</description>
 
-    <groupId>org.ga4gh</groupId>
     <artifactId>ctk-testpack</artifactId>
     <version>0.5.1-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -42,7 +41,7 @@
     -->
 
     <properties>
-        <spring.boot.version>1.3.0.M1</spring.boot.version>
+
     </properties>
 
     <developers>
@@ -62,7 +61,7 @@
 
     <!-- TODO consider moving all the Spring stuff to its own POM -->
     <!-- (you don't need this if you are using a .RELEASE version) -->
-    <repositories>
+<!--    <repositories>
         <repository>
             <id>spring-snapshots</id>
             <url>http://repo.spring.io/snapshot</url>
@@ -84,36 +83,15 @@
             <id>spring-milestones</id>
             <url>http://repo.spring.io/milestone</url>
         </pluginRepository>
-    </pluginRepositories>
+    </pluginRepositories>-->
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <!-- Import dependency management from Spring Boot -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <dependencies>
-        <!--   if we were going to be a 'normal' spring boot app
-               but I want to depend on the ctk parent to ensure same versions
-               of JSON libs etc across the CTK so we comment this out and just
-               use spring boot dependency management
-               <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-parent</artifactId>
-                    <version>${spring.boot.version}</version>
-                </dependency>-->
+
         <dependency>
             <!-- The core Spring Boot starter, including
             auto-configuration support, logging and YAML -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>${spring.boot.version}</version>
             <!-- std logging for Spring Boot is logback, but I
             want to use log4j2 in the CTK so we exclude the default logging
             here and add in log4j2 later -->
@@ -129,7 +107,6 @@
             and Mockito along with the spring-test module. -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring.boot.version}</version>
         </dependency>
         <!-- turn on @ConfigurationProcessor so we can have ctk.* automatic naming -->
         <dependency>
@@ -168,6 +145,7 @@
         <dependency>
             <groupId>org.tap4j</groupId>
             <artifactId>tap4j-ext</artifactId>
+            <version>${tap4j-ext.version}</version>
         </dependency>
 
         <!-- lots of utility stuff! -->
@@ -208,11 +186,6 @@
             <artifactId>jackson-dataformat-avro</artifactId>
         </dependency>
 
-        <!-- bring in the GA4GH schema -->
-        <!--        <dependency>
-                    <groupId>org.ga4gh</groupId>
-                    <artifactId>ga4gh-format</artifactId>
-                </dependency>-->
         <dependency> <!-- also provides ga4gh schema we run against -->
             <groupId>org.ga4gh</groupId>
             <artifactId>ctk-transport</artifactId>
@@ -230,7 +203,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
                 <configuration>
-                    <!-- add the test classes to the config so that mavn spring-boot:run
+                    <!-- add the test classes to the config so that mvn spring-boot:run
                          finds them without having to build the jars and use that loader! -->
                     <folders>
                         <folder>${project.build.testOutputDirectory}</folder>
@@ -239,32 +212,21 @@
 
                 <executions>
                     <execution>
+                        <!-- this happens during the 'package' phase -->
                         <goals>
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
                             <!-- ZIP layout uses the PropertiesLauncher
-                            so in addition to looking in lib/ for jars the launcher
-                            also looks wherever the 'loader.path' property points to
-                            (loader.path: a comma-separated list of directories to
+                            so the launcher looks wherever the 'loader.path' property points
+                            for jars or resource
+
+                            loader.path: a comma-separated list of directories to
                             append to the classpath (containing file resources
                             and/or nested archives in *.jar or *.zip) -->
                             <layout>ZIP</layout>
                             <!-- <classifier>exec</classifier> -->
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- build a jar including all test classes and resources -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -280,42 +242,11 @@
                     </includes>
                     <excludes>
                         <!-- surefire for unit tests, so skip the integration tests -->
-                        <!-- they will be run by the 'failsafe' plugin -->
-                        <exclude>%regex[.*.systests.*]</exclude>
+                        <!-- they will be run by the 'failsafe' plugin,
+                        actually in another module now (cts-java) so this might be useless -->
+                        <exclude>%regex[.*.org.ga4gh.cts.*]</exclude>
                     </excludes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.18.1</version>
-                <configuration>
-                    <properties>
-                        <property>
-                            <!-- hook in the TAP framework for future reporting integration -->
-                            <name>listener</name>
-                            <value>
-                                org.tap4j.ext.junit.listener.TapListenerClass,org.tap4j.ext.junit.listener.TapListenerSuite
-                            </value>
-                        </property>
-                        <systemPropertyValues>
-                            <tap.junit.results>target/tap4j</tap.junit.results>
-                        </systemPropertyValues>
-                    </properties>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                        <configuration>
-                            <encoding>UTF-8</encoding>
-                            <!-- disable forking for easy debugging -->
-                            <!-- TODO make a mvn profile 'devel' for this, enable parallel in prod -->
-                            <forkCount>0</forkCount>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -337,7 +268,7 @@
                 <version>2.18.1</version>
                 <reportSets>
                     <reportSet>
-                        <!-- report on the 'failsafe' integration tests (the SYSTESTS -->
+                        <!-- report on the 'failsafe' integration tests -->
                         <!-- assembles the reports, doesn't run the tests! -->
                         <id>integration-tests</id>
                         <reports>

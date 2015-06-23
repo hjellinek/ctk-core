@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.*;
  */
 
 @ContextConfiguration(classes = Props.class)
-@TestPropertySource("classpath:/application.properties")
 public class PropsTest {
 
     // These two Rules (new in Spring 4.2) let us use Spring facilities in a test

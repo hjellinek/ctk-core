@@ -2,6 +2,7 @@ package org.ga4gh.ctk;
 
 import com.google.common.collect.*;
 import org.ga4gh.ctk.config.*;
+import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.avrojson.*;
 import org.junit.runner.*;
 import org.junit.runner.notification.*;
@@ -49,6 +50,9 @@ public class Application implements CommandLineRunner {
         this.testFinder = testFinder;
     }
 
+    @Value("${ctk.tgt.urlRoot}")
+    String urlroot;
+
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
     }
@@ -67,6 +71,11 @@ public class Application implements CommandLineRunner {
         log.debug("Application launched from " + location.getFile());
         log.debug("command line args: " + Arrays.toString(args));
 
+        // patch through config to URLMAPPING
+        if(urlroot != null){
+            log.debug("Setting urlroot to " + urlroot);
+            URLMAPPING.setUrlRoot(urlroot);
+        }
         // run a 'before' script if it exists
         String scriptBefore = props.ctk_scripts_before;
         if(scriptBefore != null && !scriptBefore.isEmpty()){
@@ -79,13 +88,15 @@ public class Application implements CommandLineRunner {
         // work through each clause one at a time, even though it might mean re-run tests
         // alternative is to get the classes all into a Set and run that
         for(String mstr : matchStr.split(",")) {
-            log.debug("seeking test classes that match < " + mstr + " >");
+            log.info("seeking test classes that match < " + mstr + " >");
 
             Set<Class<?>> testClasses = testFinder.findTestClasses(mstr);
 
             if (testClasses.isEmpty()) {
                 testlog.warn("Didn't do any testing for matchStr " + mstr);
             } else {
+                testlog.debug("Matched classes count (can be >1 test in a class): " + testClasses.size());
+                testlog.trace("Matched test classes are " + testClasses.toString());
                 runTestClasses(testClasses);
             }
         }
@@ -120,13 +131,17 @@ public class Application implements CommandLineRunner {
         TapListenerClass tapclass = new TapListenerClass();// TAP outputs per class
         junit.addListener(tapclass);
 
+        long starttime = System.currentTimeMillis();
         Result result = junit.run(req);
+        long endtime = System.currentTimeMillis();
 
-        testlog.info("Test run count: " + result.getRunCount());
-        testlog.info("Test ignore count: " + result.getIgnoreCount());
-        testlog.info("Test failure count: " + result.getFailureCount());
+        int passed = result.getRunCount() - result.getFailureCount() -result.getIgnoreCount();
+        testlog.info(result.getFailureCount() + " failed, "
+                + passed + " passed, "
+                + result.getIgnoreCount() + " skipped, "
+                + result.getRunTime() + " ms");
         for (Failure failure : result.getFailures()) {
-            testlog.warn(failure.toString());
+            testlog.warn("FAIL: " + failure.toString());
         }
     }
 
