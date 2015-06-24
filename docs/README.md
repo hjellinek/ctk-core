@@ -65,15 +65,15 @@ The CTK/CTS build status is [![Build Status](https://travis-ci.org/wstidolph/ctk
 
 There are several docs (in progress):
 
-- [Installing the CTK](docs/InstallingTheCTK.md)
-- [Configuring the CTK](docs/ConfigTheCTK.md)
-- [Running Tests from CLI](docs/RunningTests_CLI.md)
-- [Running Tests from Maven](docs/RunningTests_maven.md)
-- [Running Tests from an IDE](docs/RunningTests_IDE.md)
-- [Test Architecture and Conventions](docs/TestArchAndConventions.md)
-- [Writing A Test](docs/WritingATest.md)
-- [Structure And Rationale for the CTK/CTS](docs/StructureAndRationale.md)
-- [Future Steps](docs/FutureSteps.md)
+- [Installing the CTK](InstallingTheCTK.md)
+- [Configuring the CTK](ConfigTheCTK.md)
+- [Running Tests from CLI](RunningTests_CLI.md)
+- [Running Tests from Maven](RunningTests_maven.md)
+- [Running Tests from an IDE](RunningTests_IDE.md)
+- [Test Architecture and Conventions](TestArchAndConventions.md)
+- [Writing A Test](WritingATest.md)
+- [Structure And Rationale for the CTK/CTS](StructureAndRationale.md)
+- [Future Steps](FutureSteps.md)
 
 
 
