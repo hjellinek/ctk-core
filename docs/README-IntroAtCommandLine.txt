@@ -1,7 +1,7 @@
 This is how to get to started running the command-line (binary) distribution of the GA4GH Conformance Test Kit.
 
 1. Get the ga4gh-cts-bin.zip distribution from github
-(https://github.com/wstidolph/ctk-core/releases/download/test-release-process-3/ga4gh-cts-bin.zip)
+(get latest ga4gh-cts-bin.zip from https://github.com/wstidolph/ctk-core/releases)
 2. Unzip the file in the directory you want to run from. This creates a "lib" and a "target" directory.
 The target directory is empty (it will hold test-run results) while the lib directory holds tests and control files.
 
