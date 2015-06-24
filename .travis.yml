@@ -6,5 +6,7 @@ deploy:
   api_key:
     secure: BQ/re8hbOwK9hwVCOZ2Ex2HO2gn9L7GXTqdujKDbvYGwUyNkJW+EZO8JUV1spT54YDzg7hw5+L/t1yeyBr0E8fD8LKNLVWcqrvsPQbzZ5zC5uaZ+pz+ZvPNliKHop/+pCOSSgze8LTBYlXRXxdlDLvZ7V8cg0BaquSc5D/xaP+4xPOn77MCan6vYOx2TFCkVGLR4zrrpgYkwZZdzcB/d/L+HXIgv9cCQ56bEgNbMcAnvl4ZyXh49loaPKrgJ5vUsdWQ9nzhXZ31hk7VXUoJuwNLSzkuTqHS85UkgcpguT2VlF9ubXZ4OSVPliMDim07MKEd93I4s6Pqxso0UwEXrMs3b5UVX2YDdgPCawJlACPlhEQ5nYwe2ogHYXED/T/5QwFvEh+da9/QCyjFcOl0Ng+ytx+accMLrZWPxvIY+3BopmyMAEX0YvSJz/dOYKtOzysZJKS60PNM7kJNcv0Qo/FD2lk0ovRQ6TGb+Lca8QXIDqOwHtYr9eFDun8Yc61uiaa5yAEW4CM+FjQxU2WNh+W3NlpkesQnKczPBRypRN0/nbOohdXqs5BBLi9Lvo6euKeuPg4ApU+nOfU7qrJUetBKuBYNn/m5yw8enexPlTJpZwcCzz4vtddKZSCshCjiLaGwvCywYfXyoE6GDhMrDpIUsqsi54Yo7XcuOU9hiM50=
   file: dist/target/ga4gh-cts-bin.zip
+  skip-cleanup: true
   on:
     repo: wstidolph/ctk-core
+    tags: test-release-process
