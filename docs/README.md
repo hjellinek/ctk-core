@@ -6,7 +6,7 @@
 A Conformance Test Kit for evaluating a GA4GH Server against the data and messages defined
 in the IDL of the [schemas](https://github.com/ga4gh/schemas) repository. CTK tests are currently written as JUnit/Java tests using a
 fluent assertions library ([AssertJ](http://joel-costigliola.github.io/assertj/)) with assertions
-customized to the GA4GH domain objects, like this:
+customized to the GA4GH domain objects. Here's an example testcase:
 
 ```java
 
@@ -24,10 +24,10 @@ customized to the GA4GH domain objects, like this:
                     .matches("[ACTGN]+");
 ```
 
-The CTK communicates with a running target server, but it doesn't (currently) manage the target server's lifecycle). The CTK outputs:
+The CTK communicates with a running target server, but it does not manage the target server's lifecycle. The CTK outputs:
 
-- common [xUnit]() output text files (.txt,.xml) and .tap (for [Test Anything Protocol](https://testanything.org/) users)
-- console output (including any test logs until you configure them to accumulate in files)
+- text files: .txt, .xml from Junit, and .tap from [tap4j](http://tap4j.org/)  ([Test Anything Protocol](https://testanything.org/))
+- console output (including any test logs, until you configure them to accumulate in files)
 - HTML files of test results, linked to test source/javadoc
 - HTML 'site' of contributor, dependency reports, source code, javadoc, etc
 
@@ -37,7 +37,7 @@ a maven module specific to the implementation language (so far, we have only "ct
 
 
 ### Use Cases
-This effort has two primary use cases:
+The CTK has two primary use cases:
 
 - helping a server developer **track against the standard APIs**: for this, we build an executable file (a java 'jar')
 and a 'tests' jar file, and package them in a single ZIP distribution; the executable jar is controlled either from a command line or from properties files or
@@ -46,7 +46,7 @@ server-sanity check. This approach generates test results to log files (defaulti
 - helping a developer **create new tests** as they develop new APIs and related server implementations: for this,
 the developer uses the CTK under the Maven build tool (maven 3 and java 8). This works particularly well in an IDE
 with Maven test reporting (as, for example, IntelliJ or Eclipse). See the
- [Getting Started as a test writer](##getting-started-as-a-test-writer) document below.
+ [Getting Started as a test writer](##getting-started-as-a-test-writer) document.
 
 
 ## Functional Status
