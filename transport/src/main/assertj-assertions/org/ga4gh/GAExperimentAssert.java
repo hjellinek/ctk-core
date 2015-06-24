@@ -50,6 +50,121 @@ public class GAExperimentAssert extends AbstractAssert<GAExperimentAssert, GAExp
   }
 
   /**
+   * Verifies that the actual GAExperiment's created is equal to the given one.
+   * @param created the given created to compare the actual GAExperiment's created to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's created is not equal to the given one.
+   */
+  public GAExperimentAssert hasCreated(Long created) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting created of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    Long actualCreated = actual.getCreated();
+    if (!Objects.areEqual(actualCreated, created)) {
+      failWithMessage(assertjErrorMessage, actual, created, actualCreated);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual GAExperiment's description is equal to the given one.
+   * @param description the given description to compare the actual GAExperiment's description to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's description is not equal to the given one.
+   */
+  public GAExperimentAssert hasDescription(String description) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting description of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    String actualDescription = actual.getDescription();
+    if (!Objects.areEqual(actualDescription, description)) {
+      failWithMessage(assertjErrorMessage, actual, description, actualDescription);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual GAExperiment's id is equal to the given one.
+   * @param id the given id to compare the actual GAExperiment's id to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's id is not equal to the given one.
+   */
+  public GAExperimentAssert hasId(String id) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting id of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    String actualId = actual.getId();
+    if (!Objects.areEqual(actualId, id)) {
+      failWithMessage(assertjErrorMessage, actual, id, actualId);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual GAExperiment's info is equal to the given one.
+   * @param info the given info to compare the actual GAExperiment's info to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's info is not equal to the given one.
+   */
+  public GAExperimentAssert hasInfo(java.util.Map info) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting info of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    java.util.Map actualInfo = actual.getInfo();
+    if (!Objects.areEqual(actualInfo, info)) {
+      failWithMessage(assertjErrorMessage, actual, info, actualInfo);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual GAExperiment's instrumentDataFile is equal to the given one.
+   * @param instrumentDataFile the given instrumentDataFile to compare the actual GAExperiment's instrumentDataFile to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's instrumentDataFile is not equal to the given one.
+   */
+  public GAExperimentAssert hasInstrumentDataFile(String instrumentDataFile) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting instrumentDataFile of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    String actualInstrumentDataFile = actual.getInstrumentDataFile();
+    if (!Objects.areEqual(actualInstrumentDataFile, instrumentDataFile)) {
+      failWithMessage(assertjErrorMessage, actual, instrumentDataFile, actualInstrumentDataFile);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual GAExperiment's instrumentModel is equal to the given one.
    * @param instrumentModel the given instrumentModel to compare the actual GAExperiment's instrumentModel to.
    * @return this assertion object.
@@ -73,22 +188,91 @@ public class GAExperimentAssert extends AbstractAssert<GAExperimentAssert, GAExp
   }
 
   /**
-   * Verifies that the actual GAExperiment's libraryId is equal to the given one.
-   * @param libraryId the given libraryId to compare the actual GAExperiment's libraryId to.
+   * Verifies that the actual GAExperiment's library is equal to the given one.
+   * @param library the given library to compare the actual GAExperiment's library to.
    * @return this assertion object.
-   * @throws AssertionError - if the actual GAExperiment's libraryId is not equal to the given one.
+   * @throws AssertionError - if the actual GAExperiment's library is not equal to the given one.
    */
-  public GAExperimentAssert hasLibraryId(String libraryId) {
+  public GAExperimentAssert hasLibrary(String library) {
     // check that actual GAExperiment we want to make assertions on is not null.
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting libraryId of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting library of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
-    String actualLibraryId = actual.getLibraryId();
-    if (!Objects.areEqual(actualLibraryId, libraryId)) {
-      failWithMessage(assertjErrorMessage, actual, libraryId, actualLibraryId);
+    String actualLibrary = actual.getLibrary();
+    if (!Objects.areEqual(actualLibrary, library)) {
+      failWithMessage(assertjErrorMessage, actual, library, actualLibrary);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual GAExperiment's libraryLayout is equal to the given one.
+   * @param libraryLayout the given libraryLayout to compare the actual GAExperiment's libraryLayout to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's libraryLayout is not equal to the given one.
+   */
+  public GAExperimentAssert hasLibraryLayout(String libraryLayout) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting libraryLayout of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    String actualLibraryLayout = actual.getLibraryLayout();
+    if (!Objects.areEqual(actualLibraryLayout, libraryLayout)) {
+      failWithMessage(assertjErrorMessage, actual, libraryLayout, actualLibraryLayout);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual GAExperiment's molecule is equal to the given one.
+   * @param molecule the given molecule to compare the actual GAExperiment's molecule to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's molecule is not equal to the given one.
+   */
+  public GAExperimentAssert hasMolecule(String molecule) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting molecule of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    String actualMolecule = actual.getMolecule();
+    if (!Objects.areEqual(actualMolecule, molecule)) {
+      failWithMessage(assertjErrorMessage, actual, molecule, actualMolecule);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual GAExperiment's name is equal to the given one.
+   * @param name the given name to compare the actual GAExperiment's name to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's name is not equal to the given one.
+   */
+  public GAExperimentAssert hasName(String name) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    String actualName = actual.getName();
+    if (!Objects.areEqual(actualName, name)) {
+      failWithMessage(assertjErrorMessage, actual, name, actualName);
     }
 
     // return the current assertion for method chaining
@@ -119,6 +303,29 @@ public class GAExperimentAssert extends AbstractAssert<GAExperimentAssert, GAExp
   }
 
   /**
+   * Verifies that the actual GAExperiment's runDate is equal to the given one.
+   * @param runDate the given runDate to compare the actual GAExperiment's runDate to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's runDate is not equal to the given one.
+   */
+  public GAExperimentAssert hasRunDate(Long runDate) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting runDate of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    Long actualRunDate = actual.getRunDate();
+    if (!Objects.areEqual(actualRunDate, runDate)) {
+      failWithMessage(assertjErrorMessage, actual, runDate, actualRunDate);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual GAExperiment's schema is equal to the given one.
    * @param schema the given schema to compare the actual GAExperiment's schema to.
    * @return this assertion object.
@@ -135,6 +342,29 @@ public class GAExperimentAssert extends AbstractAssert<GAExperimentAssert, GAExp
     org.apache.avro.Schema actualSchema = actual.getSchema();
     if (!Objects.areEqual(actualSchema, schema)) {
       failWithMessage(assertjErrorMessage, actual, schema, actualSchema);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual GAExperiment's selection is equal to the given one.
+   * @param selection the given selection to compare the actual GAExperiment's selection to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's selection is not equal to the given one.
+   */
+  public GAExperimentAssert hasSelection(String selection) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting selection of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    String actualSelection = actual.getSelection();
+    if (!Objects.areEqual(actualSelection, selection)) {
+      failWithMessage(assertjErrorMessage, actual, selection, actualSelection);
     }
 
     // return the current assertion for method chaining
@@ -163,6 +393,64 @@ public class GAExperimentAssert extends AbstractAssert<GAExperimentAssert, GAExp
     // return the current assertion for method chaining
     return this;
   }
+
+  /**
+   * Verifies that the actual GAExperiment's strategy is equal to the given one.
+   * @param strategy the given strategy to compare the actual GAExperiment's strategy to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's strategy is not equal to the given one.
+   */
+  public GAExperimentAssert hasStrategy(String strategy) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting strategy of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    String actualStrategy = actual.getStrategy();
+    if (!Objects.areEqual(actualStrategy, strategy)) {
+      failWithMessage(assertjErrorMessage, actual, strategy, actualStrategy);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual GAExperiment's updated is equal to the given one.
+   * @param updated the given updated to compare the actual GAExperiment's updated to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual GAExperiment's updated is not equal to the given one.
+   */
+  public GAExperimentAssert hasUpdated(Long updated) {
+    // check that actual GAExperiment we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting updated of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    Long actualUpdated = actual.getUpdated();
+    if (!Objects.areEqual(actualUpdated, updated)) {
+      failWithMessage(assertjErrorMessage, actual, updated, actualUpdated);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
