@@ -83,11 +83,13 @@ and in that we find:
     ReadsTests.java
     ReadsTestSuite.java
 
-The first three of these holds tests. The other two are for a near-future capability that isn't quite
-readyfor command-line use yet. (ReadsTests.java is a "marker" we use when writing a
-test to marke the test method as "one of the Reads tests" ... then, ReadsTestSuite is a TestSuite that groups all of those, so we
- can run the ReadsTestSuite to get a pre-defined set of tests to execute. Since these
- aren't ready, we'll fall back to matching on the test name.)
+The first three of these hold tests.
+
+The other two are for a near-future capability that isn't quite ready for command-line use yet.
+ReadsTests.java is a "marker" we use when writing a test to marke the test method as
+"one of the Reads tests" ... then, ReadsTestSuite is a TestSuite that groups all of those, so
+we can run the ReadsTestSuite to get a pre-defined set of tests to execute.
+Since these aren't ready, we'll fall back to matching on the test name.
 
  To run a selected test, we just match its name as a regex to the ctk.matchstr property:
 
@@ -102,7 +104,10 @@ and notification systems. The files are named after the test class or suite that
  so if you have a use for them you'll want to archive them or move them somewhere. The
 CTK doesn't use these files at all, they are a pure "maybe useful" convenience.
 
-Next: the maven-generated 'site' packaging generates cross-referenced/cross-linked source and test code
+There's a rudimentary bash script ("ctk") which will handle moving aside your existing target/ dir on successive runs
+and running the CTK; you can edit that to add property settings.
+
+What's Next: the maven-generated 'site' packaging generates cross-referenced/cross-linked source and test code
 and javadoc in HTML, and adds in HTML test reports with links from the failre messages
  directly into that source tree. We'll have a quick on-ramp to that soon, but there
  may be enough information already avaliable in the docs on the github site

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+ctk_tgt_urlRoot="http://192.168.2.115:8000/v0.5.1/"
+
+# TODO expand to all known control properties, export to subshell and run CTK there
+
+CTKJAR="ctk-testpack-0.5.1-SNAPSHOT.jar"
+TGTDIR="target"
+
+# if target/ exists, amend its name
+if [ -d "$TGTDIR" ]; then
+  NEWDIR=$TGTDIR-`date -Iseconds`
+  mv $TGTDIR $NEWDIR
+  # if the just-renamed directory is empty, we can forget it
+  if [ "$(ls -A $NEWDIR)" ]; then
+        echo "moved existing results to "$NEWDIR
+  else
+      rmdir $NEWDIR
+  fi
+fi
+# if no target/ then create it
+mkdir $TGTDIR
+
+# run the CTK
+# other properties are set in application.properties, log4j2.xml
+java -Dctk.tgt.urlRoot=$ctk_tgt_urlRoot -jar $CTKJAR
