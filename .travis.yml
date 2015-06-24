@@ -9,4 +9,4 @@ deploy:
   skip_cleanup: true
   on:
     repo: wstidolph/ctk-core
-    tags: test-release-process
+    tags: true
