@@ -32,28 +32,28 @@ public class TestExecListener extends RunListener {
      * Called when an atomic test is about to be started.
      */
     public void testStarted(Description description) throws java.lang.Exception {
-        testlog.trace("Starting execution of test case : " + description.getMethodName());
+        testlog.trace("Starting test case : " + description.getMethodName());
     }
 
     /**
      * Called when an atomic test has finished, whether the test succeeds or fails.
      */
     public void testFinished(Description description) throws java.lang.Exception {
-        testlog.debug("Finished execution of test case : " + description.getMethodName());
+        testlog.debug("Finished test case : " + description.getMethodName());
     }
 
     /**
      * Called when an atomic test fails.
      */
     public void testFailure(Failure failure) throws java.lang.Exception {
-        testlog.debug("Execution of test case failed : " + failure.getMessage());
+        testlog.debug("FAILED test case : " + failure.getMessage());
     }
 
     /**
      * Called when a test will not be run, generally because a test method is annotated with Ignore.
      */
     public void testIgnored(Description description) throws java.lang.Exception {
-        testlog.debug("Execution of test case ignored : " + description.getMethodName());
+        testlog.debug("Ignoring test case : " + description.getMethodName());
     }
 
 }
