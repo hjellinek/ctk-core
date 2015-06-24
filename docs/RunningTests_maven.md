@@ -1,5 +1,21 @@
 # Testing using Maven goals
 
+# tl;dr
+
+- in `ctk-core`execute `mvn clean install` then
+- in `cts-java` run `mvn failsafe:integration-test`
+
+Modify the behavior using:
+- properties set in the `cts-java` maven `pom.xml`, or
+- on the command line using `mvn -D<property=<value`, or
+- `application.properties`  to alter which tests are run by default.
+- `defaulttransport.properties` to alter server endpoints
+
+**Most important property** to check is: `ctk.tgt.urlRoot=http://localhost:8000/v0.5.1`
+
+To alter logging behavior: modify `log4j2.xml` in source/test for a build/run launch in your IDE or in maven, or modify `lib/log4j2.xml` for a command-line launch.
+
+# Details
 You can run Maven from a command line, or from a maven runner in your build or development environments. With maven runs you will get JUnit .txt and .xml files and HTML summary files. You can also use maven to generate a complete `site` about the CTK - cross referenced source and javadoc, dependency reports on the CTK/CTS itself, and HTML reports on the most recent test execution.
 
 > **Background**: in [Maven](https://maven.apache.org/), you run a 'goal' defined in a `pom.xml` file. Goals are implemented by `plugin`s. Each module has its own `pom.xml`,and its own plugins, and it can define which plugin 'goals' are attached to which 'phases' in the maven build lifecycles. (Maven has a handful of predefined lifecycles for things like "build a jar" and a lifecycle has phases, which may be used or vacant ... maven just executes whatever is bound to each predefined phase, in order.)

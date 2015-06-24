@@ -1,13 +1,31 @@
 # Testing from the command line
 
-In this mode you are simply executing the CTS tests. The first generation CTK packages the CTS tests in a jar file which is separate from the main CTK framework jar. These two jars are named:
+In this mode you are simply executing the CTS tests - not writing tests. You wn't have HTML files and reports to build, so it runs fast and output comes as text.
+
+## tl;dr
+
+Get the distribution ZIP you can grab from github (the [repository releases page](https://github.com/wstidolph/ctk-core/releases)) and just unzip in the directory you want to run from. The unzip will place a jar file(ctk-testpack-*)  in this directory, and create `lib/` and `target/` directories; the tests jar and a couple control files will already be in the `lib/`. You run the test with:
+
+`java -Dctk.tgt.urlRoot=... -jar ctk-testpack-0.5.1-SNAPSHOT.jar`
+
+If you want to see a failure example, add another property:
+
+`java -Dcts.demofail=true -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=...`
+
+(or, just set an environment variable "`ctk.tgt.urlRoot` to avoid having to re-enter that property all the time)
+
+## Details
+
+(The setup described here is what you get if you just unzip the distribution, but if you're hand-assembling the environment from your local maven build this is what you need to end up with)
+
+ The first generation CTK packages the CTS tests in a jar file which is separate from the main CTK framework jar, and it assumes the tests are in a `lib` subdirectory. These two jars are named:
 
 - `ctk-testpack-0.5.1-SNAPSHOT.jar`
 - `cts-java-0.5.1-SNAPSHOT-tests.jar` 
 
-Choose or create a directory to run the test from, and put the CTK jar there.
+So, choose or create a directory to run the test from, and put the CTK jar there. Then 
 
-Create a subdirectory named `lib` and put the CTS jar there. Also, create a directory `target` for the test reports to go into. NOTE: You will not get junit .txt or .xml files from this process, as you do when running from Maven.
+Create a subdirectory named `lib` and put the CTS ("-tests") jar there. A (If you have multiple test jars for some reason, just put them all in that directory.) lso, create a directory `target` for the test reports to go into. NOTE: You will not get junit .txt or .xml files from this process, as you do when running from Maven.
 
 And, you will may want to configure the test environment, so extract the controlling properties files
 
@@ -43,7 +61,7 @@ If you want to alter the test selection strings, you can do that on the command 
 
 ```
 
-    G:\Projects\playground\temp>java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethodsEndpointAliveIT.* --ctk.tgt.urlRoot=http://192.168.2.115:8000/v0.5.1/
+    ~/temp>java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethodsEndpointAliveIT.* --ctk.tgt.urlRoot=http://192.168.2.115:8000/v0.5.1/
     [TESTLOG] 4 failed, 6 passed, 0 skipped, 1068 ms
     [TESTLOG] FAIL: [0] TWO_GOOD, NOT_IMPLEMENTED (multipleReadGroupsNotSupported)(org.ga4gh.cts.api.reads.ReadMethodsEndpointAliveIT):
     ...
