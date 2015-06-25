@@ -167,7 +167,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
             wireTracker.setResponseStatus(RespCode.fromInt(httpResp.getStatus()));
             //wireTracker.setActJson(json);
         }
-        if (httpResp.getStatus() == HttpStatus.SC_OK) {
+        if (httpResp != null && httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
 
             theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path, deserMode); // URL just for logging
