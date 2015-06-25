@@ -3,27 +3,39 @@
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 http://maven.apache.org/xsd/assembly-1.1.3.xsd
 http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 ">
     <!-- don't set formats here, leave to the maven plugin configuration element -->
-    <id>bin</id>
+    <id>cli</id>
     <!-- unpack directy, no extra root layer -->
     <includeBaseDirectory>false</includeBaseDirectory>
-    <formats>
-        <format>zip</format>
-    </formats>
 
-    <!-- very brute force for the first pass! -->
+    <!-- use dependencySet, not moduleSet, because we aren't in the top-level
+         (aggregating) module; this also lets us concentrate distro processing
+         here, not in each module -->
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>org.ga4gh:cts-java:jar:tests</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>org.ga4gh:ctk-testpack:jar
+                </include>
+            </includes>
+            <!-- user can can read and execute this, other can read (copy) -->
+            <fileMode>0544</fileMode>
+        </dependencySet>
+    </dependencySets>
+
     <files>
-        <file>
-            <source>../testpack/target/ctk-testpack-0.5.1-SNAPSHOT.jar</source>
-        </file>
         <file>
             <source>../docs/README-IntroAtCommandLine.txt</source>
         </file>
         <file>
             <source>../testpack/src/main/resources/ctk</source>
-        </file>
-        <file>
-            <source>../cts-java/target/cts-java-0.5.1-SNAPSHOT-tests.jar</source>
-            <outputDirectory>lib</outputDirectory>
+            <!-- user can can read, write, and execute this; other can read (copy) -->
+            <fileMode>0744</fileMode>
         </file>
         <file>
             <source>../testpack/target/classes/application.properties</source>
@@ -38,7 +50,7 @@ http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 ">
         <!-- somewhat convoluted way to ensure the 'target' dir is there -->
         <fileSet>
             <directory>./</directory>
-            <outputDirectory>/target</outputDirectory>
+            <outputDirectory>target</outputDirectory>
             <excludes>
                 <exclude>*/**</exclude>
             </excludes>
