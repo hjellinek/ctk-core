@@ -37,16 +37,18 @@
                 <version>2.5.5</version>
                 <executions>
                     <execution>
-                        <id>distibution-package</id>
+                        <id>cli</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <finalName>ga4gh-cts</finalName>
+                            <finalName>ga4gh-ctk</finalName>
+                            <formats>
+                                <format>zip</format>
+                            </formats>
                             <descriptors>
-                                <descriptor>src/assembly/dist.xml
-                                </descriptor>
+                                <descriptor>src/assembly/cli.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
