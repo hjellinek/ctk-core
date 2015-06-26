@@ -42,16 +42,6 @@ public class SoftAssertions {
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GAAnalysisAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GAAnalysisAssert assertThat(org.ga4gh.GAAnalysis actual) {
-    return proxy(org.ga4gh.GAAnalysisAssert.class, org.ga4gh.GAAnalysis.class, actual);
-  }
-
-  /**
    * Creates a new "soft" instance of <code>{@link org.ga4gh.GACallAssert}</code>.
    *
    * @param actual the actual value.
@@ -132,26 +122,6 @@ public class SoftAssertions {
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GAIndividualAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GAIndividualAssert assertThat(org.ga4gh.GAIndividual actual) {
-    return proxy(org.ga4gh.GAIndividualAssert.class, org.ga4gh.GAIndividual.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GAIndividualGroupAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GAIndividualGroupAssert assertThat(org.ga4gh.GAIndividualGroup actual) {
-    return proxy(org.ga4gh.GAIndividualGroupAssert.class, org.ga4gh.GAIndividualGroup.class, actual);
-  }
-
-  /**
    * Creates a new "soft" instance of <code>{@link org.ga4gh.GALinearAlignmentAssert}</code>.
    *
    * @param actual the actual value.
@@ -179,36 +149,6 @@ public class SoftAssertions {
    */
   public org.ga4gh.GAListReferenceBasesResponseAssert assertThat(org.ga4gh.GAListReferenceBasesResponse actual) {
     return proxy(org.ga4gh.GAListReferenceBasesResponseAssert.class, org.ga4gh.GAListReferenceBasesResponse.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GAMetadataAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GAMetadataAssert assertThat(org.ga4gh.GAMetadata actual) {
-    return proxy(org.ga4gh.GAMetadataAssert.class, org.ga4gh.GAMetadata.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GAMetadataMethodsAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GAMetadataMethodsAssert assertThat(org.ga4gh.GAMetadataMethods actual) {
-    return proxy(org.ga4gh.GAMetadataMethodsAssert.class, org.ga4gh.GAMetadataMethods.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GAOntologyTermAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GAOntologyTermAssert assertThat(org.ga4gh.GAOntologyTerm actual) {
-    return proxy(org.ga4gh.GAOntologyTermAssert.class, org.ga4gh.GAOntologyTerm.class, actual);
   }
 
   /**
@@ -322,36 +262,6 @@ public class SoftAssertions {
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASampleAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASampleAssert assertThat(org.ga4gh.GASample actual) {
-    return proxy(org.ga4gh.GASampleAssert.class, org.ga4gh.GASample.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchAnalysesRequestAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASearchAnalysesRequestAssert assertThat(org.ga4gh.GASearchAnalysesRequest actual) {
-    return proxy(org.ga4gh.GASearchAnalysesRequestAssert.class, org.ga4gh.GASearchAnalysesRequest.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchAnalysesResponseAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASearchAnalysesResponseAssert assertThat(org.ga4gh.GASearchAnalysesResponse actual) {
-    return proxy(org.ga4gh.GASearchAnalysesResponseAssert.class, org.ga4gh.GASearchAnalysesResponse.class, actual);
-  }
-
-  /**
    * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchCallSetsRequestAssert}</code>.
    *
    * @param actual the actual value.
@@ -369,66 +279,6 @@ public class SoftAssertions {
    */
   public org.ga4gh.GASearchCallSetsResponseAssert assertThat(org.ga4gh.GASearchCallSetsResponse actual) {
     return proxy(org.ga4gh.GASearchCallSetsResponseAssert.class, org.ga4gh.GASearchCallSetsResponse.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchExperimentsRequestAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASearchExperimentsRequestAssert assertThat(org.ga4gh.GASearchExperimentsRequest actual) {
-    return proxy(org.ga4gh.GASearchExperimentsRequestAssert.class, org.ga4gh.GASearchExperimentsRequest.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchExperimentsResponseAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASearchExperimentsResponseAssert assertThat(org.ga4gh.GASearchExperimentsResponse actual) {
-    return proxy(org.ga4gh.GASearchExperimentsResponseAssert.class, org.ga4gh.GASearchExperimentsResponse.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchIndividualGroupsRequestAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASearchIndividualGroupsRequestAssert assertThat(org.ga4gh.GASearchIndividualGroupsRequest actual) {
-    return proxy(org.ga4gh.GASearchIndividualGroupsRequestAssert.class, org.ga4gh.GASearchIndividualGroupsRequest.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchIndividualGroupsResponseAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASearchIndividualGroupsResponseAssert assertThat(org.ga4gh.GASearchIndividualGroupsResponse actual) {
-    return proxy(org.ga4gh.GASearchIndividualGroupsResponseAssert.class, org.ga4gh.GASearchIndividualGroupsResponse.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchIndividualsRequestAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASearchIndividualsRequestAssert assertThat(org.ga4gh.GASearchIndividualsRequest actual) {
-    return proxy(org.ga4gh.GASearchIndividualsRequestAssert.class, org.ga4gh.GASearchIndividualsRequest.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchIndividualsResponseAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASearchIndividualsResponseAssert assertThat(org.ga4gh.GASearchIndividualsResponse actual) {
-    return proxy(org.ga4gh.GASearchIndividualsResponseAssert.class, org.ga4gh.GASearchIndividualsResponse.class, actual);
   }
 
   /**
@@ -512,26 +362,6 @@ public class SoftAssertions {
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchSamplesRequestAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASearchSamplesRequestAssert assertThat(org.ga4gh.GASearchSamplesRequest actual) {
-    return proxy(org.ga4gh.GASearchSamplesRequestAssert.class, org.ga4gh.GASearchSamplesRequest.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchSamplesResponseAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASearchSamplesResponseAssert assertThat(org.ga4gh.GASearchSamplesResponse actual) {
-    return proxy(org.ga4gh.GASearchSamplesResponseAssert.class, org.ga4gh.GASearchSamplesResponse.class, actual);
-  }
-
-  /**
    * Creates a new "soft" instance of <code>{@link org.ga4gh.GASearchVariantSetsRequestAssert}</code>.
    *
    * @param actual the actual value.
@@ -569,16 +399,6 @@ public class SoftAssertions {
    */
   public org.ga4gh.GASearchVariantsResponseAssert assertThat(org.ga4gh.GASearchVariantsResponse actual) {
     return proxy(org.ga4gh.GASearchVariantsResponseAssert.class, org.ga4gh.GASearchVariantsResponse.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.GASexAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.GASexAssert assertThat(org.ga4gh.GASex actual) {
-    return proxy(org.ga4gh.GASexAssert.class, org.ga4gh.GASex.class, actual);
   }
 
   /**

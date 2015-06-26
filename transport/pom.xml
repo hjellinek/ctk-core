@@ -197,7 +197,7 @@
                 <executions>
                     <execution>
                         <!-- ecplicitly set emphty phase so the generator does not run -->
-                        <phase/>
+                        <!-- <phase/> -->
                         <goals>
                             <goal>generate-assertions</goal>
                         </goals>
