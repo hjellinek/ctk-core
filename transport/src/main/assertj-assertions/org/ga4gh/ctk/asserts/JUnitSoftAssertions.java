@@ -634,24 +634,4 @@ public class JUnitSoftAssertions implements TestRule {
     return proxy(org.ga4gh.GAVariantsAssert.class, org.ga4gh.GAVariants.class, actual);
   }
 
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.ctk.transport.RespCodeAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.ctk.transport.RespCodeAssert assertThat(org.ga4gh.ctk.transport.RespCode actual) {
-    return proxy(org.ga4gh.ctk.transport.RespCodeAssert.class, org.ga4gh.ctk.transport.RespCode.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link org.ga4gh.ctk.transport.WireTrackerAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public org.ga4gh.ctk.transport.WireTrackerAssert assertThat(org.ga4gh.ctk.transport.WireTracker actual) {
-    return proxy(org.ga4gh.ctk.transport.WireTrackerAssert.class, org.ga4gh.ctk.transport.WireTracker.class, actual);
-  }
-
 }
