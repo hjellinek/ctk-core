@@ -43,15 +43,26 @@ Nor, of course, does it track to your own version of the schema if you were chan
 So you need to use standard git mechanisms to ensure this git submodule is tracking
 the version/branch of Schema you care about.
 
-If you change the schema, you need to regenerate the custom Assertions, to ensure you
-have asserts for all your fields. To do this, first we need your schema available to the
-assertions generator, so lets put it in it's jar and push that to a local maven repository:
+If you change the schema, you need to do a couple things:
+
+- assign a local version number for your schema, so it can be deployed and used
+without confusing the dependency trackers. Set your version in the properties part of
+the `parent/pom.xml/`, for example: `<ga4gh.schema.local.version>0.5.2-SNAPSHOT</ga4gh.schema.local.version>`
+- regenerate the custom Assertions, to ensure you have asserts matching your fields
+
+To regenerate the assertions, first we need your schema available to the
+assertions generator, so lets put it in it's jar and push that to a local maven
+repository (with its new version number!):
+
 - `cd schemas`
 - `mvn clean install`
 
 Now we can run the generator:
+
 - `cd ../transport`
 - `mvn assertj:generate-assertions`
+
+(Or just run the `transport` modules assertj:generate-assertions goal using your IDE's maven runner)
 
 You now have custom assertions, as source, in `transport/src/main/assertj-assertions` - you
 manage these in your local git branch, or push them to your remotes like any other source.
