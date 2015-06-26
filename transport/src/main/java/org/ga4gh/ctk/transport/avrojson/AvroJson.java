@@ -221,13 +221,14 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
             log.warn("problem communicating JSON with " + theURL, e);
         }
         if (log.isDebugEnabled()) {
-            log.debug("exit jsonPost to " + theURL + " with status " + jsonResponse.getStatusText());
+            log.debug("exit jsonPost to " + theURL + " with status "
+                    + jsonResponse != null? jsonResponse.getStatusText() : "FAILED");
         }
         if (wireTracker != null) {
             wireTracker.theUrl = theURL;
             wireTracker.bodySent = jsonStr;
-            wireTracker.bodyReceived = jsonResponse.getBody().toString();
-            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse.getStatus()));
+            wireTracker.bodyReceived = (jsonResponse != null? jsonResponse.getBody().toString(): null);
+            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse != null? jsonResponse.getStatus(): 599));
         }
         return jsonResponse;
     }
@@ -247,13 +248,14 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
             log.warn("problem communicating JSON with " + theUrl + " id: " + id, e);
         }
         if (log.isDebugEnabled()) {
-            log.debug("exit jsonGet to " + theUrl + " id=" + id + " with status " + jsonResponse.getStatusText());
+            log.debug("exit jsonGet to " + theUrl + " id=" + id + " with status "
+                    + jsonResponse != null? jsonResponse.getStatusText() : "FAILED");
         }
         if (wireTracker != null) {
             wireTracker.theUrl = theUrl + "/ " + id;
             wireTracker.bodySent = "";
-            wireTracker.bodyReceived = jsonResponse.getBody().toString();
-            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse.getStatus()));
+            wireTracker.bodyReceived = (jsonResponse != null? jsonResponse.getBody().toString(): null);
+            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse != null? jsonResponse.getStatus(): 599));
         }
         return jsonResponse;
     }
