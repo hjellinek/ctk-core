@@ -18,6 +18,7 @@
 
     <packaging>pom</packaging>
 
+    <inceptionYear>2015</inceptionYear>
     <organization>
         <name>Global Alliance for Genomics and Health</name>
         <url>http://genomicsandhealth.org</url>
@@ -28,10 +29,14 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+    <scm>
+        <connection>scm:git:https://github.com/wstidolph/ctk-core</connection>
+        <developerConnection>scm:git:https://github.com/wstidolph/ctk-core</developerConnection>
+        <url>https://github.com/wstidolph/ctk-core</url>
+    </scm>
 
 
     <properties>
-
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <additionalparam>-Xdoclint:none</additionalparam>
         <!--
@@ -42,7 +47,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
 
-        <assertj.core.version>3.0.0</assertj.core.version>
+        <assertj.core.version>3.1.0</assertj.core.version>
         <assertj.generator.version>1.6.0</assertj.generator.version>
         <avro.version>1.7.7</avro.version>
         <gson.version>2.3.1</gson.version>
