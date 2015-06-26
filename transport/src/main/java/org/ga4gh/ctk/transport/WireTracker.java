@@ -65,7 +65,7 @@ public class WireTracker {
                 gaeMessage = gae.getMessage();
                 gaeErrorCode = gae.getErrorCode();
             }catch (Exception e){
-                log.warn("Parse failure on GAException: " + e.toString());
+                log.warn("Parse failure on GAException: BODY < " + bodyReceived + " > " + e.toString());
                 gaeErrorCode = -1;
                 gaeMessage = bodyReceived;
                 parseableGae = false;
