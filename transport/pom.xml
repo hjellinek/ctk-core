@@ -196,9 +196,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <!-- unbind since we checked the generated source into git;
-                                 keep here for easy manual regeneration -->
-                           <!-- <goal>generate-assertions</goal>-->
+                           <goal>generate-assertions</goal>
                         </goals>
                     </execution>
                 </executions>
