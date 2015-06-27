@@ -1,6 +1,15 @@
 #!/bin/bash -e
-# A SHORT DESCRIPTION OF YOUR SCRIPT GOES HERE
+#
 # Run the GA4GH CTK
+#
+# When this script runs it will move aside any existing target/ (with your
+# previous test results) into a directory named target-`date -Iseconds`
+#
+# This script passes in the most important properties to control
+# the CTK, but you can also control the CTK using the application.properties
+# and log4j2.xml files, or by simply setting the controlling properties in
+# your general environment.
+#
 ###############################################################################
 set -e          # exit on command errors (so you MUST handle exit codes properly!)
 set -E          # pass trap handlers down to subshells
@@ -34,10 +43,9 @@ CMD_DIR="$(cd "$(dirname "$CMD")" && pwd -P)"
 [ "$VERBOSE" ] ||  VERBOSE=
 [ "$DEBUG" ]   ||  DEBUG=
 [ "$CTKJAR" ]  ||  CTKJAR="ctk-testpack-0.5.1-SNAPSHOT.jar"
-[ "$ctk_tgt_urlRoot" ] || ctk_tgt_urlRoot="http://192.168.2.115:8000/v0.5.1/"
+[ "$ctk_tgt_urlRoot" ] || ctk_tgt_urlRoot="http://localhost:8000/v0.5.1/"
+[ "$ctk_matchstr" ] || ctg_matchstr=".*IT.*"
 [ "$TGTDIR" ] || TGTDIR="target"
-
-# >>>> PUT OTHER ENV VAR DEFAULTS HERE <<<<
 
 # Basic helpers
 out() { echo "$(date +%Y%m%dT%H%M%SZ): $*"; }
@@ -66,8 +74,10 @@ NARGS=-1; while [ "$#" -ne "$NARGS" ]; do NARGS=$#; case $1 in
 	-v|--verbose)   # Enable verbose messages
 		VERBOSE=$(( VERBOSE + 1 )) && shift && echo "#-INFO: VERBOSE=$VERBOSE"; ;;
 	# PAIRS
-	-t|--thing)     # Set a thing to a value (DEFAULT: $THING)
-		shift && THING="$1" && shift && vrb "#-INFO: THING=$THING"; ;;
+	-m|--ctk_matchstr)     # Set the matchstring to a value (DEFAULT: $ctk_matchstr)
+		shift && ctk_matchstr="$1" && shift && vrb "#-INFO: ctk_matchstr=$ctk_matchstr"; ;;
+	-u|--ctk_tgt_urlRoot)     # Set the urlRoot to a value (DEFAULT: $ctk_tgt_urlRoot)
+		shift && ctk_tgt_urlRoot="$1" && shift && vrb "#-INFO: ctk_tgt_urlRoot=$ctk_tgt_urlRoot"; ;;
 	*)
 		break;
 esac; done
@@ -78,11 +88,12 @@ esac; done
 
 # Validate some things
 #TODO: You will probably want to change this but this is an example of simple params validation
-[ $# -gt 0 -a -z "$THING" ]  &&  THING="$1"  &&  shift
-[ "$THING" ]  ||  die "You must provide some thing!"
+[ $# -gt 0 -a -z "$ctk.urlRoot" ]  &&  ctk.tgt.urlRoot="$1"  &&  shift
+[ "$ctk_matchstr" ]  ||  die "You must provide a test-selecting match string (ctk_matchstr)!"
+[ "$ctk_tgt_urlRoot" ]  ||  die "You must provide a target server (ctk_tgt_urlRoot)!"
 [ $# -eq 0 ]  ||  die "ERROR: Unexpected commands!"
 
-# >>>> PUT YOUR SCRIPT HERE <<<<
+
 
 # if target/ exists, amend its name
 if [ -d "$TGTDIR" ]; then
@@ -101,4 +112,4 @@ mkdir ${TGTDIR}
 # run the CTK
 # other properties are set in application.properties, log4j2.xml
 # should use a JAVACMD var to find/use specific JDK?
-java -Dctk.tgt.urlRoot=$ctk_tgt_urlRoot -jar ${CTKJAR}
+java -Dctk.matchstr=$ctk_matchstr -Dctk.tgt.urlRoot=$ctk_tgt_urlRoot -jar ${CTKJAR}
