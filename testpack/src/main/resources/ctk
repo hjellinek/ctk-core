@@ -47,6 +47,52 @@ CMD_DIR="$(cd "$(dirname "$CMD")" && pwd -P)"
 [ "$ctk_matchstr" ] || ctg_matchstr=".*IT.*"
 [ "$TGTDIR" ] || TGTDIR="target"
 
+###### endpoints, reference material, unlikely to need changing soon #####
+
+# map message to resource path, per the IDL comments
+# these are also set as defaults internally to the CKT ('transport' module)
+ctk.tgt.searchReads=reads/search
+ctk.tgt.searchReadGroupSets=readgroupsets/search
+ctk.tgt.searchReferencesets=referencesets/search
+ctk.tgt.searchVariantSets=variantsets/search
+ctk.tgt.searchVariants=variants/search
+ctk.tgt.searchCallsets=callsets/search
+
+# These are for future use, not currently implemented
+# so we record them, but set them blank to clear them
+# out of the defaults in URLMAPPING.java
+
+# ctk.tgt.getReadGroupSet=readgroupsets/{id}
+ctk.tgt.getReadGroupSet=
+# ctk.tgt.getReferences=references/{id}
+ctk.tgt.getReferences=
+# ctk.tgt.getReferencesBases=references/{id}/bases
+ctk.tgt.getReferencesBases=
+# ctk.tgt.searchReferences=references/search
+ctk.tgt.searchReferences=
+# ctk.tgt.getReferencesets=referencesets/{id}
+ctk.tgt.getReferencesets=
+# ctk.tgt.getReadGroup=readgroups/{id}
+ctk.tgt.getReadGroup=
+# ctk.tgt.searchDatasets=datasets/search
+ctk.tgt.searchDatasets=
+# ctk.tgt.getDataset=datasets/{id}
+ctk.tgt.getDataset=
+# ctk.tgt.getVariantSet=variantsets/{id}
+ctk.tgt.getVariantSet=
+# ctk.tgt.getVariant=variants/{id}
+ctk.tgt.getVariant=
+# ctk.tgt.searchAlleleCalls=allelecalls/search
+ctk.tgt.searchAlleleCalls=
+# ctk.tgt.searchAlleles=alleles/search
+ctk.tgt.searchAlleles=
+# ctk.tgt.getAllele=alleles/{id}
+ctk.tgt.getAllele=
+# ctk.tgt.getCallSet=callsets/{id}
+ctk.tgt.getCallSet=
+# ctk.tgt.searchCalls=calls/search
+ctk.tgt.searchCalls=
+
 # Basic helpers
 out() { echo "$(date +%Y%m%dT%H%M%SZ): $*"; }
 err() { out "$*" 1>&2; }
@@ -87,7 +133,6 @@ esac; done
 ###############################################################################
 
 # Validate some things
-#TODO: You will probably want to change this but this is an example of simple params validation
 [ $# -gt 0 -a -z "$ctk.urlRoot" ]  &&  ctk.tgt.urlRoot="$1"  &&  shift
 [ "$ctk_matchstr" ]  ||  die "You must provide a test-selecting match string (ctk_matchstr)!"
 [ "$ctk_tgt_urlRoot" ]  ||  die "You must provide a target server (ctk_tgt_urlRoot)!"
