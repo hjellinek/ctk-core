@@ -7,16 +7,6 @@ package org.ga4gh.ctk.asserts;
 public class Assertions {
 
   /**
-   * Creates a new instance of <code>{@link org.ga4gh.GAAnalysisAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GAAnalysisAssert assertThat(org.ga4gh.GAAnalysis actual) {
-    return new org.ga4gh.GAAnalysisAssert(actual);
-  }
-
-  /**
    * Creates a new instance of <code>{@link org.ga4gh.GACallAssert}</code>.
    *
    * @param actual the actual value.
@@ -97,26 +87,6 @@ public class Assertions {
   }
 
   /**
-   * Creates a new instance of <code>{@link org.ga4gh.GAIndividualAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GAIndividualAssert assertThat(org.ga4gh.GAIndividual actual) {
-    return new org.ga4gh.GAIndividualAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GAIndividualGroupAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GAIndividualGroupAssert assertThat(org.ga4gh.GAIndividualGroup actual) {
-    return new org.ga4gh.GAIndividualGroupAssert(actual);
-  }
-
-  /**
    * Creates a new instance of <code>{@link org.ga4gh.GALinearAlignmentAssert}</code>.
    *
    * @param actual the actual value.
@@ -144,36 +114,6 @@ public class Assertions {
    */
   public static org.ga4gh.GAListReferenceBasesResponseAssert assertThat(org.ga4gh.GAListReferenceBasesResponse actual) {
     return new org.ga4gh.GAListReferenceBasesResponseAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GAMetadataAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GAMetadataAssert assertThat(org.ga4gh.GAMetadata actual) {
-    return new org.ga4gh.GAMetadataAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GAMetadataMethodsAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GAMetadataMethodsAssert assertThat(org.ga4gh.GAMetadataMethods actual) {
-    return new org.ga4gh.GAMetadataMethodsAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GAOntologyTermAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GAOntologyTermAssert assertThat(org.ga4gh.GAOntologyTerm actual) {
-    return new org.ga4gh.GAOntologyTermAssert(actual);
   }
 
   /**
@@ -287,36 +227,6 @@ public class Assertions {
   }
 
   /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASampleAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASampleAssert assertThat(org.ga4gh.GASample actual) {
-    return new org.ga4gh.GASampleAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASearchAnalysesRequestAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASearchAnalysesRequestAssert assertThat(org.ga4gh.GASearchAnalysesRequest actual) {
-    return new org.ga4gh.GASearchAnalysesRequestAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASearchAnalysesResponseAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASearchAnalysesResponseAssert assertThat(org.ga4gh.GASearchAnalysesResponse actual) {
-    return new org.ga4gh.GASearchAnalysesResponseAssert(actual);
-  }
-
-  /**
    * Creates a new instance of <code>{@link org.ga4gh.GASearchCallSetsRequestAssert}</code>.
    *
    * @param actual the actual value.
@@ -334,66 +244,6 @@ public class Assertions {
    */
   public static org.ga4gh.GASearchCallSetsResponseAssert assertThat(org.ga4gh.GASearchCallSetsResponse actual) {
     return new org.ga4gh.GASearchCallSetsResponseAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASearchExperimentsRequestAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASearchExperimentsRequestAssert assertThat(org.ga4gh.GASearchExperimentsRequest actual) {
-    return new org.ga4gh.GASearchExperimentsRequestAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASearchExperimentsResponseAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASearchExperimentsResponseAssert assertThat(org.ga4gh.GASearchExperimentsResponse actual) {
-    return new org.ga4gh.GASearchExperimentsResponseAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASearchIndividualGroupsRequestAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASearchIndividualGroupsRequestAssert assertThat(org.ga4gh.GASearchIndividualGroupsRequest actual) {
-    return new org.ga4gh.GASearchIndividualGroupsRequestAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASearchIndividualGroupsResponseAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASearchIndividualGroupsResponseAssert assertThat(org.ga4gh.GASearchIndividualGroupsResponse actual) {
-    return new org.ga4gh.GASearchIndividualGroupsResponseAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASearchIndividualsRequestAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASearchIndividualsRequestAssert assertThat(org.ga4gh.GASearchIndividualsRequest actual) {
-    return new org.ga4gh.GASearchIndividualsRequestAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASearchIndividualsResponseAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASearchIndividualsResponseAssert assertThat(org.ga4gh.GASearchIndividualsResponse actual) {
-    return new org.ga4gh.GASearchIndividualsResponseAssert(actual);
   }
 
   /**
@@ -477,26 +327,6 @@ public class Assertions {
   }
 
   /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASearchSamplesRequestAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASearchSamplesRequestAssert assertThat(org.ga4gh.GASearchSamplesRequest actual) {
-    return new org.ga4gh.GASearchSamplesRequestAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASearchSamplesResponseAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASearchSamplesResponseAssert assertThat(org.ga4gh.GASearchSamplesResponse actual) {
-    return new org.ga4gh.GASearchSamplesResponseAssert(actual);
-  }
-
-  /**
    * Creates a new instance of <code>{@link org.ga4gh.GASearchVariantSetsRequestAssert}</code>.
    *
    * @param actual the actual value.
@@ -534,16 +364,6 @@ public class Assertions {
    */
   public static org.ga4gh.GASearchVariantsResponseAssert assertThat(org.ga4gh.GASearchVariantsResponse actual) {
     return new org.ga4gh.GASearchVariantsResponseAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link org.ga4gh.GASexAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static org.ga4gh.GASexAssert assertThat(org.ga4gh.GASex actual) {
-    return new org.ga4gh.GASexAssert(actual);
   }
 
   /**
@@ -594,6 +414,26 @@ public class Assertions {
    */
   public static org.ga4gh.GAVariantsAssert assertThat(org.ga4gh.GAVariants actual) {
     return new org.ga4gh.GAVariantsAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link org.ga4gh.ctk.transport.RespCodeAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static org.ga4gh.ctk.transport.RespCodeAssert assertThat(org.ga4gh.ctk.transport.RespCode actual) {
+    return new org.ga4gh.ctk.transport.RespCodeAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link org.ga4gh.ctk.transport.WireTrackerAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static org.ga4gh.ctk.transport.WireTrackerAssert assertThat(org.ga4gh.ctk.transport.WireTracker actual) {
+    return new org.ga4gh.ctk.transport.WireTrackerAssert(actual);
   }
 
   /**

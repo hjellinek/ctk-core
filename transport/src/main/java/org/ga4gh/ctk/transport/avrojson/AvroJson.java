@@ -11,6 +11,9 @@ import org.apache.avro.io.DatumWriter;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.http.HttpStatus;
+import org.apache.http.HttpVersion;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.message.BasicStatusLine;
 import org.ga4gh.ctk.transport.RespCode;
 import org.ga4gh.ctk.transport.WireTracker;
 
@@ -69,6 +72,11 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
      */
     boolean compareToRef = false;
 
+    /**
+     * Cause comms to be skipped and NO_COMM_RESP returned when false.
+     */
+    static public boolean shouldDoComms = true;
+
     String path;
     Schema reqSchema;
     Schema respSchema;
@@ -77,6 +85,21 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     AvroMaker.DESER_MODE deserMode = AvroMaker.DESER_MODE.GSON_RELAXED; // default
     private P theResp;
     private WireTracker wireTracker;
+
+    /**
+     * The NO_COMM_RESP is a dummy returned when HTTP communications is stubbed out,
+     * due to test or to previous comms failures.
+     */
+    public static HttpResponse<JsonNode> NO_COMM_RESP;
+
+    static {
+        org.apache.http.HttpResponse
+                dummyResponse = new org.apache.http.message.BasicHttpResponse(
+                new BasicStatusLine(HttpVersion.HTTP_1_0,
+                                    HttpStatus.SC_SERVICE_UNAVAILABLE,
+                                    "No communication with server"));
+        NO_COMM_RESP = new HttpResponse<>(dummyResponse, JsonNode.class);
+    }
 
     /**
      * Construct an AvroJson for a particular request/response interaction.
@@ -162,12 +185,13 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         //jsonBytes = JsonMaker.JacksonToJsonBytes(theAvroReq);
         jsonStr = JsonMaker.GsonToJsonBytes(theAvroReq);
 
-        httpResp = jsonPost(urlRoot + path);
+        httpResp = shouldDoComms ? jsonPost(urlRoot + path): NO_COMM_RESP;
+
         if(wireTracker != null){
             wireTracker.setResponseStatus(RespCode.fromInt(httpResp.getStatus()));
             //wireTracker.setActJson(json);
         }
-        if (httpResp.getStatus() == HttpStatus.SC_OK) {
+        if (httpResp != null && httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
 
             theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path, deserMode); // URL just for logging
@@ -193,7 +217,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     public P doGetResp(String id) {
 
         // no request object to build, just GET from the endpoint with route param
-        httpResp = jsonGet(urlRoot + path, id);
+        httpResp = shouldDoComms? jsonGet(urlRoot + path, id) : NO_COMM_RESP;
 
         if (httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
@@ -218,16 +242,18 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
                     .body(jsonStr)
                     .asJson();
         } catch (UnirestException e) {
-            log.warn("problem communicating JSON with " + theURL, e);
+            log.warn("stubbing future comms due to problem communicating JSON with " + theURL, e);
+            shouldDoComms = false;
         }
         if (log.isDebugEnabled()) {
-            log.debug("exit jsonPost to " + theURL + " with status " + jsonResponse.getStatusText());
+            log.debug("exit jsonPost to " + theURL + " with status "
+                    + jsonResponse != null? jsonResponse.getStatusText() : "FAILED");
         }
         if (wireTracker != null) {
             wireTracker.theUrl = theURL;
             wireTracker.bodySent = jsonStr;
-            wireTracker.bodyReceived = jsonResponse.getBody().toString();
-            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse.getStatus()));
+            wireTracker.bodyReceived = (jsonResponse != null? jsonResponse.getBody().toString(): null);
+            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse != null? jsonResponse.getStatus(): 0));
         }
         return jsonResponse;
     }
@@ -244,16 +270,18 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
                     .routeParam("id", id)
                     .asJson();
         } catch (UnirestException e) {
-            log.warn("problem communicating JSON with " + theUrl + " id: " + id, e);
+            log.warn("stubbing future comms due to problem communicating JSON with " + theUrl + " id: " + id, e);
+            shouldDoComms = false;
         }
         if (log.isDebugEnabled()) {
-            log.debug("exit jsonGet to " + theUrl + " id=" + id + " with status " + jsonResponse.getStatusText());
+            log.debug("exit jsonGet to " + theUrl + " id=" + id + " with status "
+                    + jsonResponse != null? jsonResponse.getStatusText() : "FAILED");
         }
         if (wireTracker != null) {
             wireTracker.theUrl = theUrl + "/ " + id;
             wireTracker.bodySent = "";
-            wireTracker.bodyReceived = jsonResponse.getBody().toString();
-            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse.getStatus()));
+            wireTracker.bodyReceived = (jsonResponse != null? jsonResponse.getBody().toString(): null);
+            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse != null? jsonResponse.getStatus(): 0));
         }
         return jsonResponse;
     }
