@@ -28,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>org.ga4gh</groupId>
-            <artifactId>ga4gh-format</artifactId>
+            <artifactId>ctk-schemas</artifactId>
             <version>0.5.2-SNAPSHOT</version>
         </dependency>
 

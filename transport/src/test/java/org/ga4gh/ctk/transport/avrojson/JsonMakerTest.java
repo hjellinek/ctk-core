@@ -1,25 +1,18 @@
 package org.ga4gh.ctk.transport.avrojson;
 
-import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericDatumWriter;
-import org.apache.avro.io.DatumWriter;
-import org.ga4gh.GAReadGroup;
-import org.ga4gh.GASearchAnalysesRequest;
-import org.ga4gh.GASearchReadsRequest;
-import org.ga4gh.GASearchVariantsRequest;
-import org.ga4gh.ctk.transport.testcategories.AvroTests;
-import org.ga4gh.ctk.transport.testcategories.TransportTests;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.skyscreamer.jsonassert.JSONAssert;
+import org.apache.avro.*;
+import org.apache.avro.generic.*;
+import org.apache.avro.io.*;
+import org.ga4gh.*;
+import org.ga4gh.ctk.transport.testcategories.*;
+import org.junit.*;
+import org.junit.experimental.categories.*;
+import org.skyscreamer.jsonassert.*;
 
-import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * JsonMaker Tester.
@@ -180,7 +173,7 @@ public class JsonMakerTest {
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
                 .setStart(0L) // must set, even to default
                 .build();
-        Schema wrongSchema = GASearchAnalysesRequest.SCHEMA$;
+        Schema wrongSchema = GAExperiment.SCHEMA$;
         DatumWriter dw = new GenericDatumWriter<>(wrongSchema);
 
         // using the DatumWriter should trigger an exception

@@ -149,10 +149,10 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- the prebuilt avro schemas for GA4GH -->
         <dependency>
             <groupId>org.ga4gh</groupId>
-            <artifactId>ga4gh-format</artifactId>
+            <artifactId>ctk-schemas</artifactId>
+            <version>0.5.2-SNAPSHOT</version>
             <!-- example if you want to build with link to a local schema jar file -->
             <!-- which I need to do since I can't find 0.1.0 externally -->
             <!--
@@ -161,6 +161,7 @@
             </systemPath>
             -->
         </dependency>
+
         <!-- do we want to put slf4j-log4j12.jar on the path? or is OK it's supplied at runtime?-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -213,7 +214,7 @@
                     </includes>
                     <entryPointClassPackage>org.ga4gh.ctk.asserts</entryPointClassPackage>
 
-                    <targetDir>src/main/assertj-assertions</targetDir>
+                    <targetDir>${project.basedir}/src/main/assertj-assertions</targetDir>
 
                 </configuration>
             </plugin>
