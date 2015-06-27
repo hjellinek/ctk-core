@@ -16,8 +16,9 @@
     <name>CTK Schemas</name>
     <description>CTK-embedded GAG Schemas, v0.5.1+fixes</description>
 
-    <!-- assign version in parent to stay coherent across build -->
-    <version>${ga4gh.schema.local.version}</version>
+    <!-- I wish I could assign version in parent to stay coherent across build -->
+    <!-- TODO adopt the 'release' plugin to control the version numbering -->
+    <version>0.5.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
