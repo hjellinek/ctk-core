@@ -1,14 +1,18 @@
 This is how to get to started running the command-line (binary) distribution of the GA4GH Conformance Test Kit.
 
-1. Get the ga4gh-cts-bin.zip distribution from github
-(get latest ga4gh-cts-bin.zip from https://github.com/wstidolph/ctk-core/releases)
+1. Get the ga4gh-ctk-cli.zip distribution from github
+(get latest ga4gh-ctk-cli.zip from https://github.com/wstidolph/ctk-core/releases)
 2. Unzip the file in the directory you want to run from. This creates a "lib" and a "target" directory.
 The target directory is empty (it will hold test-run results) while the lib directory holds tests and control files.
 
-The CTK is runnable now, but you probably want to set a "target server" property, "ctk.tgt.urlRoot"
-Setting properties to manage the CTK can be done several ways, but the this property is
-unlikely to change from run to run, so it's probably best set it as an operating system
-environment variable. Or, you can pass it into the CTK on the command line, as we'll do here.
+The CTK is runnable now (assuming your target server is running at localhost:8000/v0.5.1/).
+The CTK is controlled by properties - environment, system, or command-line settings all control properties
+which the CTK observes. If you are on a bash command line, there's a bash script 'ctk' you can run (start with 'ctk -h')
+which will help you set a couple important properties.
+
+But, let's take a look at running the CTK as a java jar file (in case you're *NOT* on a bash
+command line) by setting the most important property, the location of your target server
+(controlled by internal property "ctk.tgt.urlRoot").
 
 We'll assume your target server is at localhost:8000/v0.5.1/ so we run
 
@@ -17,6 +21,11 @@ java -jar ctk-testpack-v0.5.1-SNAPSHOT.jat --ctg.tgt.urlRoot=http://localhost:80
 and if your target server is OK you should see one line of output:
 
  [TESTLOG] 0 failed, 12 passed, 8 skipped, 1397 ms
+
+This show the property being passed in directly to the CTK using command line "--<name>=<val>" - you can do
+this for almost any property. The exception is items which are controlled during static initialization,
+like logging. So, for logging control you need to edit a file the CTK will load early just for this purpose,
+"lib/log4j2.xml"
 
 The CTK has normal java class-oriented logging, but it also has a couple logs just for test results.
 Let's turn up the data on the tests, just a bit. Edit the file lib/log4j2.xml, and look for the
@@ -40,7 +49,8 @@ adjust the level to "debug" and save the file. Rerun the test, and now you see s
 In that log4j2.xml file you can set up the Appenders to write to files, syslogs, network servers, etc. Check
 out normal log4j2 controls (https://logging.apache.org/log4j/2.x/manual/index.html). For now, let's leave
 TESTLOG at 'debug' and try failing a test. The "propertyCanCauseTestFail" test case is a dummy that
-passes or fails based on a property, so let's trigger it:
+passes or fails based on a property, so let's trigger it ... we'll use a different mechanism to set that property,
+the -D<name>=<val> so you can see what it looks like and that you can have multiple paths to setting a property.
 
 java -Dcts.demofail=true -jar ctk-testpack-v0.5.1-SNAPSHOT.jat --ctg.tgt.urlRoot=http://localhost:8000/v0.5.1/
 
@@ -55,7 +65,7 @@ java -Dcts.demofail=true -jar ctk-testpack-v0.5.1-SNAPSHOT.jat --ctg.tgt.urlRoot
 [TESTLOG] 1 failed, 11 passed, 8 skipped, 1357 ms
 [TESTLOG] FAIL: propertyCanCauseTestFail(org.ga4gh.cts.core.LandingPageIT): expected:<[tru]e> but was:<[fals]e>
 
-We see the TESTLOG tells us:
+The TESTLOG tells us:
 
 * the name of the failing method ("propertyCanCauseTestFail")
 * the name of the class that test case comes from ("org.ga4gh.cts.core.LandingPageIT")
@@ -83,19 +93,19 @@ and in that we find:
     ReadsTests.java
     ReadsTestSuite.java
 
-The first three of these hold tests.
+The first three of these class hold tests, as "test methods" (each "test method" is an actual test case).
 
-The other two are for a near-future capability that isn't quite ready for command-line use yet.
+The other two classes are for a near-future capability that isn't quite ready for command-line use yet.
 ReadsTests.java is a "marker" we use when writing a test to marke the test method as
 "one of the Reads tests" ... then, ReadsTestSuite is a TestSuite that groups all of those, so
 we can run the ReadsTestSuite to get a pre-defined set of tests to execute.
 Since these aren't ready, we'll fall back to matching on the test name.
 
- To run a selected test, we just match its name as a regex to the ctk.matchstr property:
+To run a selected test, we just match its name as a regex to the ctk.matchstr property:
 
  java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethods.*
 
-(ctk.matchstr is a comma-seperated string of regex'es but between the regex-ness and the command-line
+(ctk.matchstr is a comma-separated string of regex'es but between the regex-ness and the command-line
 escaping it's usually better to set anything complicated in the lib/application.properties file).
 
 At the end of each run a set of text files that summarize the result are put into the target/ directory.
@@ -105,7 +115,7 @@ and notification systems. The files are named after the test class or suite that
 CTK doesn't use these files at all, they are a pure "maybe useful" convenience.
 
 There's a rudimentary bash script ("ctk") which will handle moving aside your existing target/ dir on successive runs
-and running the CTK; you can edit that to add property settings.
+and running the CTK; you can also edit that to add property settings if you want to customize your setup.
 
 What's Next: the maven-generated 'site' packaging generates cross-referenced/cross-linked source and test code
 and javadoc in HTML, and adds in HTML test reports with links from the failre messages
