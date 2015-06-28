@@ -80,6 +80,9 @@ public class Props {
     @Value("${ctk.pattern.testsuite}")
     public String ctk_pattern_testsuite;
 
+    @Value("${ctk.antfile}")
+    public String ctk_antfile;
+
     /* pre/post scripts are a planned capability, not yet connected */
     @Value("${ctk.scripts.before}")
     public String ctk_scripts_before;

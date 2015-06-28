@@ -67,6 +67,9 @@ public class Application implements CommandLineRunner {
     @Autowired
     private TestExecListener testExecListener;
 
+    @Autowired
+    private AntExecutor antExecutor;
+
     @Value("${ctk.tgt.urlRoot}")
     String urlroot;
 
@@ -108,13 +111,15 @@ public class Application implements CommandLineRunner {
             log.debug("seeking test classes that match < " + mstr + " >");
 
             Set<Class<?>> testClasses = testFinder.findTestClasses(mstr);
+            antExecutor.executeAntTask();
 
             if (testClasses.isEmpty()) {
                 testlog.warn("Didn't do any testing for matchStr " + mstr);
             } else {
                 testlog.debug("Matched classes count (can be >1 test in a class): " + testClasses.size());
                 testlog.trace("Matched test classes are " + testClasses.toString());
-                runTestClasses(testClasses);
+                //runTestClasses(testClasses);
+
             }
         }
         // post-Test reporting
@@ -161,6 +166,11 @@ public class Application implements CommandLineRunner {
         for (Failure failure : result.getFailures()) {
             testlog.warn("FAIL: " + failure.toString());
         }
+    }
+
+    void antRun(String buildXmlFileFullPath) {
+        // the buildfile might be null
+
     }
 
     private void scriptRunner(String str){

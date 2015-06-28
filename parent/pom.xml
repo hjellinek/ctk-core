@@ -47,6 +47,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
 
+        <ant.version>1.9.5</ant.version>
         <assertj.core.version>3.1.0</assertj.core.version>
         <assertj.generator.version>1.6.0</assertj.generator.version>
         <avro.version>1.7.7</avro.version>
@@ -130,6 +131,16 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
                 <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ant</groupId>
+                <artifactId>ant-junit</artifactId>
+                <version>${ant.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ant</groupId>
+                <artifactId>ant-launcher</artifactId>
+                <version>${ant.version}</version>
             </dependency>
 
             <dependency>
