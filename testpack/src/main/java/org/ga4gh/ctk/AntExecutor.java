@@ -28,7 +28,7 @@ public class AntExecutor {
     }
 
     /**
-     * To execute the default target specified in the Ant build.xml file
+     * To execute the default target specified in the Ant antRunTests.xml file
      *
      */
     public boolean executeAntTask() {
@@ -36,7 +36,7 @@ public class AntExecutor {
     }
 
     /**
-     * To execute a target specified in the Ant build.xml file
+     * To execute a target specified in the Ant antRunTests.xml file
      *
      * @param target
      */

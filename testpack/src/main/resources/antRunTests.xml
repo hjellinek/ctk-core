@@ -1,0 +1,36 @@
+<project default="reports">
+    <!-- Define the classpath which includes the junit.jar and the classes after compiling-->
+    <target name="diagnostics" description="diagnostics">
+        <diagnostics/>
+    </target>
+
+    <!-- 'basedir' seems to be the dir the buildfile is in (lib} -->
+    <!-- the calling AntExecutor should set it explicitly -->
+
+    <target name="tests">
+        <mkdir dir="${basedir}/../target/test-classes"/>
+        <!-- temp hack to hardcode the test jar -->
+        <unjar src="cts-java-0.5.1-SNAPSHOT-tests.jar"
+               dest="${basedir}/../target/test-classes"/>
+        <junit printsummary="on" fork="off" haltonfailure="false" showoutput="true">
+            <batchtest fork="off" todir="${basedir}/../target">
+                <fileset dir="${basedir}/../target/test-classes">
+                    <include name="**/*IT.class"/>
+                    <include name="**/IT*.class"/>
+                </fileset>
+            </batchtest>
+            <formatter type="xml"/>
+            <formatter type="brief"/>
+        </junit>
+    </target>
+
+    <target name="reports" depends="tests">
+        <mkdir dir="${basedir}/../target/report"/>
+        <junitreport todir="${basedir}/../target/report">
+            <fileset dir="${basedir}/../target">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${basedir}/../target/report/html"/>
+        </junitreport>
+    </target>
+</project>
