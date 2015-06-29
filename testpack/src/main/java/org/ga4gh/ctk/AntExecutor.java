@@ -6,6 +6,7 @@ package org.ga4gh.ctk;
 
 import org.apache.tools.ant.*;
 import org.ga4gh.ctk.config.*;
+import org.ga4gh.ctk.transport.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
@@ -50,7 +51,7 @@ public class AntExecutor {
      */
     public boolean executeAntTask(String testjar) {
 
-        String expandedReportTitle = props.ctk_report_title + " " + props.ctk_tgt_urlRoot;
+        String expandedReportTitle = props.ctk_report_title + " " + URLMAPPING.getUrlRoot();
 
         boolean success = false;
         DefaultLogger consoleLogger = getConsoleLogger();
