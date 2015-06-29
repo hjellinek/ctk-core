@@ -54,7 +54,7 @@ public class ReadsSearchIT {
             "VALID_READGROUPID"
     })
     // We pass in a key to look up the readgroupId, rather than the readgroupId itself,
-    // so teh TAP framework can make a valid filename out of the parameter string
+    // so the TAP framework can make a valid filename out of the parameter string
     public void readsResponseMatchesACTGNPattern(String rgid) throws Exception {
         String replacedRgid = rgidMap.get(rgid);
         // do a readsearch
@@ -62,7 +62,14 @@ public class ReadsSearchIT {
                 .setReadGroupIds(Arrays.asList(replacedRgid))
                 .build();
         GASearchReadsResponse grtn = client.searchReads(gsrr);
-        // GASearchReadsResponse
+
+        // the readmethods idl says:
+        // record GASearchReadsResponse { array<GAReadAlignment> alignments = []; ...
+        // so at the least we should get back an empty array
+
+        assertThat(grtn.getAlignments()).isNotNull();
+
+            // GASearchReadsResponse
         //    array<GAReadAlignment> alignments = [];
         //       GAReadAlignement field alignedSequence is null || string
 
