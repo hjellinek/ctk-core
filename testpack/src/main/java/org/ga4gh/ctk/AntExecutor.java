@@ -5,6 +5,7 @@ package org.ga4gh.ctk;
  */
 
 import org.apache.tools.ant.*;
+import org.ga4gh.ctk.config.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
@@ -22,10 +23,17 @@ public class AntExecutor {
     private static org.slf4j.Logger log = getLogger(AntExecutor.class);
 
     @Value("${ctk.antfile}")
-    private File antFile;
+    private File antFile; // use direct invjection; let Spring convert the String to a File
     public void setAntfile(File theFile){
         antFile = theFile;
     }
+
+    @Autowired
+    private Props props;
+    public void setProps(Props props){
+        this.props = props;
+    }
+
 
     /**
      * To execute the default target specified in the Ant antRunTests.xml file
@@ -42,26 +50,29 @@ public class AntExecutor {
      */
     public boolean executeAntTask(String testjar) {
 
+        String expandedReportTitle = props.ctk_report_title + " " + props.ctk_tgt_urlRoot;
+
         boolean success = false;
         DefaultLogger consoleLogger = getConsoleLogger();
 
         // Prepare Ant project
         Project project = new Project();
-        InputStream buildInputStream;
         try {
             File buildFile = antFile;
             project.setUserProperty("ant.file", buildFile.getName());
             project.setUserProperty("ctk.testjar", testjar);
+            project.setUserProperty("ctk.reporttitle", expandedReportTitle);
             project.fireBuildStarted();
             project.init();
             ProjectHelper projectHelper = ProjectHelper.getProjectHelper();
             project.addReference("ant.projectHelper", projectHelper);
-            projectHelper.parse(project, buildFile);;
+            projectHelper.parse(project, buildFile);
         } catch (Exception e) {
             log.warn("Exception setting up ant project based on " + antFile, e.getCause());
             e.printStackTrace();
         }
 
+        project.addBuildListener(getLog4jListener());
         project.addBuildListener(consoleLogger);
         String targetToExecute = "";
 
@@ -88,11 +99,17 @@ public class AntExecutor {
      * @return
      */
     private DefaultLogger getConsoleLogger() {
+
         DefaultLogger consoleLogger = new DefaultLogger();
         consoleLogger.setErrorPrintStream(System.err);
         consoleLogger.setOutputPrintStream(System.out);
         consoleLogger.setMessageOutputLevel(Project.MSG_INFO);
 
         return consoleLogger;
+    }
+
+    private BuildListener getLog4jListener() {
+        // log4j gets routed by the log4k-over-slf4j module into SLF4
+        return new org.apache.tools.ant.listener.Log4jListener();
     }
 }

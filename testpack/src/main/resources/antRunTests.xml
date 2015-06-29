@@ -42,10 +42,13 @@
     <target name="reports" depends="tests">
         <mkdir dir="${basedir}/../target/report"/>
         <junitreport todir="${basedir}/../target/report">
+
             <fileset dir="${basedir}/../target">
                 <include name="TEST-*.xml"/>
             </fileset>
-            <report format="frames" todir="${basedir}/../target/report/html"/>
+            <report format="frames" todir="${basedir}/../target/report/html">
+                <param name="TITLE" expression="${ctk.reporttitle}"/>
+            </report>
         </junitreport>
     </target>
 </project>

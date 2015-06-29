@@ -151,7 +151,11 @@
         </dependency>
         <dependency>
             <groupId>org.apache.ant</groupId>
-            <artifactId>ant-launcher</artifactId>
+            <artifactId>ant-apache-log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
         </dependency>
 
         <!-- use tap4j to get Test Anything Protocol support -->

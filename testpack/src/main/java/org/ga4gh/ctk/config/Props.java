@@ -71,6 +71,8 @@ public class Props {
     // if we make the field private, but public variables don't need them
     // and seem (to me) cleaner here
 
+    @Value("${ctk.tgt.urlRoot}")
+    public String ctk_tgt_urlRoot;
     @Value("${ctk.matchstr}")
     public String ctk_matchstr;
     @Value("${ctk.testpackage}")
@@ -85,6 +87,9 @@ public class Props {
 
     @Value("${ctk.testjar}")
     public String ctk_testjar;
+
+    @Value("${ctk.reporttitle}")
+    public String ctk_report_title;
 
     /* pre/post scripts are a planned capability, not yet connected */
     @Value("${ctk.scripts.before}")
