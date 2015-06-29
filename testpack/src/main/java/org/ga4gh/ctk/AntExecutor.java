@@ -55,7 +55,7 @@ public class AntExecutor {
             project.init();
             ProjectHelper projectHelper = ProjectHelper.getProjectHelper();
             project.addReference("ant.projectHelper", projectHelper);
-            projectHelper.parse(project, buildFile);
+            projectHelper.parse(project, buildFile);;
         } catch (Exception e) {
             log.warn("Exception setting up ant project based on " + antFile, e.getCause());
             e.printStackTrace();
