@@ -83,6 +83,9 @@ public class Props {
     @Value("${ctk.antfile}")
     public String ctk_antfile;
 
+    @Value("${ctk.testjar}")
+    public String ctk_testjar;
+
     /* pre/post scripts are a planned capability, not yet connected */
     @Value("${ctk.scripts.before}")
     public String ctk_scripts_before;

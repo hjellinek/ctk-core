@@ -1,23 +1,17 @@
 package org.ga4gh.ctk.transport.avrojson;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
+import com.google.common.collect.*;
 import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.apache.avro.Schema;
-import org.apache.avro.io.DatumWriter;
-import org.apache.avro.specific.SpecificDatumWriter;
-import org.apache.avro.specific.SpecificRecordBase;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.message.BasicStatusLine;
-import org.ga4gh.ctk.transport.RespCode;
-import org.ga4gh.ctk.transport.WireTracker;
+import com.mashape.unirest.http.*;
+import com.mashape.unirest.http.exceptions.*;
+import org.apache.avro.*;
+import org.apache.avro.io.*;
+import org.apache.avro.specific.*;
+import org.apache.http.*;
+import org.apache.http.message.*;
+import org.ga4gh.ctk.transport.*;
 
-import static org.slf4j.LoggerFactory.getLogger;
+import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Provide Avro/Json communications layer specific to GA4GH and with extensive logging in support of CTK use.</p>
@@ -191,6 +185,14 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
             wireTracker.setResponseStatus(RespCode.fromInt(httpResp.getStatus()));
             //wireTracker.setActJson(json);
         }
+
+        updateTheRespAndLogMessages("POST");
+
+        return theResp;
+    }
+
+    private void updateTheRespAndLogMessages(String postOrGet){
+        // httpResp can be null (e.g., a timeout)
         if (httpResp != null && httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
 
@@ -198,9 +200,8 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         }
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null ? theResp.getClass().getSimpleName()  : "null";
-        messages.put(theAvroReq.getClass().getSimpleName() + " POST <" + jsonStr + ">", respName, httpResp.getStatus());
-
-        return theResp;
+        messages.put(theAvroReq.getClass().getSimpleName() + postOrGet + " <" + jsonStr + ">", respName,
+                httpResp != null ? httpResp.getStatus(): 0);
     }
 
     /**
@@ -219,13 +220,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         // no request object to build, just GET from the endpoint with route param
         httpResp = shouldDoComms? jsonGet(urlRoot + path, id) : NO_COMM_RESP;
 
-        if (httpResp.getStatus() == HttpStatus.SC_OK) {
-            String json = httpResp.getBody().toString();
-            theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path + "/" + id, deserMode);
-        }
-        // track all message types sent/received for simple "test coverage" indication
-        String respName = theResp != null ? theResp.getClass().getSimpleName() : "null";
-        messages.put(theAvroReq.getClass().getSimpleName() + " GET <" + id + ">", respName, httpResp.getStatus());
+        updateTheRespAndLogMessages("GET");
 
         return theResp;
     }

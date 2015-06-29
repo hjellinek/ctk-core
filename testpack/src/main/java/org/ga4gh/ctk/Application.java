@@ -111,7 +111,7 @@ public class Application implements CommandLineRunner {
             log.debug("seeking test classes that match < " + mstr + " >");
 
             Set<Class<?>> testClasses = testFinder.findTestClasses(mstr);
-            antExecutor.executeAntTask();
+            antExecutor.executeAntTask(props.ctk_testjar);
 
             if (testClasses.isEmpty()) {
                 testlog.warn("Didn't do any testing for matchStr " + mstr);

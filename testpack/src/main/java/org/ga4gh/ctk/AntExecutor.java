@@ -36,11 +36,11 @@ public class AntExecutor {
     }
 
     /**
-     * To execute a target specified in the Ant antRunTests.xml file
+     * Execute teh tests under ant build script (runAntTests.xml)
      *
-     * @param target
+     * @param testjar tests jar to unpack/run in Ant
      */
-    public boolean executeAntTask(String target) {
+    public boolean executeAntTask(String testjar) {
 
         boolean success = false;
         DefaultLogger consoleLogger = getConsoleLogger();
@@ -51,6 +51,7 @@ public class AntExecutor {
         try {
             File buildFile = antFile;
             project.setUserProperty("ant.file", buildFile.getName());
+            project.setUserProperty("ctk.testjar", testjar);
             project.fireBuildStarted();
             project.init();
             ProjectHelper projectHelper = ProjectHelper.getProjectHelper();
@@ -68,7 +69,8 @@ public class AntExecutor {
         try {
 
             // If no target specified then default target will be executed.
-            targetToExecute = (target != null && target.trim().length() > 0) ? target.trim() : project.getDefaultTarget();
+           // targetToExecute = (target != null && target.trim().length() > 0) ? target.trim() : project.getDefaultTarget();
+            targetToExecute = project.getDefaultTarget();
             project.executeTarget(targetToExecute);
             project.fireBuildFinished(null);
         } catch (BuildException buildException) {
