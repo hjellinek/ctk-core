@@ -3,28 +3,46 @@ This is how to get to started running the command-line (binary) distribution of 
 1. Get the ga4gh-ctk-cli.zip distribution from github
 (get latest ga4gh-ctk-cli.zip from https://github.com/wstidolph/ctk-core/releases)
 2. Unzip the file in the directory you want to run from. This creates a "lib" and a "target" directory.
-The target directory is empty (it will hold test-run results) while the lib directory holds tests and control files.
+The target directory is empty (it will hold test-run results, and unpacked test classes, support jars).
+The lib directory holds test classes, support jars and control files.
 
-The CTK is runnable now (assuming your target server is running at localhost:8000/v0.5.1/).
+The CTK is runnable now (assuming your target server is running at http://localhost:8000/v0.5.1/), either
+using java or using a bash wrapper script ('ctk').
+
+If you want to use java, try
+java -Dctg.tgt.urlRoot=http://localhost:8000/v0.5.1/ -jar ctk-testpack-v0.5.1-SNAPSHOT.jar
+
+(replace with your target server URL, of course).
+
+If you are on a bash command line, start with 'ctk -h'.
+
 The CTK is controlled by properties - environment, system, or command-line settings all control properties
-which the CTK observes. If you are on a bash command line, there's a bash script 'ctk' you can run (start with 'ctk -h')
-which will help you set a couple important properties.
+which the CTK observes.
 
-But, let's take a look at running the CTK as a java jar file (in case you're *NOT* on a bash
-command line) by setting the most important property, the location of your target server
-(controlled by internal property "ctk.tgt.urlRoot").
+and if your target server is OK you should see output such as:
 
-We'll assume your target server is at localhost:8000/v0.5.1/ so we run
-
-java -jar ctk-testpack-v0.5.1-SNAPSHOT.jat --ctg.tgt.urlRoot=http://localhost:8000/v0.5.1/
-
-and if your target server is OK you should see one line of output:
+NOTE -- CHANGING BELOW HERE DUE TO MOVE TO ANT RUNNER, DETAILS ARE VERY SUSPECT!
 
  [TESTLOG] 0 failed, 12 passed, 8 skipped, 1397 ms
 
-This show the property being passed in directly to the CTK using command line "--<name>=<val>" - you can do
-this for almost any property. The exception is items which are controlled during static initialization,
-like logging. So, for logging control you need to edit a file the CTK will load early just for this purpose,
+ tests:
+     [mkdir] Created dir: C:\temp\ctk\target\test-classes
+     [unjar] Expanding: C:\temp\ctk\lib\cts-java-0.5.1-SNAPSHOT-tests.jar into C:\temp\ctk\target\test-classes
+     [unjar] Expanding: C:\temp\ctk\ctk-testpack-0.5.1-SNAPSHOT.jar into C:\temp\ctk\target\test-classes
+     [junit] Running org.ga4gh.cts.api.reads.ReadGroupSetsSearchIT
+     [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 3, Time elapsed: 0.018 sec
+ ...
+
+ reports:
+     [mkdir] Created dir: C:\temp\ctk\target\report
+ ...
+
+ The first thing to note is that your test results are available in the target\report tree; there's txt, xml,
+ and even html reports available there.
+
+The next thing to note is the property being passed in directly to the CTK using command line "--<name>=<val>".
+You can do this for almost any property; the exception is items which are controlled during static initialization,
+like logging. So, for logging control you will need to edit a file the CTK will load early just for this purpose,
 "lib/log4j2.xml"
 
 The CTK has normal java class-oriented logging, but it also has a couple logs just for test results.
@@ -52,7 +70,7 @@ TESTLOG at 'debug' and try failing a test. The "propertyCanCauseTestFail" test c
 passes or fails based on a property, so let's trigger it ... we'll use a different mechanism to set that property,
 the -D<name>=<val> so you can see what it looks like and that you can have multiple paths to setting a property.
 
-java -Dcts.demofail=true -jar ctk-testpack-v0.5.1-SNAPSHOT.jat --ctg.tgt.urlRoot=http://localhost:8000/v0.5.1/
+java -Dcts.demofail=true -Dctg.tgt.urlRoot=http://localhost:8000/v0.5.1/ -jar ctk-testpack-v0.5.1-SNAPSHOT.jat
 
 [TESTLOG] Matched classes count (can be >1 test in a class): 10
 [TESTLOG] Number of testcases to execute : 29
@@ -96,7 +114,7 @@ and in that we find:
 The first three of these class hold tests, as "test methods" (each "test method" is an actual test case).
 
 The other two classes are for a near-future capability that isn't quite ready for command-line use yet.
-ReadsTests.java is a "marker" we use when writing a test to marke the test method as
+ReadsTests.java is a "marker" we use when writing a test to mark the test method as
 "one of the Reads tests" ... then, ReadsTestSuite is a TestSuite that groups all of those, so
 we can run the ReadsTestSuite to get a pre-defined set of tests to execute.
 Since these aren't ready, we'll fall back to matching on the test name.
@@ -105,13 +123,20 @@ To run a selected test, we just match its name as a regex to the ctk.matchstr pr
 
  java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethods.*
 
-(ctk.matchstr is a comma-separated string of regex'es but between the regex-ness and the command-line
+ or
+
+ ctk -m ".*ReadMethods.*"
+
+(ctk.matchstr allows a comma-separated string of regex'es but between the regex-ness and the command-line
 escaping it's usually better to set anything complicated in the lib/application.properties file).
 
 At the end of each run a set of text files that summarize the result are put into the target/ directory.
-These files are in "Test Anything Protocol" (.tap) format, which can be consumed by various monitoring
-and notification systems. The files are named after the test class or suite that ran them,
- so if you have a use for them you'll want to archive them or move them somewhere. The
+There are normal ant junitreport output (.txt, .xml, and .html).
+
+NOTE - TAP NOT HOOKED UP TO ANT NOW
+There should also be "Test Anything Protocol" (.tap) files which can be consumed by various monitoring and
+notification systems. The files are named after the test class or suite that ran them,
+so if you have a use for them you'll want to archive them or move them somewhere. The
 CTK doesn't use these files at all, they are a pure "maybe useful" convenience.
 
 There's a rudimentary bash script ("ctk") which will handle moving aside your existing target/ dir on successive runs

@@ -8,12 +8,12 @@
     <!-- the calling AntExecutor should set it explicitly -->
 
     <target name="tests">
-        <mkdir dir="${basedir}/../target/test-classes"/>
+        <mkdir dir="${basedir}/../lib/test-classes"/>
         <!-- empty out the test-classes, just in case -->
         <unjar src="${ctk.testjar}"
-               dest="${basedir}/../target/test-classes"/>
+               dest="${basedir}/../lib/test-classes"/>
         <unjar src="${basedir}/../ctk-testpack-0.5.1-SNAPSHOT.jar"
-               dest="${basedir}/../target/test-classes">
+               dest="${basedir}/../lib/test-classes">
             <patternset>
                 <include name="lib/*.jar"/>
                 <!-- exclude logging - the ant classloader seems to pick it up from ctk -->
@@ -23,13 +23,13 @@
         </unjar>
         <junit printsummary="on" fork="off" filtertrace="on" haltonfailure="false" showoutput="true">
             <classpath>
-                <fileset dir="${basedir}/../target/test-classes/lib">
+                <fileset dir="${basedir}/../lib/test-classes/lib">
                     <include name="**/*.jar"/>
                 </fileset>
                 <pathelement location="${basedir}/../target/test-classes"/>
             </classpath>
             <batchtest fork="off" todir="${basedir}/../target">
-                <fileset dir="${basedir}/../target/test-classes">
+                <fileset dir="${basedir}/../lib/test-classes">
                     <include name="**/*IT.class"/>
                     <include name="**/IT*.class"/>
                 </fileset>
