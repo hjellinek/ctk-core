@@ -36,6 +36,8 @@
             </batchtest>
             <formatter type="xml"/>
             <formatter type="brief"/>
+            <!-- this "formatter" just bridges junit events to the CTK log -->
+            <formatter classname="org.ga4gh.ctk.TestExecListener" />
         </junit>
     </target>
 

@@ -96,33 +96,40 @@ public class Application implements CommandLineRunner {
             log.debug("Setting urlroot to " + urlroot);
             URLMAPPING.setUrlRoot(urlroot);
         }
-        // run a 'before' script if it exists
+
+        /* ********* PRE-TEST SCRIPT ******* */
         String scriptBefore = props.ctk_scripts_before;
         if(scriptBefore != null && !scriptBefore.isEmpty()){
             scriptRunner(scriptBefore);
         }
 
+        /* ********* TEST SELECTION ******** */
+/* commenting out out DIY loop while migrate to ant-driven
         String matchStr = props.ctk_matchstr;
         log.debug("matchstr: " + matchStr);
 
         // work through each clause one at a time, even though it might mean re-run tests
         // alternative is to get the classes all into a Set and run that
+
         for(String mstr : matchStr.split(",")) {
             log.debug("seeking test classes that match < " + mstr + " >");
 
             Set<Class<?>> testClasses = testFinder.findTestClasses(mstr);
-            antExecutor.executeAntTask(props.ctk_testjar);
 
             if (testClasses.isEmpty()) {
                 testlog.warn("Didn't do any testing for matchStr " + mstr);
             } else {
                 testlog.debug("Matched classes count (can be >1 test in a class): " + testClasses.size());
                 testlog.trace("Matched test classes are " + testClasses.toString());
-                //runTestClasses(testClasses);
-
+                runTestClasses(testClasses);
             }
         }
-        // post-Test reporting
+*/
+
+        /* ****** MAIN RUN-THE-TESTS *********** */
+        antExecutor.executeAntTask(props.ctk_testjar);
+
+        /* ******* post-Test reporting ********* */
 
         // just log the traffic, until I get the coverage-tests written
         for (Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()) {

@@ -6,34 +6,26 @@ package org.ga4gh.ctk;
 
 import org.apache.tools.ant.*;
 import org.ga4gh.ctk.config.*;
+import org.ga4gh.ctk.testcategories.*;
 import org.ga4gh.ctk.transport.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
 import java.io.*;
 
-import static org.slf4j.LoggerFactory.*;
-
 /**
  * @author srccodes.com
  * @version 1.0
  */
 @Component
-public class AntExecutor {
+public class AntExecutor implements CtkLogs {
 
-    private static org.slf4j.Logger log = getLogger(AntExecutor.class);
+    // private static org.slf4j.Logger log = getLogger(AntExecutor.class);
 
     @Value("${ctk.antfile}")
     private File antFile; // use direct invjection; let Spring convert the String to a File
     public void setAntfile(File theFile){
         antFile = theFile;
-    }
-
-    @Value("${ctk.antlog.properties}")
-    private File antLogPropFile;
-    public void setAntLogPropFile(File theFile){
-        log.debug("ctk.antlog.properties (to be injected as a File) is in Props as " + props.ctk_antlog_properties);
-        antLogPropFile = theFile;
     }
 
     @Autowired
@@ -62,7 +54,7 @@ public class AntExecutor {
 
         boolean success = false;
         DefaultLogger consoleLogger = getConsoleLogger();
-
+        AntExecListener antExecListener = new AntExecListener();
         // Prepare Ant project
         Project project = new Project();
         try {
@@ -70,6 +62,8 @@ public class AntExecutor {
             project.setUserProperty("ant.file", buildFile.getName());
             project.setUserProperty("ctk.testjar", testjar);
             project.setUserProperty("ctk.reporttitle", expandedReportTitle);
+            project.addBuildListener(antExecListener);
+
             project.fireBuildStarted();
             project.init();
             ProjectHelper projectHelper = ProjectHelper.getProjectHelper();
@@ -80,7 +74,7 @@ public class AntExecutor {
             e.printStackTrace();
         }
 
-        project.addBuildListener(getLog4jListener());
+
         log.debug("ctk.antlog.consolelogger is " + props.ctk_antlog_consolelogger);
         if("ON".equals(props.ctk_antlog_consolelogger)) {
             log.debug("enabling ConsoleLogger");
@@ -96,11 +90,14 @@ public class AntExecutor {
             targetToExecute = project.getDefaultTarget();
             project.executeTarget(targetToExecute);
             project.fireBuildFinished(null);
+            testlog.info("Overall: " + TestExecListener.getTestReport());
         } catch (BuildException buildException) {
             project.fireBuildFinished(buildException);
             success = false;
             log.warn("Failed attempt to run " + targetToExecute + " due to " + buildException.getMessage());
         }
+        if ("ON".equals(props.ctk_antlog_clearstats))
+            TestExecListener.resetStats(); // these are static fields which accumulate results
 
         return success;
     }
@@ -118,32 +115,5 @@ public class AntExecutor {
         consoleLogger.setMessageOutputLevel(Project.MSG_INFO);
 
         return consoleLogger;
-    }
-
-    private BuildListener getLog4jListener() {
-        // log4j gets routed by the log4k-over-slf4j module into SLF4
-
-       /*
-        FileInputStream afis = null;
-        Properties antlogprops = new Properties();
-        try {
-            afis = new FileInputStream(antLogPropFile);
-            if("YES".equals(props.ctk_antlog_shouldinit)){
-                antlogprops.load(afis);
-                log.debug("ant log about to be configured by properties " + antlogprops.toString());
-                PropertyConfigurator.configure(antlogprops);
-            } else {
-                log.debug("ant log config skipped because ctk.antlog.shouldinit is " + props.ctk_antlog_shouldinit);
-            }
-        } catch (FileNotFoundException e) {
-           log.warn("Didn't find ant properties file at "+ String.valueOf(antLogPropFile));
-        } catch (IOException e) {
-            log.warn("couldn't get an properties file " + afis + " due to " + e.getMessage());
-        }
-        */
-
-        BuildListener bl =  new org.apache.tools.ant.listener.Log4jListener();
-
-        return bl;
     }
 }
