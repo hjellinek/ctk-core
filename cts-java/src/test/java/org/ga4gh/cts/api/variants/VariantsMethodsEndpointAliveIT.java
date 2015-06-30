@@ -2,13 +2,13 @@ package org.ga4gh.cts.api.variants;
 
 import org.assertj.core.api.*;
 import org.ga4gh.*;
+import org.ga4gh.ctk.testcategories.*;
 import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;
 import org.junit.experimental.categories.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Verifies basic reachability of the Server's endpoints for variants, variantsets, and callsets.</p>
@@ -35,9 +35,9 @@ import static org.slf4j.LoggerFactory.*;
  */
 
 @Category(VariantsTests.class)
-public class VariantsMethodsEndpointAliveIT {
+public class VariantsMethodsEndpointAliveIT implements CtkLogs {
 
-    private static org.slf4j.Logger log = getLogger(VariantsMethodsEndpointAliveIT.class);
+    //private static org.slf4j.Logger log = getLogger(VariantsMethodsEndpointAliveIT.class);
 
     private static VariantsProtocolClient client;
 

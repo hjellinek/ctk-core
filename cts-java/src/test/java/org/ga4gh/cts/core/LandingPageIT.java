@@ -18,12 +18,11 @@ import org.junit.runner.*;
 import java.net.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.slf4j.LoggerFactory.*;
 
 @Category(CoreTests.class)
 @RunWith(JUnitParamsRunner.class)
-public class LandingPageIT {
-    private static org.slf4j.Logger log = getLogger(LandingPageIT.class);
+public class LandingPageIT implements CtkLogs {
+    // private static org.slf4j.Logger log = getLogger(LandingPageIT.class);
 
     /**
      * <p>Landing pages should exist.</p>
@@ -33,7 +32,6 @@ public class LandingPageIT {
      *
      * @throws Exception the exception
      */
-
     @Test
     public void landingPagesShouldExist() throws Exception {
         String theUrlString = URLMAPPING.getUrlRoot();
@@ -58,8 +56,11 @@ public class LandingPageIT {
      */
     @Test
     public void propertyCanCauseTestFail() throws Exception {
-        if(Boolean.getBoolean("cts.demofail"))
+
+        if(Boolean.getBoolean("cts.demofail")) {
+            CtkLogs.testlog.warn("Dummying failure because cts.demofail is true");
             assertThat(false).isTrue();
+        }
         else
             assertThat(false).isFalse();
     }

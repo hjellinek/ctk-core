@@ -2,6 +2,7 @@ package org.ga4gh.cts.api.reads;
 
 import junitparams.*;
 import org.ga4gh.*;
+import org.ga4gh.ctk.testcategories.*;
 import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;
@@ -10,16 +11,14 @@ import org.junit.runner.*;
 
 import java.util.*;
 
-import static org.slf4j.LoggerFactory.*;
-
 /**
  * <p>Validates data returned by readgroupsets/search.</p>
  * <p>Created by Wayne Stidolph on 6/7/2015.</p>
  */
 @Category(ReadsTests.class)
 @RunWith(JUnitParamsRunner.class)
-public class ReadGroupSetsSearchIT {
-    private static org.slf4j.Logger log = getLogger(ReadGroupSetsSearchIT.class);
+public class ReadGroupSetsSearchIT implements CtkLogs  {
+    // private static org.slf4j.Logger log = getLogger(ReadGroupSetsSearchIT.class);
 
     private static ReadsProtocolClient client;
 

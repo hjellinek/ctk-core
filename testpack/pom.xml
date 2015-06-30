@@ -141,6 +141,7 @@
             <version>0.9.10</version>
         </dependency>
 
+        <!-- seems like we need the junit3 ant-junit, as well as the junit4! -->
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant-junit</artifactId>
@@ -149,10 +150,18 @@
             <groupId>org.apache.ant</groupId>
             <artifactId>ant-junit4</artifactId>
         </dependency>
+
+        <!-- give ant the Log4jListener  -->
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant-apache-log4j</artifactId>
         </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+
+        <!-- route ant's log4j into the main app logging, slf4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>

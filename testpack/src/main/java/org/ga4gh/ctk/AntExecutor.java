@@ -29,6 +29,13 @@ public class AntExecutor {
         antFile = theFile;
     }
 
+    @Value("${ctk.antlog.properties}")
+    private File antLogPropFile;
+    public void setAntLogPropFile(File theFile){
+        log.debug("ctk.antlog.properties (to be injected as a File) is in Props as " + props.ctk_antlog_properties);
+        antLogPropFile = theFile;
+    }
+
     @Autowired
     private Props props;
     public void setProps(Props props){
@@ -74,7 +81,11 @@ public class AntExecutor {
         }
 
         project.addBuildListener(getLog4jListener());
-        project.addBuildListener(consoleLogger);
+        log.debug("ctk.antlog.consolelogger is " + props.ctk_antlog_consolelogger);
+        if("ON".equals(props.ctk_antlog_consolelogger)) {
+            log.debug("enabling ConsoleLogger");
+            project.addBuildListener(consoleLogger);
+        }
         String targetToExecute = "";
 
         // Capture event for Ant script build start / stop / failure
@@ -111,6 +122,28 @@ public class AntExecutor {
 
     private BuildListener getLog4jListener() {
         // log4j gets routed by the log4k-over-slf4j module into SLF4
-        return new org.apache.tools.ant.listener.Log4jListener();
+
+       /*
+        FileInputStream afis = null;
+        Properties antlogprops = new Properties();
+        try {
+            afis = new FileInputStream(antLogPropFile);
+            if("YES".equals(props.ctk_antlog_shouldinit)){
+                antlogprops.load(afis);
+                log.debug("ant log about to be configured by properties " + antlogprops.toString());
+                PropertyConfigurator.configure(antlogprops);
+            } else {
+                log.debug("ant log config skipped because ctk.antlog.shouldinit is " + props.ctk_antlog_shouldinit);
+            }
+        } catch (FileNotFoundException e) {
+           log.warn("Didn't find ant properties file at "+ String.valueOf(antLogPropFile));
+        } catch (IOException e) {
+            log.warn("couldn't get an properties file " + afis + " due to " + e.getMessage());
+        }
+        */
+
+        BuildListener bl =  new org.apache.tools.ant.listener.Log4jListener();
+
+        return bl;
     }
 }

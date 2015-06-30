@@ -83,11 +83,22 @@ public class Props {
     @Value("${ctk.antfile}")
     public String ctk_antfile;
 
+    @Value("${ctk.antlog.shouldinit}")
+    public String ctk_antlog_shouldinit;
+
+    @Value("${ctk.antlog.properties}")
+    public String ctk_antlog_properties;
+
+    @Value("${ctk.antlog.consolelogger}")
+    public String ctk_antlog_consolelogger;
+
     @Value("${ctk.testjar}")
     public String ctk_testjar;
 
     @Value("${ctk.reporttitle}")
     public String ctk_report_title;
+
+
 
     /* pre/post scripts are a planned capability, not yet connected */
     @Value("${ctk.scripts.before}")

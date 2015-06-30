@@ -1,21 +1,20 @@
 package org.ga4gh.cts.api.variants;
 
 import junitparams.*;
+import org.ga4gh.ctk.testcategories.*;
 import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;
 import org.junit.experimental.categories.*;
 import org.junit.runner.*;
 
-import static org.slf4j.LoggerFactory.*;
-
 /**
  * Created by Wayne Stidolph on 6/11/2015.
  */
 @RunWith(JUnitParamsRunner.class)
 @Category(VariantsTests.class)
-public class CallsetsSearchResponseCheckIT {
-    private static org.slf4j.Logger log = getLogger(CallsetsSearchResponseCheckIT.class);
+public class CallsetsSearchResponseCheckIT implements CtkLogs {
+    // implements CtkLogsprivate static org.slf4j.Logger log = getLogger(CallsetsSearchResponseCheckIT.class);
 
     private static VariantsProtocolClient client;
 

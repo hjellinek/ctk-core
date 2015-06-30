@@ -2,6 +2,7 @@ package org.ga4gh.cts.api.variants;
 
 import junitparams.*;
 import org.ga4gh.*;
+import org.ga4gh.ctk.testcategories.*;
 import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;
@@ -11,7 +12,6 @@ import org.junit.runner.*;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Test the data returned in a GASearchVariantsResponse is as expected.</p>
@@ -22,8 +22,8 @@ import static org.slf4j.LoggerFactory.*;
  */
 @RunWith(JUnitParamsRunner.class)
 @Category(VariantsTests.class)
-public class VariantsSearchResponseCheckIT {
-    private static org.slf4j.Logger log = getLogger(VariantsSearchResponseCheckIT.class);
+public class VariantsSearchResponseCheckIT implements CtkLogs {
+    // private static org.slf4j.Logger log = getLogger(VariantsSearchResponseCheckIT.class);
 
     private static VariantsProtocolClient client;
     /**

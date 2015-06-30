@@ -3,6 +3,7 @@ package org.ga4gh.cts.api.reads;
 import junitparams.*;
 import org.assertj.core.api.*;
 import org.ga4gh.*;
+import org.ga4gh.ctk.testcategories.*;
 import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;
@@ -12,7 +13,6 @@ import org.junit.runner.*;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Verifies basic sanity of the reads/search API.</p>
@@ -34,9 +34,9 @@ import static org.slf4j.LoggerFactory.*;
  */
 @Category(ReadsTests.class)
 @RunWith(JUnitParamsRunner.class)
-public class ReadMethodsEndpointAliveIT {
+public class ReadMethodsEndpointAliveIT implements CtkLogs {
 
-    private static org.slf4j.Logger log = getLogger(ReadMethodsEndpointAliveIT.class);
+   // private static org.slf4j.Logger log = getLogger(ReadMethodsEndpointAliveIT.class);
 
     private static ReadsProtocolClient client;
 

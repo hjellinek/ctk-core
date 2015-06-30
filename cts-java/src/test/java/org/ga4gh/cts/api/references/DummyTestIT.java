@@ -6,13 +6,14 @@ package org.ga4gh.cts.api.references;
  * <p>Created by Wayne Stidolph on 6/7/2015.</p>
  */
 
+import org.ga4gh.ctk.testcategories.*;
 import org.junit.*;
 import org.junit.experimental.categories.*;
 
 import static org.junit.Assert.*;
 
 @Category(ReferencesTests.class)
-public class DummyTestIT {
+public class DummyTestIT implements CtkLogs{
     /**
      * Dummy so ReferencesTestSuite can initialize.
      *

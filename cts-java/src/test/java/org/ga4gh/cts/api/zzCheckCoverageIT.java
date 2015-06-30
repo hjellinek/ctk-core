@@ -1,8 +1,8 @@
 package org.ga4gh.cts.api;
 
+import org.ga4gh.ctk.testcategories.*;
 import org.ga4gh.ctk.transport.*;
 import org.junit.*;
-import org.springframework.test.context.junit4.rules.*;
 
 import static org.junit.Assert.*;
 
@@ -11,9 +11,7 @@ import static org.junit.Assert.*;
  * integration test completeness (are all messages, data type,and endpoints exercised)</p>
  * <p>Created by Wayne Stidolph on 5/30/2015.</p>
  */
-
-public class zzCheckCoverageIT {
-
+public class zzCheckCoverageIT implements CtkLogs {
     /* These first two rules set up Spring (4.2.0RC1+) injection support
    without having to adopt the SpingJUnit4ClassRunner, so we can use
    Runners such as the WildcardPatternSuite, or Parameterized, etc
@@ -21,11 +19,11 @@ public class zzCheckCoverageIT {
    See http://docs.spring.io/spring/docs/4.2.0.RC1/spring-framework-reference/htmlsingle/#testing
    specifically Section 5.6
  */
-    @ClassRule
+    /*@ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
 
     @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
+    public final SpringMethodRule springMethodRule = new SpringMethodRule();*/
 
     @Ignore("Unimplemented")
     @Test
