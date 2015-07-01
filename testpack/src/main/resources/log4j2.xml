@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- see http://logging.apache.org/log4j/2.x/manual/configuration.html -->
 <Configuration status="WARN">
     <!-- use status="TRACE" to get more log4j2 details if need to troubleshoot logging config -->
     <Appenders>
@@ -14,6 +15,7 @@
         </Console>
     </Appenders>
 
+    <!-- levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and OFF in decreasing verbosity-->
     <Loggers>
         <Logger name="TESTLOG" level="info" additivity="false">
             <AppenderRef ref="TESTLOG"/>

@@ -1,37 +1,46 @@
 # Testing from the command line
 
-In this mode you are simply executing the CTS tests - not writing tests. You wn't have HTML files and reports to build, so it runs fast and output comes as text.
+In this mode you are simply executing the CTS tests - not writing tests. (Writing tests means writing code, so that will take place in your dev environment, under Maven.)
 
-## tl;dr
+## Quickstart
 
-Get the distribution ZIP you can grab from github (the [repository releases page](https://github.com/wstidolph/ctk-core/releases)) and just unzip in the directory you want to run from. The unzip will place a jar file(ctk-testpack-*)  in this directory, and create `lib/` and `target/` directories; the tests jar and a couple control files will already be in the `lib/`. You run the test with:
+Get the `ga4gh-ctk-cli.zip` distribution ZIP from github (the [repository releases page](https://github.com/wstidolph/ctk-core/releases)) and just unzip in the directory you want to run from. The unzip will place a jar file(ctk-testpack-*)  in this directory, and create `lib/` and `target/` directories; the tests jar and a couple control files will already be in the `lib/`. You run the test with:
 
 `java -Dctk.tgt.urlRoot=... -jar ctk-testpack-0.5.1-SNAPSHOT.jar`
+
+(Tip - set an environment variable "`ctk.tgt.urlRoot`" to avoid having to re-enter that property all the time on the command line)
 
 If you want to see a failure example, add another property:
 
 `java -Dcts.demofail=true -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=...`
 
-(or, just set an environment variable "`ctk.tgt.urlRoot` to avoid having to re-enter that property all the time)
+There will be some console output, and you can check in `target/report` for details; if you have a browser, check out `target/report/html/index.html`
 
 ## Details
 
-(The setup described here is what you get if you just unzip the distribution, but if you're hand-assembling the environment from your local maven build this is what you need to end up with)
+### Hand-assemble the environment
 
- The first generation CTK packages the CTS tests in a jar file which is separate from the main CTK framework jar, and it assumes the tests are in a `lib` subdirectory. These two jars are named:
+The setup described here is what you get if you just unzip the distribution, but if you're hand-assembling the environment.
+
+The first generation CTK packages the CTS tests in a jar file which is separate from the main CTK framework jar.  These two jars are named:
 
 - `ctk-testpack-0.5.1-SNAPSHOT.jar`
 - `cts-java-0.5.1-SNAPSHOT-tests.jar` 
 
-So, choose or create a directory to run the test from, and put the CTK jar there. Then 
+So, choose or create a directory to run the test from, and put the two CTK jars there to start.
 
-Create a subdirectory named `lib` and put the CTS ("-tests") jar there. A (If you have multiple test jars for some reason, just put them all in that directory.) lso, create a directory `target` for the test reports to go into. NOTE: You will not get junit .txt or .xml files from this process, as you do when running from Maven.
+The CTK test runners assume the test jar(s) are in a `lib` subdirectory. Create a subdirectory named `lib` and move the CTS ("-tests") jar there. (If you have multiple test jars for some reason, just put them all in that directory.)
 
-And, you will may want to configure the test environment, so extract the controlling properties files
+Create a directory `target` for the test reports to go into. The `ctk` script will copy the `target` directory before each new run, so you don't accidentally overwrite your results.
+
+Now let's make sure you have easy access to the controlling properties files:
 
 - `jar xf ctk-testpack-0.5.1-SNAPSHOT.jar application.properties`
 - `jar xf ctk-testpack-0.5.1-SNAPSHOT.jar log4j2.xml`
-- `mv log4j2.xml lib/`
+- `jar xf ctk-testpack-0.5.1-SNAPSHOT.jar antRunTests.xml`
+- `mv *.xml lib/`
+- `jar xf ctk-testpack-0.5.1-SNAPSHOT.jar ctk` (if you're at a bash prompt)
+- `chmod +c ctk`  (if you're at a bash prompt)
 
 So you end up with:
 
@@ -39,25 +48,39 @@ So you end up with:
     <launch dir>/
       | - ctk-testpack-0.5.1-SNAPSHOT.jar
       | - application.properties
+      | - ctk
       | - lib/
       |       |- cts-java-0.5.1-SNAPSHOT-tests.jar
       |       |- log4j2.xml
+      |       |- antRunTests.xml
       | - target/
 
 ```
+## Run and Results
 
-The simplest way to run is to simply execute all tests from the launch dir, passing in the address of your target server:
+The simplest way to run is to simply execute all tests from the launch dir, passing in the address of your target server; you can do this using the `ctk` script (start with `ctk -h` for usage), or by invoking `java`:
 
-`java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=http://myserver:8000/v0.5.1`
+- `ctk ...`
+- `java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=http://myserver:8000/v0.5.1`
  
-If you want to attach a debugger to the CTK, use:
+Advanced tip: if you want to attach a debugger to the command-line CTK, use:
 
     java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
          -jar ctk-testpack-0.5.1-SNAPSHOT.jar
 
-## Altering the run 
 
-If you want to alter the test selection strings, you can do that on the command line (or using environment variables):
+When the tests are done, the reports will be in the `target/` dir. There are normal ant-junit reports in txt and HTML, and HTML versions in `target/report/html`
+
+You might want Desktop notifications about the results of these tests; check into the [ShoulderTap](https://github.com/ryandoyle/shouldertap) project
+
+## Altering the run 
+**NOTE**: 30 June 2015 TestSuites and using matchStr to select non-default tests is not tested, probably not working
+
+The CTK primary control is via properties such as the ones you've been setting (`ctk.tgt.urlRoot` etc). You can see and set these in the `application.properties` file. Properties can also be set in your environment.
+
+Properties passed in directly to the CTK using command line "--<name>=<val>". These override your property files and environment variables.  You can do this for almost any property; the exception is items which are controlled during static initialization, like logging. So, for logging control you will need to edit a file the CTK will load early just for this purpose, "`lib/log4j2.xml`" (We'll discuss that a bit more, in the `Tuning the output` section below.)
+
+If you want to alter the test selection strings, you can do that on the command line (or using environment variables, etc):
 
 ```
 
@@ -65,38 +88,77 @@ If you want to alter the test selection strings, you can do that on the command 
     [TESTLOG] 4 failed, 6 passed, 0 skipped, 1068 ms
     [TESTLOG] FAIL: [0] TWO_GOOD, NOT_IMPLEMENTED (multipleReadGroupsNotSupported)(org.ga4gh.cts.api.reads.ReadMethodsEndpointAliveIT):
     ...
+```
 
+Right now, the set of tests is small and runs quickly; but, as the test suite gets larger, or the tests get slower, you may want to control which tests are run. Tests are selected primarily based on name-matching against the test class, and you can supply a property to be the match regex. To make this work, the CTK/CTS  has a naming convention for tests:
+
+**Test classes end in "IT"**
+
+For example, the CTS test suite package includes the java package
+
+`   org.ga4gh.cts.api.reads`
+
+and in that package we find:
+```
+    ReadGroupSetsSearchIT.java
+    ReadMethodsEndpointAliveIT.java
+    ReadsSearchIT.java
+    ReadsTests.java
+    ReadsTestSuite.java
+```
+
+The first three of these classes end in IT, so they're test classes. A test class can hold multiple "test methods" so there can be several tests executed when, for example, the `ReadGroupSetsSearchIT` test is run. And, each "test method" may get executed multiple times with different parameters, depending on what the test writer set up.
+
+The other two classes are for a near-future capability that isn't quite ready for command-line use yet, but we'll describe it nonetheless:
+- ReadsTests.java is a "marker" we use when writing a test to mark the test method as "one of the Reads tests" ... then,
+- ReadsTestSuite is a TestSuite that groups all of those, so we can run the ReadsTestSuite to get a pre-defined set of tests to execute.
+
+Since these aren't ready as of **30 June**, we'll focus on matching on the test name.
+
+>**30 June 2015** The `matchStr` capability isn't working, during a refactoring. Repair expected soon!
+
+To run a selected test, we just match its name as a regex to the ctk.matchstr property:
+
+` java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethods.*`
+
+ or
+
+ `ctk -m ".*ReadMethods.*"`
+
+(`ctk.matchstr` allows a comma-separated string of regex'es but between the regex-ness and the command-line escaping it's usually better to set anything complicated in the lib/application.properties file).
+
+
+## Tuning the output
+
+CTK output is to logs, not to "stdout" and such. The logging framework in the default configuration is Apache's `log4j2` (see http://logging.apache.org/log4j/2.x/) so you can use `lib/log4j2.xml` to adjust logger levels, direct the output to log files, etc.
+
+The important thing to know is that there is a specific logger called "TESTLOG" used in all test classes to report on test progress, as well as the usual per-class loggers named after the class' full hierarchical name. You may want to send TESTLOG to a file, and leave the `org.ga4gh.*` loggers as console output; but,  the CTK default is to route all the loggers at the console, so you may see some duplicated information.
+
+If any tests fail, you'll get additional failure-specific logging at a WARN level. To demostrate, we'll use the "`propertyCanCauseTestFail`" test case. This test just passes or fails based on a property, so let's trigger it ...
+
+`java -Dcts.demofail=true -jar ctk-testpack-v0.5.1-SNAPSHOT.jar`
 
 ```
 
-**NOTE**: 19 June 2015 there is a known problem running TestSuites (e.g., `...ReadsTestSuite): URI is not hierarchical`)
-
-When the tests are done, the TAP reports will be in the `target/` dir.
-
-You might want Desktop notifications about the results of these tests; check into the [ShoulderTap](https://github.com/ryandoyle/shouldertap) project
-
-## Using the command line output
-
-You can use `lib/log4j2.xml` to adjust logger levels, direct the output to log files, etc. With the default setting in log4j2.xml, you'll get one line of console output when the tests complete:
-
-`[TESTLOG] 0 failed, 11 passed, 8 skipped, 1511 ms`
-
-If any tests fail, you'll get additional failure-specific logging at a WARN level; for example (**not a real failure**):
-
-```
-
-    [TESTLOG] 8 failed, 3 passed, 8 skipped, 1217 ms
-    [TESTLOG] FAIL: testSearchCallSetsRequestWDEndpointAlive(org.ga4gh.cts.api.variants.VariantsMethodsEndpointAliveIT): expected:<NOT_[IMPLEMENTE]D> but was:<NOT_[FOUN]D>
-    [TESTLOG] FAIL: testSearchVariantsForRequestWdEndpointAlive(org.ga4gh.cts.api.variants.VariantsMethodsEndpointAliveIT):
-    expected:<NOT_[IMPLEMENTE]D> but was:<NOT_[FOUN]D>
-    [TESTLOG] FAIL: [0] VALID_READGROUPID (readsResponseMatchesACTGNPattern)(org.ga4gh.cts.api.reads.ReadsSearchIT): null
-    [TESTLOG] FAIL: [0] TWO_GOOD, NOT_IMPLEMENTED (multipleReadGroupsNotSupported)(org.ga4gh.cts.api.reads.ReadMethodsEndpointAliveIT):
-    Expecting responseStatus of: <org.ga4gh.ctk.transport.WireTracker@5c4a90b>
-    to be:
-    <NOT_IMPLEMENTED>
-    but was:
-    <NOT_FOUND>
+[TESTLOG] Suite start org.ga4gh.cts.core.LandingPageIT
+[TESTLOG] Dummying failure because cts.demofail is true
+[TESTLOG] FAILED propertyCanCauseTestFail(org.ga4gh.cts.core.LandingPageIT) due to expected:<[tru]e> but was:<[fals]e>
+[TESTLOG] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.035 sec
     ...
 
 ```
+
+The TESTLOG tells us:
+
+* the name of the failing method ("`propertyCanCauseTestFail`")
+* the name of the class that test case comes from ("`org.ga4gh.cts.core.LandingPageIT`")
+* what assertion didn't pass ("`expected:<[tru]e> but was:<[fals]e`")
+
+(We get the odd-looking assertion message because we're doing a string compare rather than a boolean compare ... can you fix that? :)
+
+You might want to have your TESTLOG routed to a network log-receiver, such as [Chainsaw](https://logging.apache.org/chainsaw/), [Logstash](https://www.elastic.co/products/logstash), or [Graylog](https://www.graylog.org/) - since we're using the common log4j2 framework you'll find a lot of internet tutorials and examples on how to set up these configurations.
+
+## What's Next
+
+If you have Maven installed, you will want to look into using it as the environment for running and developing tests - you 'll get cross-referenced/cross-linked source and test code and javadoc in HTML, and the HTML test reports have links from the failure messages directly into that source tree.
 
