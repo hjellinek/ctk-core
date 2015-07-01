@@ -6,7 +6,6 @@ package org.ga4gh.ctk;
 
 import org.apache.tools.ant.*;
 import org.ga4gh.ctk.config.*;
-import org.ga4gh.ctk.testcategories.*;
 import org.ga4gh.ctk.transport.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;

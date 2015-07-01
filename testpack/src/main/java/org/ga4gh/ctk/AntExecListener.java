@@ -1,7 +1,6 @@
 package org.ga4gh.ctk;
 
 import org.apache.tools.ant.*;
-import org.ga4gh.ctk.testcategories.*;
 
 /**
  * <p>Bridge ant-generated events to CTK logs</p>
