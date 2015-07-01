@@ -39,15 +39,15 @@ public class AntExecutor implements CtkLogs {
      *
      */
     public boolean executeAntTask() {
-        return executeAntTask(""); // invokes default target
+        return executeAntTask(props.ctk_testjar,props.ctk_matchstr);
     }
 
     /**
-     * Execute teh tests under ant build script (runAntTests.xml)
+     * Execute the tests under ant build script (runAntTests.xml)
      *
      * @param testjar tests jar to unpack/run in Ant
      */
-    public boolean executeAntTask(String testjar) {
+    public boolean executeAntTask(String testjar, String matchStr) {
 
         String expandedReportTitle = props.ctk_report_title + " " + URLMAPPING.getUrlRoot();
 
@@ -60,6 +60,7 @@ public class AntExecutor implements CtkLogs {
             File buildFile = antFile;
             project.setUserProperty("ant.file", buildFile.getName());
             project.setUserProperty("ctk.testjar", testjar);
+            project.setUserProperty("ctk.matchstr", matchStr);
             project.setUserProperty("ctk.reporttitle", expandedReportTitle);
             project.addBuildListener(antExecListener);
 
