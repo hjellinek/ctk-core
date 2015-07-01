@@ -3,7 +3,7 @@ package org.ga4gh.cts.api.reads;
 import junitparams.*;
 import org.assertj.core.api.*;
 import org.ga4gh.*;
-import org.ga4gh.ctk.testcategories.*;
+import org.ga4gh.ctk.*;
 import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;

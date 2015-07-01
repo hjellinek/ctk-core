@@ -1,4 +1,4 @@
-package org.ga4gh.ctk.testcategories;
+package org.ga4gh.ctk;
 
 import static org.slf4j.LoggerFactory.*;
 

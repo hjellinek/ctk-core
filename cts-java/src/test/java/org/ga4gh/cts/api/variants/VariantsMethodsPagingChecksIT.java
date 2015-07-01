@@ -1,6 +1,6 @@
 package org.ga4gh.cts.api.variants;
 
-import org.ga4gh.ctk.testcategories.*;
+import org.ga4gh.ctk.*;
 import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;
@@ -11,7 +11,7 @@ import org.junit.experimental.categories.*;
  * <p>Created by Wayne Stidolph on 6/11/2015.</p>
  */
 @Category(VariantsTests.class)
-public class VariantsMethodsPagingChecksIT implements CtkLogs  {
+public class VariantsMethodsPagingChecksIT implements CtkLogs {
     // private static org.slf4j.Logger log = getLogger(VariantsMethodsPagingChecksIT.class);
 
     private static VariantsProtocolClient client;

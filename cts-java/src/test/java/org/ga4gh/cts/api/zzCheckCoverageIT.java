@@ -1,6 +1,6 @@
 package org.ga4gh.cts.api;
 
-import org.ga4gh.ctk.testcategories.*;
+import org.ga4gh.ctk.*;
 import org.ga4gh.ctk.transport.*;
 import org.junit.*;
 

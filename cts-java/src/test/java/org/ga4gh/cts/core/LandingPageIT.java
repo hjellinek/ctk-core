@@ -9,6 +9,7 @@ package org.ga4gh.cts.core;
 import com.mashape.unirest.http.*;
 import com.mashape.unirest.request.*;
 import junitparams.*;
+import org.ga4gh.ctk.*;
 import org.ga4gh.ctk.testcategories.*;
 import org.ga4gh.ctk.transport.*;
 import org.junit.*;

@@ -1,7 +1,7 @@
 package org.ga4gh.cts.api.variants;
 
 import junitparams.*;
-import org.ga4gh.ctk.testcategories.*;
+import org.ga4gh.ctk.*;
 import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.protocols.*;
 import org.junit.*;
