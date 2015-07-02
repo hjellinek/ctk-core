@@ -52,6 +52,16 @@ public class SoftAssertions {
   }
 
   /**
+   * Creates a new "soft" instance of <code>{@link org.ga4gh.BEACONCallbackAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.ga4gh.BEACONCallbackAssert assertThat(org.ga4gh.BEACON.Callback actual) {
+    return proxy(org.ga4gh.BEACONCallbackAssert.class, org.ga4gh.BEACON.Callback.class, actual);
+  }
+
+  /**
    * Creates a new "soft" instance of <code>{@link org.ga4gh.BEACONRequestAssert}</code>.
    *
    * @param actual the actual value.
@@ -59,6 +69,16 @@ public class SoftAssertions {
    */
   public org.ga4gh.BEACONRequestAssert assertThat(org.ga4gh.BEACONRequest actual) {
     return proxy(org.ga4gh.BEACONRequestAssert.class, org.ga4gh.BEACONRequest.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.ga4gh.BEACONRequestBuilderAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.ga4gh.BEACONRequestBuilderAssert assertThat(org.ga4gh.BEACONRequest.Builder actual) {
+    return proxy(org.ga4gh.BEACONRequestBuilderAssert.class, org.ga4gh.BEACONRequest.Builder.class, actual);
   }
 
   /**

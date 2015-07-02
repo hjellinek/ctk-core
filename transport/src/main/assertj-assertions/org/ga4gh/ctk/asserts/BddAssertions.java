@@ -17,6 +17,16 @@ public class BddAssertions {
   }
 
   /**
+   * Creates a new instance of <code>{@link org.ga4gh.BEACONCallbackAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static org.ga4gh.BEACONCallbackAssert then(org.ga4gh.BEACON.Callback actual) {
+    return new org.ga4gh.BEACONCallbackAssert(actual);
+  }
+
+  /**
    * Creates a new instance of <code>{@link org.ga4gh.BEACONRequestAssert}</code>.
    *
    * @param actual the actual value.
@@ -24,6 +34,16 @@ public class BddAssertions {
    */
   public static org.ga4gh.BEACONRequestAssert then(org.ga4gh.BEACONRequest actual) {
     return new org.ga4gh.BEACONRequestAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link org.ga4gh.BEACONRequestBuilderAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static org.ga4gh.BEACONRequestBuilderAssert then(org.ga4gh.BEACONRequest.Builder actual) {
+    return new org.ga4gh.BEACONRequestBuilderAssert(actual);
   }
 
   /**
