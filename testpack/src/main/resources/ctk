@@ -44,7 +44,7 @@ CMD_DIR="$(cd "$(dirname "$CMD")" && pwd -P)"
 [ "$DEBUG" ]   ||  DEBUG=
 [ "$CTKJAR" ]  ||  CTKJAR="ctk-testpack-0.5.1-SNAPSHOT.jar"
 [ "$ctk_tgt_urlRoot" ] || ctk_tgt_urlRoot="http://localhost:8000/v0.5.1/"
-[ "$ctk_matchstr" ] || ctg_matchstr=".*IT.*"
+[ "$ctk_matchstr" ] || ctk_matchstr=".*IT.class"
 [ "$TGTDIR" ] || TGTDIR="target"
 
 
