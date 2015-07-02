@@ -104,7 +104,7 @@ public class Application implements CommandLineRunner {
         }
 
         /* ********* TEST SELECTION ******** */
-/* commenting out out DIY loop while migrate to ant-driven
+
         String matchStr = props.ctk_matchstr;
         log.debug("matchstr: " + matchStr);
 
@@ -114,6 +114,7 @@ public class Application implements CommandLineRunner {
         for(String mstr : matchStr.split(",")) {
             log.debug("seeking test classes that match < " + mstr + " >");
 
+            /*
             Set<Class<?>> testClasses = testFinder.findTestClasses(mstr);
 
             if (testClasses.isEmpty()) {
@@ -123,11 +124,10 @@ public class Application implements CommandLineRunner {
                 testlog.trace("Matched test classes are " + testClasses.toString());
                 runTestClasses(testClasses);
             }
+            */
+                    /* ****** MAIN RUN-THE-TESTS *********** */
+            antExecutor.executeAntTask(props.ctk_testjar, mstr);
         }
-*/
-
-        /* ****** MAIN RUN-THE-TESTS *********** */
-        antExecutor.executeAntTask(props.ctk_testjar);
 
         /* ******* post-Test reporting ********* */
 

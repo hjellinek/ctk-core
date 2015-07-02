@@ -1,0 +1,46 @@
+# This is a list of the various server endpoints in v0.5.1, and as seen for
+#0.6.0 in a snapshot; this is reference material, unlikely to need changing soon
+
+# map message to resource path, per the IDL comments
+# these are also set as defaults internally to the CKT ('transport' module)
+ctk_tgt_searchReads="reads/search"
+ctk_tgt_searchReadGroupSets="readgroupsets/search"
+ctk_tgt_searchReferencesets="referencesets/search"
+ctk_tgt_searchVariantSets="variantsets/search"
+ctk_tgt_searchVariants="variants/search"
+ctk_tgt_searchCallsets="callsets/search"
+
+# These are for future use, not currently implemented
+# so we record them, but set them blank to clear them
+# out of the defaults in URLMAPPING.java
+
+# ctk_tgt_getReadGroupSet='readgroupsets/{id}'
+ctk_tgt_getReadGroupSet=
+# ctk_tgt_getReferences='references/{id}'
+ctk_tgt_getReferences=
+# ctk_tgt_getReferencesBases='references/{id}/bases'
+ctk_tgt_getReferencesBases=
+# ctk_tgt_searchReferences='references/search'
+ctk_tgt_searchReferences=
+# ctk_tgt_getReferencesets='referencesets/{id}'
+ctk_tgt_getReferencesets=
+# ctk_tgt_getReadGroup='readgroups/{id}'
+ctk_tgt_getReadGroup=
+# ctk_tgt_searchDatasets='datasets/search'
+ctk_tgt_searchDatasets=
+# ctk_tgt_getDataset='datasets/{id}'
+ctk_tgt_getDataset=
+# ctk_tgt_getVariantSet='variantsets/{id}'
+ctk_tgt_getVariantSet=
+# ctk_tgt_getVariant='variants/{id}'
+ctk_tgt_getVariant=
+# ctk_tgt_searchAlleleCalls='allelecalls/search'
+ctk_tgt_searchAlleleCalls=
+# ctk_tgt_searchAlleles='alleles/search'
+ctk_tgt_searchAlleles=
+# ctk_tgt_getAllele='alleles/{id}'
+ctk_tgt_getAllele=
+# ctk_tgt_getCallSet='callsets/{id}'
+ctk_tgt_getCallSet=
+# ctk_tgt_searchCalls='calls/search'
+ctk_tgt_searchCalls=

@@ -30,8 +30,7 @@
             </classpath>
             <batchtest fork="off" todir="${basedir}/../target">
                 <fileset dir="${basedir}/../lib/test-classes">
-                    <include name="**/*IT.class"/>
-                    <include name="**/IT*.class"/>
+                    <filename regex="${ctk.matchstr}"/>
                 </fileset>
             </batchtest>
             <formatter type="xml"/>

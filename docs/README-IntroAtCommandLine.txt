@@ -17,7 +17,7 @@ the tests jar and a couple control files will already be in the `lib/`. You run 
 
 ava -Dctk.tgt.urlRoot=... -jar ctk-testpack-0.5.1-SNAPSHOT.jar
 
-(Tip - set an environment variable "`ctk.tgt.urlRoot`" to avoid having to re-enter that property
+(Tip - set a environment variable "ctk_tgt_urlRoot" to avoid having to re-enter that property
 all the time on the command line)
 
 If you want to see a failure example, add another property:
@@ -82,8 +82,8 @@ The two command line techniques are to:
 Run and Results
 
 The simplest way to run is to simply execute all tests from the launch dir, passing in
-the address of your target server; you can do this using the `ctk` script (start with `ctk -h` for usage),
-or by invoking `java`:
+the address of your target server; if you're on bash, you can do this using the `ctk` script (start with `ctk -h` for usage),
+or in any case you can just invoke `java`:
 
 - ctk ... (from a bash command line)
 - java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=http://myserver:8000/v0.5.1
@@ -97,20 +97,30 @@ When the tests are done, the reports will be in the `target/` directory. There a
 in txt and XML in `target`, and HTML versions in `target/report/html/`
 
 Altering the run
-**NOTE**: 30 June 2015 TestSuites and using matchStr to select non-default tests is not tested, probably not working
 
 The CTK primary control is via properties such as the ones you've been setting (`ctk.tgt.urlRoot` etc).
 You can see and set these in the `application.properties` file. Properties can also be set in your environment.
 
-Properties passed in directly to the CTK using command line "--<name>=<val>".
-These override your property files and environment variables.  You can do this for almost any property;
-the exception is items which are controlled during static initialization, like logging.
+NOTE: in a 'bash' environment, you need to replace the '.' in variable names with underscore '_' when you set the
+variables in the environment; so, do something like:
 
-So, for logging control you will need to edit a file the CTK will load early just for this purpose, "lib/log4j2.xml"
-(We'll discuss that a bit more, in the `Tuning the output` section below.)
+export ctk_tgt_urlRoot='http://localhost:8000/v0.5.1/'
 
-If you want to alter the test selection strings, you can do that on the command line
-(or using environment variables, etc):
+Generally, properties can be:
+- set in the environment, or
+- set in the properties files, or can be
+- passed in directly to the CTK using command line "--<name>=<val>".
+
+Command line overrides properties files, which override environment vars.
+
+You can do this for almost any property; the exception is items which are controlled during static initialization,
+such as logging. So, for logging control you will need to edit a file the CTK will load early just for this purpose,
+"lib/log4j2.xml" (We'll discuss that a bit more, in the `Tuning the output` section below.)
+
+If you want to alter which tests get run, you can do that on the command line
+(or using environment variables, etc) using the `ctk.matchstr` variable, which is a regex that is
+matched against class names:
+
 
     ~/temp>java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethodsEndpointAliveIT.* /
            --ctk.tgt.urlRoot=http://192.168.2.115:8000/v0.5.1/
@@ -141,9 +151,10 @@ and in that package we find:
 
 The first three of these classes end in IT, so they're test classes.
 
-A test class can hold multiple "test methods" so there can be several tests executed when, for example,
-the `ReadGroupSetsSearchIT` test is run. And, each "test method" may get executed multiple times with
-different parameters, depending on what the test writer set up.
+A test class can hold multiple "test methods" so there can be several tests executed when,
+for example, the `ReadGroupSetsSearchIT` test is run. And, each "test method" may get executed
+multiple times with different parameters, depending on what the test writer set up. The CTK does
+not (presently) have a mechanism to select a subset of test methods, selection is at the Class level.
 
 The other two classes are for a near-future capability that isn't quite ready for command-line use yet,
 but we'll describe it nonetheless:
@@ -151,10 +162,6 @@ but we'll describe it nonetheless:
   the test method as "one of the Reads tests" ... then,
 - ReadsTestSuite is a TestSuite that groups all of those,
   so we can run the ReadsTestSuite to get a pre-defined set of tests to execute.
-
-Since these aren't ready as of **30 June**, we'll focus on matching on the test name.
-
->**30 June 2015** The `matchStr` capability isn't working, during a refactoring. Repair expected soon!
 
 To run a selected test, we just match its name as a regex to the ctk.matchstr property:
 
@@ -164,9 +171,9 @@ To run a selected test, we just match its name as a regex to the ctk.matchstr pr
 
     ctk -m ".*ReadMethods.*"
 
-("ctk.matchstr" allows a comma-separated string of regex'es but between the regex-ness and
-the command-line escaping it's usually better to set anything complicated in the lib/application.properties file).
-
+Actually, `ctk.matchstr` allows a comma-separated string of regex'es so you could select a couple tests,
+but between the regex-ness and the command-line escaping it's usually better to set anything complicated
+in the lib/application.properties file.
 
 Tuning the output
 
