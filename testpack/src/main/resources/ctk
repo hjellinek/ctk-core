@@ -88,7 +88,7 @@ esac; done
 ###############################################################################
 
 # Validate some things
-[ $# -gt 0 -a -z "$ctk.urlRoot" ]  &&  ctk_tgt_urlRoot="$1"  &&  shift
+[ $# -gt 0 -a -z "$ctk.tgt.urlRoot" ]  &&  ctk_tgt_urlRoot="$1"  &&  shift
 # [ "$ctk_matchstr" ]  ||  die "You must provide a test-selecting match string (ctk_matchstr)!"
 # [ "$ctk_tgt_urlRoot" ]  ||  die "You must provide a target server (ctk_tgt_urlRoot)!"
 [ $# -eq 0 ]  ||  die "ERROR: Unexpected commands!"
