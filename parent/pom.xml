@@ -115,7 +115,8 @@
             </dependency>
             <dependency>
                 <groupId>org.ga4gh</groupId>
-                <artifactId>ga4gh-format</artifactId>
+                <!--<artifactId>ga4gh-format</artifactId>-->
+                <artifactId>ctk-schemas</artifactId>
                 <version>${ga4gh.schema.local.version}</version>
             </dependency>
             <dependency>
