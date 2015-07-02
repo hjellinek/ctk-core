@@ -4,7 +4,10 @@ import org.springframework.boot.autoconfigure.*;
 import org.springframework.context.annotation.*;
 
 /**
- * Created by Wayne Stidolph on 6/16/2015.
+ * <p>Centralize Spring framework configuration triggering</p>
+ * <p>Main role here is to enable the java configuration and trigger
+ * scanning of the org.ga4gh.ctk package for Spring Beans</p>
+ * <p>Created by Wayne Stidolph on 6/16/2015.</p>
  */
 
 @EnableAutoConfiguration

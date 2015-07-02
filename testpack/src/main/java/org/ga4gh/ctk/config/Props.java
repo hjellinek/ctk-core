@@ -11,7 +11,10 @@ import org.springframework.stereotype.*;
  * <p>Access to runtime environment properties.</p>
  * <p>This class uses Spring @Value injection to get properties from the runtime
  * environment into simple strings bound to the class; the instance can then be
- * injected (by Spring) into ojects that want these control variables.</p>
+ * injected (by Spring) into objects that want these control variables.</p>
+ *
+ * <p>This works when the application is run under Spring (e.g., when the application jar
+ *  is run from the command line or the app is launched using mvn spring-boot:run). </p>
  *
  * <p>To use the Props class, just inject it into your class, perhaps using a setter:</p>
  * <pre>
@@ -24,10 +27,10 @@ import org.springframework.stereotype.*;
  * <p>Your IDE will now autocomplete uses of 'props' (or whatever you name it) with
  * the properties Props knows about.</p>
  * <p>Note that the properties can be supplied with dots or underscores, but will be
- * accessed via the java names (e.g., property "ctk.pattern.testclass"
- * is injected into the variable named "ctk_pattern_testclass" - there's no
- * mapping-magic here, this is a manual editing step you'll need to observe
- * if you add new properties to this mechanism.</p>
+ * accessed via the java names (e.g., property "ctk.pattern.testclass" or property
+ * "ctk_pattern_testclass" would both be injected into the variable named "ctk_pattern_testclass".
+ * Spring handles the step of understanding dots and underscores in the environment and properies files,
+ * but you have to decide what the properties name is here in this class.</p>
  * <p>This class collects the "ctk.*" config values supplied via Spring's
  * normal configuration precedence order:
  * <ul>

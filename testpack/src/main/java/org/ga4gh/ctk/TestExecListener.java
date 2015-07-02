@@ -13,7 +13,9 @@ import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Route JUnit test events into the TESTLOG</p>
- * Created by Wayne Stidolph on 6/23/2015.
+ * <p>Normal use is to be attached to a JunitCore as a listener, or to
+ * be instantiated as a junit taks "formatter" inside an ant buildfile.</p>
+ * <p>Created by Wayne Stidolph on 6/23/2015.</p>
  */
 @Component
 public class TestExecListener extends RunListener implements JUnitResultFormatter  {

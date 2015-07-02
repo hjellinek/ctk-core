@@ -2,13 +2,17 @@
 
 # tl;dr
 
-- in `ctk-core`execute `mvn clean install` then
-- in `cts-java` run `mvn failsafe:integration-test`
+When testing under Maven, you're using maven's surefire plugin as the test runner, so the main CTK Application isn't involved, and application features such as logging and stdout capture are not available.
 
-Modify the behavior using:
+- in `ctk-core`(or whatever you named your root directory) execute `mvn clean install` then
+- in `cts-java` run `mvn failsafe:integration-test`  ... optionally with properties, such as `mvn -Dctk.tgt.urlRoot=http://192.168.2.214:8000/v0.5.1/ failsafe:integration-test
+` then (optionally)
+- in `ctk-core` (the root directory) run `mvn site` to generate integrated reports/source/doc in `ctk-core/target/site`
+
+Modify the behavior under maven using:
 - properties set in the `cts-java` maven `pom.xml`, or
-- on the command line using `mvn -D<property=<value`, or
-- `application.properties`  to alter which tests are run by default.
+- on the command line using `mvn -D<property>=<value>`, or
+- `application.properties` to alter which tests are run by default,
 - `defaulttransport.properties` to alter server endpoints
 
 **Most important property** to check is: `ctk.tgt.urlRoot=http://localhost:8000/v0.5.1`

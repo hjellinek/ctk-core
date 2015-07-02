@@ -13,8 +13,11 @@ import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Find test classes based on name pattern-match</p>
+ * <p>This class is being dropped in favor of the antfile-based approach and
+ * letting ant do the matching</p>
  * <p>Created by Wayne Stidolph on 6/15/2015.</p>
  */
+@Deprecated
 @Component
 public class TestFinder {
     private static org.slf4j.Logger log = getLogger(TestFinder.class);

@@ -5,7 +5,7 @@ import static org.slf4j.LoggerFactory.*;
 /**
  * <p>Utility interface to bring in the loggers.</p>
  * <p>If you "implements CtkLogs" then your class gets the
- * defaut 'log' and 'test' log to work with, saving you
+ * default 'log' and 'test' log to work with, saving you
  * a bit of typeing and increasing likelihood of using
  * consistent logger names. Recommended for integration
  * tests, but migt be a little slow for super lightweight
