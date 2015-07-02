@@ -38,7 +38,9 @@
         </Logger>
         <Root level="warn">
             <AppenderRef ref="STDOUT" level="DEBUG"/>
+            <!--
             <AppenderRef ref="LF5_SOCKET" level="DEBUG"/>
+            -->
         </Root>
     </Loggers>
 
