@@ -8,7 +8,7 @@ Get the `ga4gh-ctk-cli.zip` distribution ZIP from github (the [repository releas
 
 `java -Dctk.tgt.urlRoot=... -jar ctk-testpack-0.5.1-SNAPSHOT.jar`
 
-(Tip - set an environment variable "`ctk.tgt.urlRoot`" to avoid having to re-enter that property all the time on the command line)
+(Tip - set an environment variable "`ctk_tgt_urlRoot`" to avoid having to re-enter that property all the time on the command line)
 
 If you want to see a failure example, add another property:
 
@@ -18,9 +18,10 @@ There will be some console output, and you can check in `target/report` for deta
 
 ## Details
 
-### Hand-assemble the environment
+### Installation Details
 
-The setup described here is what you get if you just unzip the distribution, but if you're hand-assembling the environment.
+The setup described here is what you get if you just unzip the distribution, but if you're hand-assembling the environment
+here's what you do'.
 
 The first generation CTK packages the CTS tests in a jar file which is separate from the main CTK framework jar.  These two jars are named:
 
@@ -56,12 +57,24 @@ So you end up with:
       | - target/
 
 ```
+
+## Alternate ways to run
+
+There are three major ways to run the CTK - two from the command line, or from inside your maven setup.
+(If you're running from an IDE, you'lll probably want to drive the CTK through Maven, as discussed in other documents.)
+
+The two command line techniques are to:
+- directly run the executable java jar (as will be mostly discussed here)
+- use a wrapper script (which will directly drive the java jar; we supply a starting point for a bash script, in `ctk`)
+
 ## Run and Results
 
-The simplest way to run is to simply execute all tests from the launch dir, passing in the address of your target server; you can do this using the `ctk` script (start with `ctk -h` for usage), or by invoking `java`:
+The simplest way to run is to simply execute all tests from the launch dir, passing in the address of your
+target server; if you're on bash,  you can do this using the `ctk` script (start with `ctk -h` for usage),
+or in any case you can just invoke `java`:
 
 - `ctk ...`
-- `java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=http://myserver:8000/v0.5.1`
+- `java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-testpack-0.5.1-SNAPSHOT.jar `
  
 Advanced tip: if you want to attach a debugger to the command-line CTK, use:
 
@@ -69,18 +82,33 @@ Advanced tip: if you want to attach a debugger to the command-line CTK, use:
          -jar ctk-testpack-0.5.1-SNAPSHOT.jar
 
 
-When the tests are done, the reports will be in the `target/` dir. There are normal ant-junit reports in txt and HTML, and HTML versions in `target/report/html`
+When the tests are done, the reports will be in the `target/` dir.
+There are normal ant-junit reports in txt and HTML, and HTML versions in `target/report/html`
 
-You might want Desktop notifications about the results of these tests; check into the [ShoulderTap](https://github.com/ryandoyle/shouldertap) project
+## Altering the run
 
-## Altering the run 
-**NOTE**: 30 June 2015 TestSuites and using matchStr to select non-default tests is not tested, probably not working
+The CTK primary control is via properties such as the ones you've been setting (`ctk.tgt.urlRoot` etc).
+You can see and set these in the `application.properties` file. Properties can also be set in your environment.
 
-The CTK primary control is via properties such as the ones you've been setting (`ctk.tgt.urlRoot` etc). You can see and set these in the `application.properties` file. Properties can also be set in your environment.
+NOTE: in a 'bash' environment, you need to replace the '.' in variable names with underscore '_' when you set the
+variables in the environment; so, do something like:
 
-Properties passed in directly to the CTK using command line "--<name>=<val>". These override your property files and environment variables.  You can do this for almost any property; the exception is items which are controlled during static initialization, like logging. So, for logging control you will need to edit a file the CTK will load early just for this purpose, "`lib/log4j2.xml`" (We'll discuss that a bit more, in the `Tuning the output` section below.)
+`export ctk_tgt_urlRoot='http://localhost:8000/v0.5.1/'`
 
-If you want to alter the test selection strings, you can do that on the command line (or using environment variables, etc):
+Generally, properties can be:
+- set in the environment, or
+- set in the properties files, or can be
+- passed in directly to the CTK using command line "--<name>=<val>".
+
+Command line overrides properties files, which override environment vars.
+
+You can do this for almost any property; the exception is items which are controlled during static initialization,
+such as logging. So, for logging control you will need to edit a file the CTK will load early just for this purpose,
+"`lib/log4j2.xml`" (We'll discuss that a bit more, in the `Tuning the output` section below.)
+
+If you want to alter which tests get run, you can do that on the command line
+(or using environment variables, etc) using the `ctk.matchStr` variable, which is a regex that is matched against
+class names:
 
 ```
 
@@ -90,9 +118,11 @@ If you want to alter the test selection strings, you can do that on the command 
     ...
 ```
 
-Right now, the set of tests is small and runs quickly; but, as the test suite gets larger, or the tests get slower, you may want to control which tests are run. Tests are selected primarily based on name-matching against the test class, and you can supply a property to be the match regex. To make this work, the CTK/CTS  has a naming convention for tests:
+To make this work, the CTK/CTS  has a naming convention for tests:
 
 **Test classes end in "IT"**
+
+So the default for `ctk.matchStr` is ".*IT.class" - that is, any class ending in "IT"
 
 For example, the CTS test suite package includes the java package
 
@@ -107,15 +137,17 @@ and in that package we find:
     ReadsTestSuite.java
 ```
 
-The first three of these classes end in IT, so they're test classes. A test class can hold multiple "test methods" so there can be several tests executed when, for example, the `ReadGroupSetsSearchIT` test is run. And, each "test method" may get executed multiple times with different parameters, depending on what the test writer set up.
+The first three of these classes end in IT, so they're test classes.
+
+A test class can hold multiple "test methods" so there can be several tests executed when, for example, the `ReadGroupSetsSearchIT` test is run.
+And, each "test method" may get executed multiple times with different parameters, depending on what the
+test writer set up. The CTK does not (presently) have a mechanism to select a subset of test methods,
+selection is at the Class level.
 
 The other two classes are for a near-future capability that isn't quite ready for command-line use yet, but we'll describe it nonetheless:
 - ReadsTests.java is a "marker" we use when writing a test to mark the test method as "one of the Reads tests" ... then,
 - ReadsTestSuite is a TestSuite that groups all of those, so we can run the ReadsTestSuite to get a pre-defined set of tests to execute.
 
-Since these aren't ready as of **30 June**, we'll focus on matching on the test name.
-
->**30 June 2015** The `matchStr` capability isn't working, during a refactoring. Repair expected soon!
 
 To run a selected test, we just match its name as a regex to the ctk.matchstr property:
 
@@ -125,7 +157,10 @@ To run a selected test, we just match its name as a regex to the ctk.matchstr pr
 
  `ctk -m ".*ReadMethods.*"`
 
-(`ctk.matchstr` allows a comma-separated string of regex'es but between the regex-ness and the command-line escaping it's usually better to set anything complicated in the lib/application.properties file).
+
+Actually, `ctk.matchstr` allows a comma-separated string of regex'es so you could select a couple tests,
+but between the regex-ness and the command-line escaping it's usually better to set anything complicated
+in the `lib/application.properties file`.
 
 
 ## Tuning the output

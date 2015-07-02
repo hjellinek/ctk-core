@@ -47,51 +47,6 @@ CMD_DIR="$(cd "$(dirname "$CMD")" && pwd -P)"
 [ "$ctk_matchstr" ] || ctg_matchstr=".*IT.*"
 [ "$TGTDIR" ] || TGTDIR="target"
 
-###### endpoints, reference material, unlikely to need changing soon #####
-
-# map message to resource path, per the IDL comments
-# these are also set as defaults internally to the CKT ('transport' module)
-ctk.tgt.searchReads=reads/search
-ctk.tgt.searchReadGroupSets=readgroupsets/search
-ctk.tgt.searchReferencesets=referencesets/search
-ctk.tgt.searchVariantSets=variantsets/search
-ctk.tgt.searchVariants=variants/search
-ctk.tgt.searchCallsets=callsets/search
-
-# These are for future use, not currently implemented
-# so we record them, but set them blank to clear them
-# out of the defaults in URLMAPPING.java
-
-# ctk.tgt.getReadGroupSet=readgroupsets/{id}
-ctk.tgt.getReadGroupSet=
-# ctk.tgt.getReferences=references/{id}
-ctk.tgt.getReferences=
-# ctk.tgt.getReferencesBases=references/{id}/bases
-ctk.tgt.getReferencesBases=
-# ctk.tgt.searchReferences=references/search
-ctk.tgt.searchReferences=
-# ctk.tgt.getReferencesets=referencesets/{id}
-ctk.tgt.getReferencesets=
-# ctk.tgt.getReadGroup=readgroups/{id}
-ctk.tgt.getReadGroup=
-# ctk.tgt.searchDatasets=datasets/search
-ctk.tgt.searchDatasets=
-# ctk.tgt.getDataset=datasets/{id}
-ctk.tgt.getDataset=
-# ctk.tgt.getVariantSet=variantsets/{id}
-ctk.tgt.getVariantSet=
-# ctk.tgt.getVariant=variants/{id}
-ctk.tgt.getVariant=
-# ctk.tgt.searchAlleleCalls=allelecalls/search
-ctk.tgt.searchAlleleCalls=
-# ctk.tgt.searchAlleles=alleles/search
-ctk.tgt.searchAlleles=
-# ctk.tgt.getAllele=alleles/{id}
-ctk.tgt.getAllele=
-# ctk.tgt.getCallSet=callsets/{id}
-ctk.tgt.getCallSet=
-# ctk.tgt.searchCalls=calls/search
-ctk.tgt.searchCalls=
 
 # Basic helpers
 out() { echo "$(date +%Y%m%dT%H%M%SZ): $*"; }
@@ -122,7 +77,7 @@ NARGS=-1; while [ "$#" -ne "$NARGS" ]; do NARGS=$#; case $1 in
 	# PAIRS
 	-m|--ctk_matchstr)     # Set the matchstring to a value (DEFAULT: $ctk_matchstr)
 		shift && ctk_matchstr="$1" && shift && vrb "#-INFO: ctk_matchstr=$ctk_matchstr"; ;;
-	-u|--ctk_tgt_urlRoot)     # Set the urlRoot to a value (DEFAULT: $ctk_tgt_urlRoot)
+	-u|--ctk_tgt_urlRoot)  # Set the urlRoot to a value (DEFAULT: $ctk_tgt_urlRoot)
 		shift && ctk_tgt_urlRoot="$1" && shift && vrb "#-INFO: ctk_tgt_urlRoot=$ctk_tgt_urlRoot"; ;;
 	*)
 		break;
@@ -133,12 +88,10 @@ esac; done
 ###############################################################################
 
 # Validate some things
-[ $# -gt 0 -a -z "$ctk.urlRoot" ]  &&  ctk.tgt.urlRoot="$1"  &&  shift
-[ "$ctk_matchstr" ]  ||  die "You must provide a test-selecting match string (ctk_matchstr)!"
-[ "$ctk_tgt_urlRoot" ]  ||  die "You must provide a target server (ctk_tgt_urlRoot)!"
+[ $# -gt 0 -a -z "$ctk.urlRoot" ]  &&  ctk_tgt_urlRoot="$1"  &&  shift
+# [ "$ctk_matchstr" ]  ||  die "You must provide a test-selecting match string (ctk_matchstr)!"
+# [ "$ctk_tgt_urlRoot" ]  ||  die "You must provide a target server (ctk_tgt_urlRoot)!"
 [ $# -eq 0 ]  ||  die "ERROR: Unexpected commands!"
-
-
 
 # if target/ exists, amend its name
 if [ -d "$TGTDIR" ]; then
@@ -156,5 +109,5 @@ mkdir ${TGTDIR}
 
 # run the CTK
 # other properties are set in application.properties, log4j2.xml
-# should use a JAVACMD var to find/use specific JDK?
+# Probably should use full-blown JAVACMD var to find/use specific JDK, props etc
 java -Dctk.matchstr=$ctk_matchstr -Dctk.tgt.urlRoot=$ctk_tgt_urlRoot -jar ${CTKJAR}
