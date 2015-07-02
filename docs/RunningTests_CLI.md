@@ -107,7 +107,7 @@ such as logging. So, for logging control you will need to edit a file the CTK wi
 "`lib/log4j2.xml`" (We'll discuss that a bit more, in the `Tuning the output` section below.)
 
 If you want to alter which tests get run, you can do that on the command line
-(or using environment variables, etc) using the `ctk.matchStr` variable, which is a regex that is matched against
+(or using environment variables, etc) using the `ctk.matchstr` variable, which is a regex that is matched against
 class names:
 
 ```
@@ -122,7 +122,7 @@ To make this work, the CTK/CTS  has a naming convention for tests:
 
 **Test classes end in "IT"**
 
-So the default for `ctk.matchStr` is ".*IT.class" - that is, any class ending in "IT"
+So the default for `ctk.matchstr` is ".*IT.class" - that is, any class ending in "IT"
 
 For example, the CTS test suite package includes the java package
 
