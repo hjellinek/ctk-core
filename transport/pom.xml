@@ -163,6 +163,8 @@
                 <version>${assertj.generator.version}</version>
                 <executions>
                     <execution>
+                        <!-- empty phase to prevent this from running automatically -->
+                        <phase/>
                         <goals>
                            <goal>generate-assertions</goal>
                         </goals>
