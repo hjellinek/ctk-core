@@ -13,4 +13,4 @@
  *
  * Created by Wayne Stidolph on 6/7/2015.
  */
-package org.ga4gh.ctk.systests;
+package org.ga4gh.cts;
