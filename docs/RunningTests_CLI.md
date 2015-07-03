@@ -4,15 +4,15 @@ In this mode you are simply executing the CTS tests - not writing tests. (Writin
 
 ## Quickstart
 
-Get the `ga4gh-ctk-cli.zip` distribution ZIP from github (the [repository releases page](https://github.com/wstidolph/ctk-core/releases)) and just unzip in the directory you want to run from. The unzip will place a jar file(ctk-testpack-*)  in this directory, and create `lib/` and `target/` directories; the tests jar and a couple control files will already be in the `lib/`. You run the test with:
+Get the `ga4gh-ctk-cli.zip` distribution ZIP from github (the [repository releases page](https://github.com/wstidolph/ctk-core/releases)) and just unzip in the directory you want to run from. The unzip will place a jar file(ctk-cli-*)  in this directory, and create `lib/` and `target/` directories; the tests jar and a couple control files will already be in the `lib/`. You run the test with:
 
-`java -Dctk.tgt.urlRoot=... -jar ctk-testpack-0.5.1-SNAPSHOT.jar`
+`java -Dctk.tgt.urlRoot=... -jar ctk-cli-0.5.1-SNAPSHOT.jar`
 
 (Tip - set an environment variable "`ctk_tgt_urlRoot`" to avoid having to re-enter that property all the time on the command line)
 
 If you want to see a failure example, add another property:
 
-`java -Dcts.demofail=true -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=...`
+`java -Dcts.demofail=true -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=...`
 
 There will be some console output, and you can check in `target/report` for details; if you have a browser, check out `target/report/html/index.html`
 
@@ -25,7 +25,7 @@ here's what you do'.
 
 The first generation CTK packages the CTS tests in a jar file which is separate from the main CTK framework jar.  These two jars are named:
 
-- `ctk-testpack-0.5.1-SNAPSHOT.jar`
+- `ctk-cli-0.5.1-SNAPSHOT.jar`
 - `cts-java-0.5.1-SNAPSHOT-tests.jar` 
 
 So, choose or create a directory to run the test from, and put the two CTK jars there to start.
@@ -36,18 +36,18 @@ Create a directory `target` for the test reports to go into. The `ctk` script wi
 
 Now let's make sure you have easy access to the controlling properties files:
 
-- `jar xf ctk-testpack-0.5.1-SNAPSHOT.jar application.properties`
-- `jar xf ctk-testpack-0.5.1-SNAPSHOT.jar log4j2.xml`
-- `jar xf ctk-testpack-0.5.1-SNAPSHOT.jar antRunTests.xml`
+- `jar xf ctk-cli-0.5.1-SNAPSHOT.jar application.properties`
+- `jar xf ctk-cli-0.5.1-SNAPSHOT.jar log4j2.xml`
+- `jar xf ctk-cli-0.5.1-SNAPSHOT.jar antRunTests.xml`
 - `mv *.xml lib/`
-- `jar xf ctk-testpack-0.5.1-SNAPSHOT.jar ctk` (if you're at a bash prompt)
+- `jar xf ctk-cli-0.5.1-SNAPSHOT.jar ctk` (if you're at a bash prompt)
 - `chmod +c ctk`  (if you're at a bash prompt)
 
 So you end up with:
 
 ```
     <launch dir>/
-      | - ctk-testpack-0.5.1-SNAPSHOT.jar
+      | - ctk-cli-0.5.1-SNAPSHOT.jar
       | - application.properties
       | - ctk
       | - lib/
@@ -74,12 +74,12 @@ target server; if you're on bash,  you can do this using the `ctk` script (start
 or in any case you can just invoke `java`:
 
 - `ctk ...`
-- `java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-testpack-0.5.1-SNAPSHOT.jar `
+- `java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-cli-0.5.1-SNAPSHOT.jar `
  
 Advanced tip: if you want to attach a debugger to the command-line CTK, use:
 
     java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
-         -jar ctk-testpack-0.5.1-SNAPSHOT.jar
+         -jar ctk-cli-0.5.1-SNAPSHOT.jar
 
 
 When the tests are done, the reports will be in the `target/` dir.
@@ -112,7 +112,7 @@ class names:
 
 ```
 
-    ~/temp>java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethodsEndpointAliveIT.* --ctk.tgt.urlRoot=http://192.168.2.115:8000/v0.5.1/
+    ~/temp>java -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethodsEndpointAliveIT.* --ctk.tgt.urlRoot=http://192.168.2.115:8000/v0.5.1/
     [TESTLOG] 4 failed, 6 passed, 0 skipped, 1068 ms
     [TESTLOG] FAIL: [0] TWO_GOOD, NOT_IMPLEMENTED (multipleReadGroupsNotSupported)(org.ga4gh.cts.api.reads.ReadMethodsEndpointAliveIT):
     ...
@@ -151,7 +151,7 @@ The other two classes are for a near-future capability that isn't quite ready fo
 
 To run a selected test, we just match its name as a regex to the ctk.matchstr property:
 
-` java -jar ctk-testpack-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethods.*`
+` java -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethods.*`
 
  or
 
@@ -171,7 +171,7 @@ The important thing to know is that there is a specific logger called "TESTLOG" 
 
 If any tests fail, you'll get additional failure-specific logging at a WARN level. To demostrate, we'll use the "`propertyCanCauseTestFail`" test case. This test just passes or fails based on a property, so let's trigger it ...
 
-`java -Dcts.demofail=true -jar ctk-testpack-v0.5.1-SNAPSHOT.jar`
+`java -Dcts.demofail=true -jar ctk-cli-v0.5.1-SNAPSHOT.jar`
 
 ```
 

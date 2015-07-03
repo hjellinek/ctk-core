@@ -12,7 +12,7 @@
         <!-- empty out the test-classes, just in case -->
         <unjar src="${ctk.testjar}"
                dest="${basedir}/../lib/test-classes"/>
-        <unjar src="${basedir}/../ctk-testpack-0.5.1-SNAPSHOT.jar"
+        <unjar src="${basedir}/../ctk-cli-0.5.1-SNAPSHOT.jar"
                dest="${basedir}/../lib/test-classes">
             <patternset>
                 <include name="lib/*.jar"/>

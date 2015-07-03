@@ -23,11 +23,12 @@
     <description>CTK Aggregation</description>
     <modules>
         <module>cts-java</module>
-        <module>testpack</module>
+        <module>ctk-cli</module>
         <module>transport</module>
         <module>ctk-schemas</module>
         <module>dist</module>
         <module>techniques</module>
+        <module>ctk-domain</module>
     </modules>
 
     <groupId>org.ga4gh</groupId>

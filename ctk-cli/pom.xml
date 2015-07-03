@@ -19,10 +19,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>CTK driver (testpack)</name>
-    <description>tests to verify a GA4GH data server v0.5.1 implementation</description>
+    <name>CTK CLI driver</name>
+    <description>CLI app to drive tests of GA4GH data server v0.5.1</description>
 
-    <artifactId>ctk-testpack</artifactId>
+    <artifactId>ctk-cli</artifactId>
     <version>0.5.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 

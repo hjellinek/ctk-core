@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>org.ga4gh</groupId>
-            <artifactId>ctk-testpack</artifactId>
+            <artifactId>ctk-cli</artifactId>
             <version>0.5.1-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -20,7 +20,7 @@ http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 ">
         <dependencySet>
             <outputDirectory>/</outputDirectory>
             <includes>
-                <include>org.ga4gh:ctk-testpack:jar
+                <include>org.ga4gh:ctk-cli:jar
                 </include>
             </includes>
             <!-- user can can read and execute this, other can read (copy) -->
@@ -33,20 +33,20 @@ http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 ">
             <source>../docs/README-IntroAtCommandLine.txt</source>
         </file>
         <file>
-            <source>../testpack/src/main/resources/ctk</source>
+            <source>../ctk-cli/src/main/resources/ctk</source>
             <!-- user can can read, write, and execute this; other can read (copy) -->
             <fileMode>0744</fileMode>
         </file>
         <file>
-            <source>../testpack/target/classes/application.properties</source>
+            <source>../ctk-cli/target/classes/application.properties</source>
             <outputDirectory>/</outputDirectory>
         </file>
         <file>
-            <source>../testpack/target/classes/log4j2.xml</source>
+            <source>../ctk-cli/target/classes/log4j2.xml</source>
             <outputDirectory>lib</outputDirectory>
         </file>
         <file>
-            <source>../testpack/target/classes/antRunTests.xml</source>
+            <source>../ctk-cli/target/classes/antRunTests.xml</source>
             <outputDirectory>lib</outputDirectory>
         </file>
     </files>

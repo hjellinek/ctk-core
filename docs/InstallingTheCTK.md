@@ -8,7 +8,7 @@
     - `git submodule update` (to clone the schema from git)
     - `cd schemas`
     - `git checkout v0.5.2` (to ensure you have same schema)
-- `mvn clean install` (this will run the `clean` and `install` maven goals from the aggregator POM in `ctk-core`, `schema`, `transport` and `testpack` modules for you; this puts the resulting artifacts into your local Maven repository. When those goals run they will pick up dependency and plugin information from the `parent` module's `pom.xml` file.)
+- `mvn clean install` (this will run the `clean` and `install` maven goals from the aggregator POM in `ctk-core`, `schema`, `transport` and `ctk-cli` modules for you; this puts the resulting artifacts into your local Maven repository. When those goals run they will pick up dependency and plugin information from the `parent` module's `pom.xml` file.)
 
 In the above we use git submodule init and update rather than recursive clone,
 for clarity and to make it obvious where to check in your own schemas module

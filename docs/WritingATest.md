@@ -70,9 +70,9 @@ as you see in ReadsProtocolClient or VariantsProtocolClient)
 
 ### Creating Infrastructure for Foo
 
-Tests (and infrastructure) go in the **`test/`** subtree of the `testpack` module. Here is the suggested (but not mandatory) pattern:
+Tests (and infrastructure) go in the **`test/`** subtree of the `cts-java` module. Here is the suggested (but not mandatory) pattern:
 
-- Add a java package `org.ga4gh.ctk.systests.api.Foo` in the **test** tree of the `testpack` module
+- Add a java package `org.ga4gh.ctk.systests.api.Foo` in the **test** tree of the `cts-java` module
 - Add a test class `FooMethodsEndpointAliveIT.java` in that package (see examples) to verify the Foo endpoint is reachable and responsive
-- optionally create marker interface for test control, in the **test** tree of `testpack` at `org.ga4gh.ctk.control.API.FooTests.java`
+- optionally create marker interface for test control, in the **test** tree of `ctk-cli` at `org.ga4gh.ctk.control.API.FooTests.java`
 - optionally create `org.ga4gh.ctk.systests.FooTestSuite.java`

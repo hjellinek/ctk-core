@@ -1,6 +1,6 @@
 # Test Architecture and Conventions
 
-The CTS tests are in the `src/test/` tree under the cts-java module. There is nothing in the `src\main` subtree, since the infrastructure to support and execute the tests is in the `testpack` module. The CTS tests are controlled by command line invocation of the  `testpack` jar, or by maven execution of `cts-java` goals, or directly as JUnit tests from your IDE.
+The CTS tests are in the `src/test/` tree under the cts-java module. There is nothing in the `src\main` subtree, since the infrastructure to support and execute the tests is in the `ctk-cli` module. The CTS tests are controlled by command line invocation of the  `ctk-cli` jar, or by maven execution of `cts-java` goals, or directly as JUnit tests from your IDE.
 
 Tests are JUnit tests - there are test classes, and in each class there are one or more test methods. The test methods are executed in an unspecified order, so the classes can (optionally) annotate methods to run `@Before` and `@After` each method to set up or tear down any test fixtures. Each test class also has a `@BeforeClass` and `@AfterClass` annotation available to distinguish a method to run once, before any tests or after all tests complete.
 
