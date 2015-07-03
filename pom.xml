@@ -54,6 +54,14 @@
         </contributor>
     </contributors>
 
+    <properties>
+        <!-- be lenient with javadoc in JDK8 -->
+        <!-- this is also set in ctk-parent, but I don't
+        whether it's inherited from there for sure, so we'll set
+        it here for the overall site generation -->
+        <additionalparam>-Xdoclint:none</additionalparam>
+    </properties>
+
     <reporting>
         <plugins>
             <plugin>
@@ -119,7 +127,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <!-- these are the left-nav reports -->
+                <!-- these are the left-nav report links on the site pages -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>2.6</version>

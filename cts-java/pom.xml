@@ -69,6 +69,16 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- seems like we need the junit3 ant-junit, as well as the junit4! -->
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-junit4</artifactId>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -84,10 +94,27 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin> <!-- spring boot brings this in, too, but I need to exclude the systests -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <useFile>false</useFile>
+                    <includes>
+                        <include>**/*Spec.java</include>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <!-- surefire for unit tests, so skip the integration tests -->
+                        <!-- they will be run by the 'failsafe' plugin -->
+                        <exclude>**/*IT.*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.18.1</version>
-
+                <!-- accept default config naming patterns, *IT || IT* -->
                 <executions>
                     <execution>
                         <goals>
@@ -104,7 +131,7 @@
                                     </value>
                                 </property>
                                 <systemPropertyVariables>
-                                    <ctk.tgt.urlRoot>http://192.168.2.115:8000/v0.5.1/</ctk.tgt.urlRoot>
+                                    <ctk.tgt.urlRoot>http://localhost:8000/v0.5.1/</ctk.tgt.urlRoot>
                                     <tap.junit.results>target/tap4j/</tap.junit.results>
                                 </systemPropertyVariables>
                             </properties>
@@ -118,5 +145,27 @@
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.18.1</version>
+                <reportSets>
+                    <reportSet>
+                        <!-- report on the 'failsafe' integration tests -->
+                        <!-- assembles the reports, doesn't run the tests! -->
+                        <id>integration-tests</id>
+                        <reports>
+                            <report>
+                                failsafe-report-only
+                            </report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

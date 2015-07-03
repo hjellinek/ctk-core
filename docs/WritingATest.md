@@ -13,11 +13,14 @@ Scenarios:
 - adding a test (method) to an existing TestClass
 - adding a new TestClass to an existing package or protocol
 - adding a new protocol
+- adding (and using) a domain object custom assertion
+- adding (and using) a new domain Condition
 
 ## Adding a simple test method to existing test class
-- name anything, be descriptive e.g., "allSequencesShouldMatchPattern"
-- annotate with @Test
-- simplest method signature is `public void <testname>() throws Exception {...}`
+- name can be anything, so describe the end goal in domain terms e.g., "allSequencesShouldMatchPattern"
+- annotate the method with @Test
+- simplest method signature is `@Test public void <testname>() throws Exception {...}`
+- use javadoc to explain the test
 - if your Runner is JUnitParams, you'll need to annotate with one of the forms of @Parameter, and add the parameters to the test method signature
 - use `log` to report behavior of your test class, use `testlog` to report test results if you want (other than simple pass/fail, those are automatic based on whether you fail any assertions)
 - Try to structure tests as setup, action, assertion

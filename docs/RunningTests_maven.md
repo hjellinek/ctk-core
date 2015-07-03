@@ -2,18 +2,33 @@
 
 # tl;dr
 
-When testing under Maven, you're using maven's surefire plugin as the test runner, so the main CTK Application isn't involved, and application features such as logging and stdout capture are not available.
-
-- in `ctk-core`(or whatever you named your root directory) execute `mvn clean install` then
-- in `cts-java` run `mvn failsafe:integration-test`  ... optionally with properties, such as `mvn -Dctk.tgt.urlRoot=http://192.168.2.214:8000/v0.5.1/ failsafe:integration-test
-` then (optionally)
-- in `ctk-core` (the root directory) run `mvn site` to generate integrated reports/source/doc in `ctk-core/target/site`
+- in `ctk-core`(or whatever you named your root directory) execute `mvn clean install`
+- in `cts-java` run `mvn failsafe:integration-test`
+	- if you want, you can run this with properties, such as `mvn -Dctk.tgt.urlRoot=http://192.168.2.214:8000/v0.5.1/ failsafe:integration-test
+`
+- (optional) in `ctk-core` (the root directory) run `mvn site` to generate integrated reports/source/doc in `ctk-core/target/site`
 
 Modify the behavior under maven using:
 - properties set in the `cts-java` maven `pom.xml`, or
 - on the command line using `mvn -D<property>=<value>`, or
 - `application.properties` to alter which tests are run by default,
 - `defaulttransport.properties` to alter server endpoints
+
+# Introduction
+
+When testing under Maven, there are two test-running plugins to be aware of:
+- [`surefire`](https://maven.apache.org/surefire/maven-surefire-plugin/) is the runner that executes normal "unit" tests whenever the "test" phase is reached; these tests are for checking the CTK itself, they should not need any external connection.
+- [`failsafe`](https://maven.apache.org/surefire/maven-failsafe-plugin/) is the runner for "integration tests" - it is bound to a different phase, later in the project lifecycle, and these are the actual GA4GH-server tests. These tests are run when you demand it, or when you run a maven late-cycle phase such as "`install`" 
+
+For details on the Maven Lifecycle, refer to [the official introduction](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html).
+
+Both plugins can run the same tests, so we use our CTK naming convention to split out the tests to the two plugins (see the `cts-java/pom.xml` file, in the `<build><plugins><plugin>` for maven-failsafe-plugin
+
+# WORKING HERE, NOTICED POM PROBLEM
+
+surefire plugin as the test runner, so the main CTK Application isn't involved. Still, stdout and the default TESTLOG should be available in your terminal (this may vary if you elect to run maven under an IDE which itself manages I/O routing).
+
+
 
 **Most important property** to check is: `ctk.tgt.urlRoot=http://localhost:8000/v0.5.1`
 
