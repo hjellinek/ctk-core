@@ -21,15 +21,15 @@ import static org.assertj.core.api.Assertions.*;
  * <li>POST reads/search of GASearchReadsRequest yields GASearchReadsResponse</li>
  * <li>POST /readgroupsets/search of GASearchReadGroupSetsRequest yields GASearchReadGroupSetsResponse</li>
  * </ul>
- * <p>
+ *
  * <p>The test invokes a search request with null, default, and error parameters
  * on the endpoint and verifies the response. For tests with more insight into
  * the data returned (complex queries, etc) refer to the ReadsSearchIT tests.</p>
- * <p>
+ *
  * <p>The test shows simply making an assertion about the existence of the return itself
  * (in {@code defaultReadgroupsetsRequestGetsResponse} and shows making an assertion about
  * a field of the return (in {@code defaultReadsRequestGetsNullAlignments})</p>
- * <p>
+ *
  * <p>Created by wstidolph on 5/20/15.</p>
  */
 @Category(ReadsTests.class)

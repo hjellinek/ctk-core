@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.*;
 /**
  * <p>Verify data returned from reads/search queries
  * meet expectations.</p>
- * <p>
+ *
  * <p>Created by Wayne Stidolph on 6/7/2015.</p>
  */
 @Category(ReadsTests.class)

@@ -26,8 +26,15 @@ public class VariantsSearchResponseCheckIT implements CtkLogs {
     // private static org.slf4j.Logger log = getLogger(VariantsSearchResponseCheckIT.class);
 
     private static VariantsProtocolClient client;
+
     /**
      * Method: searchVariants(GASearchVariantsRequest request)
+     * @param vsetIds the vset ids (mapped in by Parameters annotation)
+     * @param refName the ref name (mapped in by Parameters annotation)
+     * @param start the start (mapped in by Parameters annotation)
+     * @param end the end (mapped in by Parameters annotation)
+     * @param expLength the exp length (mapped in by Parameters annotation)
+     * @throws Exception the exception
      */
     @Test
     @Parameters({
