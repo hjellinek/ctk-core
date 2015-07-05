@@ -31,9 +31,16 @@
         <module>dist</module>
     </modules>
 
+    <parent>
+        <artifactId>ctk-parent</artifactId>
+        <groupId>org.ga4gh</groupId>
+        <version>0.5.1-SNAPSHOT</version>
+        <relativePath>../parent</relativePath>
+    </parent>
+
     <groupId>org.ga4gh</groupId>
     <artifactId>ctk</artifactId>
-    <version>0.5.1-SNAPSHOT</version>
+<!--    <version>0.5.1-SNAPSHOT</version>-->
     <packaging>pom</packaging>
 
     <developers>
@@ -62,7 +69,6 @@
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.5</version>
                 <configuration>
-
                     <linkJavadoc>true</linkJavadoc>
                     <javadocDir>apidocs</javadocDir>
                     <testJavadocDir>testapidocs</testJavadocDir>
@@ -119,13 +125,20 @@
                 <!-- these are the left-nav report links on the site pages -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.6</version>
+                <version>${maven.project.info.reports.version}</version>
+                <!-- config for less details becuse of "no file" bug, probably
+https://issues.apache.org/jira/browse/MPIR-251 -->
+                <configuration>
+                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <reports>
                             <report>index</report>
                             <report>summary</report>
                             <report>project-team</report>
+                            <report>issue-tracking</report>
                             <report>license</report>
                         </reports>
                     </reportSet>
