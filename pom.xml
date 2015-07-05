@@ -35,7 +35,7 @@
         <artifactId>ctk-parent</artifactId>
         <groupId>org.ga4gh</groupId>
         <version>0.5.1-SNAPSHOT</version>
-        <relativePath>../parent</relativePath>
+        <relativePath>parent</relativePath>
     </parent>
 
     <groupId>org.ga4gh</groupId>
