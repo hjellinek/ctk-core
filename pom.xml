@@ -20,15 +20,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>CTK Aggregator</name>
-    <description>CTK Aggregation</description>
+    <description>CTK Module Aggregation for site, dist</description>
     <modules>
-        <module>cts-java</module>
-        <module>ctk-cli</module>
-        <module>transport</module>
         <module>ctk-schemas</module>
-        <module>dist</module>
-        <module>techniques</module>
         <module>ctk-domain</module>
+        <module>transport</module>
+        <module>ctk-cli</module>
+        <module>cts-java</module>
+        <module>technique-demo</module>
+        <module>dist</module>
     </modules>
 
     <groupId>org.ga4gh</groupId>
@@ -55,20 +55,18 @@
         </contributor>
     </contributors>
 
-    <properties>
-        <!-- be lenient with javadoc in JDK8 -->
-        <!-- this is also set in ctk-parent, but I don't
-        whether it's inherited from there for sure, so we'll set
-        it here for the overall site generation -->
-        <additionalparam>-Xdoclint:none</additionalparam>
-    </properties>
-
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.5</version>
+                <configuration>
+
+                    <linkJavadoc>true</linkJavadoc>
+                    <javadocDir>apidocs</javadocDir>
+                    <testJavadocDir>testapidocs</testJavadocDir>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <id>aggregate</id>
@@ -85,21 +83,11 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.3</version>
                 <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
                    <aggregate>true</aggregate>
                     <failOnError>false</failOnError>
                 </configuration>
                 <reportSets>
-                    <reportSet>
-                        <id>non-aggregate</id>
-                        <configuration>
-                            <!-- Specific configuration for the non aggregate report -->
-
-                        </configuration>
-                        <reports>
-                            <report>javadoc</report>
-                            <report>test-javadoc</report>
-                        </reports>
-                    </reportSet>
                     <reportSet>
                         <id>aggregate</id>
                         <configuration>

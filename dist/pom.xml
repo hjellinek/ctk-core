@@ -15,6 +15,12 @@
     <artifactId>ctk-dist</artifactId>
     <packaging>pom</packaging>
 
+    <properties>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <additionalparam>-Xdoclint:none</additionalparam>
+    </properties>
+
     <!-- dependencies ensure the dist sorts to last in the Reactor -->
     <dependencies>
         <dependency>

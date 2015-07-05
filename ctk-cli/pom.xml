@@ -186,6 +186,12 @@
             <artifactId>jackson-dataformat-avro</artifactId>
         </dependency>
 
+        <!-- need BCEL during site build -->
+        <dependency>
+            <groupId>org.apache.bcel</groupId>
+            <artifactId>bcel</artifactId>
+        </dependency>
+
         <dependency> <!-- also provides ga4gh schema we run against -->
             <groupId>org.ga4gh</groupId>
             <artifactId>ctk-transport</artifactId>

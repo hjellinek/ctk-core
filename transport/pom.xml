@@ -59,7 +59,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
+<!--        <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
             <version>${avro.version}</version>
@@ -68,7 +68,7 @@
             <groupId>org.apache.avro</groupId>
             <artifactId>avro-ipc</artifactId>
             <version>${avro.version}</version>
-        </dependency>
+        </dependency>-->
 
 
         <dependency>
@@ -128,11 +128,22 @@
             </systemPath>
             -->
         </dependency>
+        <dependency>
+            <groupId>org.ga4gh</groupId>
+            <artifactId>ctk-domain</artifactId>
+            <version>0.5.1-SNAPSHOT</version>
+        </dependency>
 
         <!-- do we want to put slf4j-log4j12.jar on the path? or is OK it's supplied at runtime?-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
+        </dependency>
+
+        <!-- need BCEL during site build -->
+        <dependency>
+            <groupId>org.apache.bcel</groupId>
+            <artifactId>bcel</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -156,7 +167,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-assertions-generator-maven-plugin</artifactId>
@@ -166,18 +176,15 @@
                         <!-- empty phase to prevent this from running automatically -->
                         <phase/>
                         <goals>
-                           <goal>generate-assertions</goal>
+                            <goal>generate-assertions</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
                     <packages>
-                        <param>org.ga4gh</param>
+                        <param>org.ga4gh.ctk.transport</param>
                     </packages>
                     <includes>
-                        <!-- assert about the GA4GH data exchanged -->
-                        <param>org\.ga4gh\.GA*.*</param>
-                        <param>org\.ga4gh\.BEACON*.*</param>
                         <!-- assert about the state of a wire transaction -->
                         <param>org\.ga4gh\.ctk\.transport\.WireTracker.*</param>
                         <param>org\.ga4gh\.ctk\.transport\.RespCode.*</param>
@@ -185,7 +192,6 @@
                     <entryPointClassPackage>org.ga4gh.ctk.asserts</entryPointClassPackage>
 
                     <targetDir>${project.basedir}/src/main/assertj-assertions</targetDir>
-
                 </configuration>
             </plugin>
             <plugin>

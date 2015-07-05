@@ -23,14 +23,22 @@
         </dependency>
         <dependency>
             <groupId>org.ga4gh</groupId>
-            <artifactId>ctk-transport</artifactId>
+            <artifactId>ctk-schemas</artifactId>
+            <version>${ga4gh.schema.local.version}</version>
+        </dependency>
+
+        <!-- asserts, conditins, etc for the schema -->
+        <dependency>
+            <groupId>org.ga4gh</groupId>
+            <artifactId>ctk-domain</artifactId>
             <version>0.5.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.ga4gh</groupId>
-            <artifactId>ctk-schemas</artifactId>
-            <version>${ga4gh.schema.local.version}</version>
+            <artifactId>ctk-transport</artifactId>
+            <version>0.5.1-SNAPSHOT</version>
         </dependency>
+
 
         <!-- bring in the Spring stuff -->
         <dependency>
@@ -79,6 +87,12 @@
             <artifactId>ant-junit4</artifactId>
         </dependency>
 
+        <!-- need BCEL during site build -->
+        <dependency>
+            <groupId>org.apache.bcel</groupId>
+            <artifactId>bcel</artifactId>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -100,7 +114,7 @@
                 <version>2.18.1</version>
                 <configuration>
                     <useFile>false</useFile>
-                    <includes>
+                                        <includes>
                         <include>**/*Spec.java</include>
                         <include>**/*Test.java</include>
                     </includes>
@@ -122,6 +136,7 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
+                            <argLine>-Dctk.tgt.urlRoot=${ctk.tgt.urlRoot}</argLine>
                             <properties>
                                 <property>
                                     <!-- hook in the TAP framework for future reporting integration -->
@@ -131,7 +146,6 @@
                                     </value>
                                 </property>
                                 <systemPropertyVariables>
-                                    <ctk.tgt.urlRoot>http://localhost:8000/v0.5.1/</ctk.tgt.urlRoot>
                                     <tap.junit.results>target/tap4j/</tap.junit.results>
                                 </systemPropertyVariables>
                             </properties>
@@ -147,6 +161,27 @@
     </build>
     <reporting>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc-no-fork</report>
+                            <report>test-javadoc-no-fork</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
             <plugin>
 
                 <groupId>org.apache.maven.plugins</groupId>
