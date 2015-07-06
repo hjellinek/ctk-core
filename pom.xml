@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>CTK Aggregator</name>
-    <description>CTK Module Aggregation for site, dist</description>
+    <description>CTK Aggregation Module to build site and distributions</description>
     <modules>
         <module>ctk-schemas</module>
         <module>ctk-domain</module>
