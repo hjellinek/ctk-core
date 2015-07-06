@@ -5,7 +5,7 @@ An extensible Conformance Test Kit for the GA4GH Server
 
 The CTK/CTS build status is [![Build Status](https://travis-ci.org/wstidolph/ctk-core.svg?branch=master)](https://travis-ci.org/wstidolph/ctk-core)
 
->**This CTK defaults to using a slightly modified version of the GA4GH v0.5.1 Schema in teh `ctk-schemas` module;
+>**This CTK defaults to using a slightly modified version of the GA4GH v0.5.1 Schema in the `ctk-schemas` module;
 this embedded schema is not being updated. You might want to recompile the CTK using Schema you care about, or
 even use standard git submodule techniques for the ctk-schemas module.**
 
