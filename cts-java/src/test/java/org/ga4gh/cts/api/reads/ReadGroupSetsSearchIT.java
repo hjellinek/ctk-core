@@ -15,6 +15,7 @@ import java.util.*;
  * <p>Validates data returned by readgroupsets/search.</p>
  * <p>Created by Wayne Stidolph on 6/7/2015.</p>
  */
+//@Loggable(name="TESTLOG", value=Loggable.INFO)
 @Category(ReadsTests.class)
 @RunWith(JUnitParamsRunner.class)
 public class ReadGroupSetsSearchIT implements CtkLogs {

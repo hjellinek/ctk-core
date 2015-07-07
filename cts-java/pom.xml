@@ -86,6 +86,10 @@
             <groupId>org.apache.ant</groupId>
             <artifactId>ant-junit4</artifactId>
         </dependency>
+        <dependency>
+            <groupId>pl.pragmatists</groupId>
+            <artifactId>JUnitParams</artifactId>
+        </dependency>
 
         <!-- need BCEL during site build -->
         <dependency>
@@ -93,9 +97,47 @@
             <artifactId>bcel</artifactId>
         </dependency>
 
+        <!-- bring in useful @Lggable aspect -->
+        <!-- except it's not working -->
+
+       <!-- <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-aspects</artifactId>
+            <version>0.22</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.6.12</version>
+            <scope>runtime</scope>
+        </dependency>-->
     </dependencies>
+
+    <!-- for the jcabi maven plugin -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>oss.sonatype.org</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <plugins>
+            <!-- weave in the JCABI aspects -->
+            <!-- taking this out, since it doesn't seem to work,
+            but leaving the commented block while I work on it -->
+<!--            <plugin>
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>ajc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

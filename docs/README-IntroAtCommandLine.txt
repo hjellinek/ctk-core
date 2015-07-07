@@ -15,7 +15,11 @@ https://github.com/wstidolph/ctk-core/releases). Unzip in the directory you want
 The unzip will place a jar file(ctk-cli-*)  in this directory, and create `lib/` and `target/` directories;
 the tests jar and a couple control files will already be in the `lib/`. You run the test with:
 
-ava -Dctk.tgt.urlRoot=... -jar ctk-cli-0.5.1-SNAPSHOT.jar
+java -Dctk.tgt.urlRoot=<your server URL base> -jar ctk-cli-0.5.1-SNAPSHOT.jar
+
+so, for example,
+
+java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-cli-o.5.1-SNAPSHOT.jar
 
 (Tip - set a environment variable "ctk_tgt_urlRoot" to avoid having to re-enter that property
 all the time on the command line)

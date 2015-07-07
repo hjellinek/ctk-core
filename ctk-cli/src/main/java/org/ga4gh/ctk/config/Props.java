@@ -35,8 +35,8 @@ import org.springframework.stereotype.*;
  * normal configuration precedence order:
  * <ul>
  * <li>command line arguments (anything starting with double-dash,
- * e.g., --server.url=192.168.2.115:8000 creates or overrides a
- * property 'server.url)</li>
+ * e.g., --foo.url=192.168.2.115:8000 creates or overrides a
+ * property 'foo.url)</li>
  * <li>NDI attributes from java:comp/env</li>
  * <li>JVM System properties (System.getProperties())</li>
  * <li>OS environment variables</li>

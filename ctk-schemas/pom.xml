@@ -12,11 +12,9 @@
 
     <artifactId>ctk-schemas</artifactId>
 
-
     <name>CTK Schemas</name>
-    <description>CTK-embedded GAG Schemas, v0.5.1+fixes</description>
+    <description>CTK-embedded GA4GH Schemas, v0.5.1+fixes (no semantic change, is 'stable' branch)</description>
 
-    <!-- I wish I could assign version in parent to stay coherent across build -->
     <!-- TODO adopt the 'release' plugin to control the version numbering -->
     <version>0.5.1-SNAPSHOT</version>
     <packaging>jar</packaging>
