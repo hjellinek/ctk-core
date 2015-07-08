@@ -78,7 +78,7 @@
         </dependency>
 
         <!-- seems like we need the junit3 ant-junit, as well as the junit4! -->
-        <dependency>
+<!--        <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant-junit</artifactId>
         </dependency>
@@ -86,15 +86,33 @@
             <groupId>org.apache.ant</groupId>
             <artifactId>ant-junit4</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>pl.pragmatists</groupId>
             <artifactId>JUnitParams</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.junit-toolbox</groupId>
+            <artifactId>junit-toolbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.skyscreamer</groupId>
+            <artifactId>jsonassert</artifactId>
         </dependency>
 
         <!-- need BCEL during site build -->
         <dependency>
             <groupId>org.apache.bcel</groupId>
             <artifactId>bcel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>${unirest-java.version}</version>
         </dependency>
 
         <!-- bring in useful @Lggable aspect -->
