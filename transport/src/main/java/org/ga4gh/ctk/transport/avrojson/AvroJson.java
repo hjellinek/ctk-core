@@ -1,5 +1,6 @@
 package org.ga4gh.ctk.transport.avrojson;
 
+import com.google.common.base.*;
 import com.google.common.collect.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.*;
@@ -96,8 +97,10 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     }
 
     /**
-     * Construct an AvroJson for a particular request/response interaction.
-     * The req and resp types parameterize this interaction object.
+     * <p>Construct an AvroJson for a particular request/response interaction.</p>
+     * <p>The req and resp types are used to parameterize this generic interaction object.</p>
+     *
+     *
      *
      * @param req     an instance of the avro *Request method object
      * @param resp    an instance of the avro *Response method object
@@ -108,9 +111,17 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         this.theAvroReq = req;
         this.theResp = resp;
         this.dw = new SpecificDatumWriter<Q>();
-        this.urlRoot = urlRoot;
-        this.path = path;
         this.wireTracker = null;
+
+        // neither urlRoot nor path should have spaces,
+        // the urlRoot should end with exactly one slash
+        String tsRoot = CharMatcher.WHITESPACE.removeFrom(urlRoot);
+        this.urlRoot = CharMatcher.is('/').trimTrailingFrom(tsRoot) + "/";
+
+        // and that the path does not begin or end with a slash
+        String tsPath = CharMatcher.WHITESPACE.removeFrom(path);
+        this.path = CharMatcher.is('/').trimFrom(tsPath);
+        log.debug(toString());
     }
 
     /**
@@ -279,5 +290,11 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
             wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse != null? jsonResponse.getStatus(): 0));
         }
         return jsonResponse;
+    }
+
+    public String toString(){
+        String reqName = theAvroReq == null ? "null" : theAvroReq.getClass().getSimpleName();
+        String respName = theResp == null? "null" : theResp.getClass().getSimpleName();
+        return urlRoot+path + " " + reqName + " " + respName;
     }
 }
