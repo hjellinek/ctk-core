@@ -216,7 +216,7 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.core.version}</version>
-                <scope>test</scope>
+                <scope>compile</scope>
             </dependency>
 
             <!-- tap4j ext will bring in tap4j for us -->
@@ -243,6 +243,12 @@
                 <groupId>org.apache.bcel</groupId>
                 <artifactId>bcel</artifactId>
                 <version>${bcel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
