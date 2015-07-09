@@ -4,35 +4,68 @@ In this mode you are simply executing the CTS tests - not writing tests. (Writin
 
 ## Quickstart
 
-Get the `ga4gh-ctk-cli.zip` distribution ZIP from github (the [repository releases page](https://github.com/wstidolph/ctk-core/releases)) and just unzip in the directory you want to run from. The unzip will place a jar file(ctk-cli-*)  in this directory, and create `lib/` and `target/` directories; the tests jar and a couple control files will already be in the `lib/`. You run the test with:
+Get the `ga4gh-ctk-cli.zip` distribution ZIP from github (the [repository releases page](https://github.com/wstidolph/ctk-core/releases)) and just unzip in the directory you want to run from. The unzip will place a jar file(ctk-cli-*)  in this directory, and create `lib/` and `target/` directories; the tests jar and a couple control files will already be in the `lib/`.
 
-`java -Dctk.tgt.urlRoot=... -jar ctk-cli-0.5.1-SNAPSHOT.jar`
+There are two ways to run the tests from the command line: you can use the 'java' command, or you can
+use the 'ctk' script (which will run the java command for you, and do a little support work to avoid
+overwriting test results when you run the tests multiple times.) 
 
-(Tip - set an environment variable "`ctk_tgt_urlRoot`" to avoid having to re-enter that property all the time on the command line)
+### To use 'java' to run the tests:
 
-If you want to see a failure example, add another property:
+    java -Dctk.tgt.urlRoot=<your server URL base> -jar ctk-cli-0.5.1-SNAPSHOT.jar
 
-`java -Dcts.demofail=true -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=...`
+so, for example,
 
-There will be some console output, and you can check in `target/report` for details; if you have a browser, check out `target/report/html/index.html`
+    java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-cli-0.5.1-SNAPSHOT.jar
+
+Tip - if you're regularly testing against the same server, you can set an environment
+variable "ctk_tgt_urlRoot" to avoid having to re-enter that URL all the time on the
+command line. How you set environment variables varies with your shell, but a common
+example would be to add to your ~/.bashrc a line like"
+
+    export ctk_tgt_urlRoot='http://myserver:8000/v0.5.1/'
+
+We'll stop adding that ctk.tgt.urlRoot property to the example command lines now.
+
+If you want to see a failure example, add another property to your java command:
+
+    java -Dcts.demofail=true -jar ctk-cli-0.5.1-SNAPSHOT.jar
+
+There will be some console output, and you can check in `target/report` for details;
+if you have a browser, check out `target/report/html/index.html`.
+
+If you run the java command again, it will overwrite the results in your `target` directory.
+
+### To use 'ctk' to run the tests:
+
+The `ctk` command has a help function, so you can start with
+
+    ctk -h
+
+and see that adding the ctk.tgt.urlRoot property has a shortcut:
+
+    ctk -u http://myserver:8000/v0.5.1/
+
+Just as when running using the 'java' command, there will be some console output, and you can check in `target/report` for details; if you have a browser, check out `target/report/html/index.html`
+
+One thing the `ctk` script does for you is to look and see if your `target` dir has existing results; if it's non-empty, then the script renames the `target` directory (by adding the datetime to its name) and creates a new `target` dir.
 
 ## Details
 
 ### Installation Details
 
-The setup described here is what you get if you just unzip the distribution, but if you're hand-assembling the environment
-here's what you do'.
+In this section we describe the steps you'd take to get the environment provided by the zipped distribution..
 
 The first generation CTK packages the CTS tests in a jar file which is separate from the main CTK framework jar.  These two jars are named:
 
 - `ctk-cli-0.5.1-SNAPSHOT.jar`
 - `cts-java-0.5.1-SNAPSHOT-tests.jar` 
 
-So, choose or create a directory to run the test from, and put the two CTK jars there to start.
+So, choose or create a directory to run the test from, and put the two jars there to start.
 
 The CTK test runners assume the test jar(s) are in a `lib` subdirectory. Create a subdirectory named `lib` and move the CTS ("-tests") jar there. (If you have multiple test jars for some reason, just put them all in that directory.)
 
-Create a directory `target` for the test reports to go into. The `ctk` script will copy the `target` directory before each new run, so you don't accidentally overwrite your results.
+Create a directory `target` for the test reports to go into.
 
 Now let's make sure you have easy access to the controlling properties files:
 
