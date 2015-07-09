@@ -59,7 +59,7 @@ public class LandingPageIT implements CtkLogs {
     public void propertyCanCauseTestFail() throws Exception {
 
         if(Boolean.getBoolean("cts.demofail")) {
-            CtkLogs.testlog.warn("Dummying failure because cts.demofail is true");
+            testlog.warn("Dummying failure because cts.demofail is true");
             assertThat(false).isTrue();
         }
         else

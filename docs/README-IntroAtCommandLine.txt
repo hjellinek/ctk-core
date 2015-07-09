@@ -206,7 +206,24 @@ the CTK default is to route all the loggers at the console, so you may see some 
 
 If any tests fail, you'll get additional failure-specific logging at a WARN level. To demonstrate, we'll use
 the "propertyCanCauseTestFail" test case in the LandingPage test class. This test just passes or fails based
-on a property, so let's trigger it (your output may differ):
+on a property; here's the example code:
+
+```java
+
+ @Test
+    public void propertyCanCauseTestFail() throws Exception {
+
+        if(Boolean.getBoolean("cts.demofail")) {
+            testlog.warn("Dummying failure because cts.demofail is true");
+            assertThat(false).isTrue();
+        }
+        else
+            assertThat(false).isFalse();
+    }
+
+```
+
+Let's trigger it:
 
 cmd_prompt>java -Dcts.demofail=true -Dctk.matchstr=.*Landing.* -jar ctk-cli-0.5.1-SNAPSHOT.jar
 [TESTLOG] Suite start org.ga4gh.cts.core.LandingPageIT
@@ -222,6 +239,10 @@ The TESTLOG tells us:
 * the name of the failing method ("propertyCanCauseTestFail")
 * the name of the class that test case comes from ("org.ga4gh.cts.core.LandingPageIT")
 * what assertion didn't pass ("`expected:<[tru]e> but was:<[fals]e`")
+
+Note that the failure is reported several times - directly to the TESTLOG by the CTK, and the failure is noted by the
+test runner we use (the [junit] task of the Apache Ant build/test toolset). This way if you direct the
+TESTLOG and the CTK logs to different locations such as console vs log files, you don't lose failure awareness.
 
 (We get the odd-looking assertion message because we're doing a string compare rather than a boolean compare ...
 can you fix that? :)
