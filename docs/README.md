@@ -27,9 +27,9 @@ customized to the GA4GH domain objects. Here's an example testcase:
 The CTK communicates with a running target server, but it does not manage the target server's lifecycle. The CTK outputs:
 
 - text files: .txt, .xml from Junit, and .tap from [tap4j](http://tap4j.org/)  ([Test Anything Protocol](https://testanything.org/))
-- console output (including any test logs, until you configure them to accumulate in files)
-- HTML files of test results, linked to test source/javadoc
-- HTML 'site' of contributor, dependency reports, source code, javadoc, etc
+- console output (in default config this includes logs, but you can re-configure using [log4j2](https://logging.apache.org/log4j/2.x/manual/configuration.html))
+- HTML files of test results (when tests run under maven, failure reports also to test source/javadoc )
+- HTML 'site' of contributor, dependency reports, source code, javadoc, etc (generated under maven)
 
 The name "CTK" refers to the test framework and transport layers.
 The term "CTS" (for "Compliance Test Suite") refers to the actual server-communicating tests. These tests are in
@@ -57,9 +57,11 @@ javadoc and source for the framework and for server tests, and for test results.
 
 ## Build Status
 
-The CTK/CTS build status is [![Build Status](https://travis-ci.org/wstidolph/ctk-core.svg?branch=SplitOutFramework)](https://travis-ci.org/wstidolph/ctk-core)
+The CTK/CTS build status is [![Build Status](https://travis-ci.org/wstidolph/ctk-core.svg?branch=master)](https://travis-ci.org/wstidolph/ctk-core)
 
->**This CTK defaults to using a slightly modified version of the GA4GH v0.5.1 Schema, which is not being updated; you need to point it at the Schema you care about, using standard git submodule techniques for the schema module.**
+>**This CTK defaults to using a slightly modified version of the GA4GH v0.5.1 Schema. (Uses Strings in place of CharSequence, and swaps order of some union fields.)
+This Schema is not being modified to track changes in the GA4GH Schemas. You can replace the Schema, or use standard git submodule techniques for the ctk-schema module,
+but will need to regenerate the custom domain assertions if you do so.**
 
 ### Docs
 
