@@ -205,16 +205,17 @@ You may want to send TESTLOG to a file, and leave the `org.ga4gh.*` loggers as c
 the CTK default is to route all the loggers at the console, so you may see some duplicated information.
 
 If any tests fail, you'll get additional failure-specific logging at a WARN level. To demonstrate, we'll use
-the "propertyCanCauseTestFail" test case. This test just passes or fails based on a property, so let's trigger it ...
+the "propertyCanCauseTestFail" test case in the LandingPage test class. This test just passes or fails based
+on a property, so let's trigger it (your output may differ):
 
-java -Dcts.demofail=true -jar ctk-cli-v0.5.1-SNAPSHOT.jar
-
+cmd_prompt>java -Dcts.demofail=true -Dctk.matchstr=.*Landing.* -jar ctk-cli-0.5.1-SNAPSHOT.jar
 [TESTLOG] Suite start org.ga4gh.cts.core.LandingPageIT
 [TESTLOG] Dummying failure because cts.demofail is true
 [TESTLOG] FAILED propertyCanCauseTestFail(org.ga4gh.cts.core.LandingPageIT) due to expected:<[tru]e> but was:<[fals]e>
-[TESTLOG] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.035 sec
-    ...
-
+[TESTLOG] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.752 sec
+[o.g.c.AntExecListener ] task [junit] tgt [tests] msg: Test org.ga4gh.cts.core.LandingPageIT FAILED
+[TESTLOG] task [junit] tgt [tests] msg: Test org.ga4gh.cts.core.LandingPageIT FAILED
+[TESTLOG] Overall: Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.000 sec
 
 The TESTLOG tells us:
 
@@ -236,6 +237,6 @@ on how to set up these configurations.
 ## What's Next
 
 If you have Maven installed, you will want to look into using it as the environment for running
-and developing tests - you 'll get cross-referenced/cross-linked source and test code and javadoc in HTML,
+and developing tests - you'll get cross-referenced/cross-linked source and test code and javadoc in HTML,
 and the HTML test reports have links from the failure messages directly into that source tree.
 
