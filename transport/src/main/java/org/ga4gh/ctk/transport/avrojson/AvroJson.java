@@ -121,7 +121,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         // and that the path does not begin or end with a slash
         String tsPath = CharMatcher.WHITESPACE.removeFrom(path);
         this.path = CharMatcher.is('/').trimFrom(tsPath);
-        log.debug(toString());
+        log.info(toString());
     }
 
     /**
