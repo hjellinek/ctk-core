@@ -25,7 +25,7 @@ example would be to add to your ~/.bashrc a line like"
 
     export ctk_tgt_urlRoot='http://myserver:8000/v0.5.1/'
 
-We'll stop adding that ctk.tgt.urlRoot property to the example command lines now.
+We'll stop adding that `ctk.tgt.urlRoot` property to the example command lines now.
 
 If you want to see a failure example, add another property to your java command:
 
@@ -35,6 +35,13 @@ There will be some console output, and you can check in `target/report` for deta
 if you have a browser, check out `target/report/html/index.html`.
 
 If you run the java command again, it will overwrite the results in your `target` directory.
+
+Advanced tip: if you want to attach a debugger to the command-line CTK, use:
+
+    java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
+         -jar ctk-cli-0.5.1-SNAPSHOT.jar
+
+For help on using the 'java' command refer to your java vendor's documentation or the help provided with your installation (e.g., `man java` or `java -h`)
 
 ### To use 'ctk' to run the tests:
 
@@ -48,7 +55,9 @@ and see that adding the ctk.tgt.urlRoot property has a shortcut:
 
 Just as when running using the 'java' command, there will be some console output, and you can check in `target/report` for details; if you have a browser, check out `target/report/html/index.html`
 
-One thing the `ctk` script does for you is to look and see if your `target` dir has existing results; if it's non-empty, then the script renames the `target` directory (by adding the datetime to its name) and creates a new `target` dir.
+If you set environment variables (or property file properties) those will still get picked up when you run via the `ctk` script; all `ctk` does about properties is give you a shortcut to setting a couple common properties and then run the same java program you get running the `java` command. 
+
+One other thing the `ctk` script does for you is to look and see if your `target` dir has existing results; if it's non-empty, then the script renames the `target` directory (by adding the datetime to its name) and creates a new `target` dir.
 
 ## Details
 
@@ -91,42 +100,16 @@ So you end up with:
 
 ```
 
-## Alternate ways to run
-
-There are three major ways to run the CTK - two from the command line, or from inside your maven setup.
-(If you're running from an IDE, you'lll probably want to drive the CTK through Maven, as discussed in other documents.)
-
-The two command line techniques are to:
-- directly run the executable java jar (as will be mostly discussed here)
-- use a wrapper script (which will directly drive the java jar; we supply a starting point for a bash script, in `ctk`)
-
-## Run and Results
-
-The simplest way to run is to simply execute all tests from the launch dir, passing in the address of your
-target server; if you're on bash,  you can do this using the `ctk` script (start with `ctk -h` for usage),
-or in any case you can just invoke `java`:
-
-- `ctk ...`
-- `java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-cli-0.5.1-SNAPSHOT.jar `
- 
-Advanced tip: if you want to attach a debugger to the command-line CTK, use:
-
-    java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
-         -jar ctk-cli-0.5.1-SNAPSHOT.jar
-
-
-When the tests are done, the reports will be in the `target/` dir.
-There are normal ant-junit reports in txt and HTML, and HTML versions in `target/report/html`
-
 ## Altering the run
 
 The CTK primary control is via properties such as the ones you've been setting (`ctk.tgt.urlRoot` etc).
 You can see and set these in the `application.properties` file. Properties can also be set in your environment.
 
-NOTE: in a 'bash' environment, you need to replace the '.' in variable names with underscore '_' when you set the
-variables in the environment; so, do something like:
+NOTE: in a 'bash' environment, you need to replace the '.' in variable names with underscore '_' when you set the variables in the environment; so, do something like:
 
 `export ctk_tgt_urlRoot='http://localhost:8000/v0.5.1/'`
+
+at a command line or in your .bashrc or as appropriate for your system.
 
 Generally, properties can be:
 - set in the environment, or
@@ -135,13 +118,10 @@ Generally, properties can be:
 
 Command line overrides properties files, which override environment vars.
 
-You can do this for almost any property; the exception is items which are controlled during static initialization,
-such as logging. So, for logging control you will need to edit a file the CTK will load early just for this purpose,
-"`lib/log4j2.xml`" (We'll discuss that a bit more, in the `Tuning the output` section below.)
+You can do this for almost any property; the exception is items which are controlled during static initialization, such as logging. So, for logging control you will need to edit a file the CTK will load early just for this purpose, "`lib/log4j2.xml`" (We'll discuss that a bit more in the `Tuning the output` section below.)
 
 If you want to alter which tests get run, you can do that on the command line
-(or using environment variables, etc) using the `ctk.matchstr` variable, which is a regex that is matched against
-class names:
+(or using environment variables, etc) using the `ctk.matchstr` variable, which is a regex that is matched against class names:
 
 ```
 
@@ -159,7 +139,7 @@ So the default for `ctk.matchstr` is ".*IT.class" - that is, any class ending in
 
 For example, the CTS test suite package includes the java package
 
-`   org.ga4gh.cts.api.reads`
+    org.ga4gh.cts.api.reads
 
 and in that package we find:
 ```
