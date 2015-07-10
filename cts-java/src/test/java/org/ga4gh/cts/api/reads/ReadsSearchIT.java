@@ -43,7 +43,7 @@ public class ReadsSearchIT implements CtkLogs {
     }
 
     /**
-     * <p>verify alignedSequences match pattern.</p>
+     * <p>Verify alignedSequences match pattern.</p>
      * <p>In any ReadsTests response, the alignedSequence field can only contain [ACTGN]+.
      * No spaces, no other letters, no lowercase, no null. This is dataset specific
      * at this point, but we might be able to extend it to all datasets later - Jeltje email</p>
