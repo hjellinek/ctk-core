@@ -59,7 +59,7 @@ public class ReadsSearchIT implements CtkLogs {
         String replacedRgid = rgidMap.get(rgid);
         // do a readsearch
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .setReadGroupIds(Arrays.asList(replacedRgid))
+                .setReadGroupIds(Collections.singletonList(replacedRgid))
                 .build();
         GASearchReadsResponse grtn = client.searchReads(gsrr);
 
@@ -71,7 +71,7 @@ public class ReadsSearchIT implements CtkLogs {
 
             // GASearchReadsResponse
         //    array<GAReadAlignment> alignments = [];
-        //       GAReadAlignement field alignedSequence is null || string
+        //       GAReadAlignment field alignedSequence is null || string
 
         for (GAReadAlignment gar : grtn.getAlignments()) {
             assertThat(gar.getAlignedSequence()).isNotNull()

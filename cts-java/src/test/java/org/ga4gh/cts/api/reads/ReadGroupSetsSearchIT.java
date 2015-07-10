@@ -35,7 +35,7 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
      */
     @Ignore("ReadGroupSets not yet supported, and returned 'name' is null")
     @Test
-    @Parameters({ // key iinto the 'stringmap' variable
+    @Parameters({ // key into the 'stringmap' variable
             "LO_COV_533_CHS",
             "LO_COV_096_GBR",
             "LO_COV_534_CHS"
@@ -77,7 +77,7 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
     public void readgroupSetResponseForDumbDatasetidShouldBeEmpty() throws Exception {
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
                 .setName(null)
-                .setDatasetIds(Arrays.asList("realyUnlikelyQQQ"))
+                .setDatasetIds(Collections.singletonList("realyUnlikelyQQQ"))
                 .build();
         GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
         // avro says always get a 200

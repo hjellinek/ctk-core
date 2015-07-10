@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.rules.*;
 
 /**
  * <p>This suite runs the "REFERENCES" category of tests.</p>
- * <p>Uses WildcardPattermSuite runner, so use junittoolbox's {@code @IncludeCategories}
+ * <p>Uses {@link WildcardPatternSuite} runner, so use junittoolbox's {@code @IncludeCategories}
  * or {@code ExcludeCategories} if you need to customize.</p>
  * <p>If there are no tests categorized as {@code ReferencesTests} then you'll get
  * a {@code NoTestsRemainException}</p>
@@ -19,7 +19,7 @@ import org.springframework.test.context.junit4.rules.*;
 public class ReferencesTestSuite {
 
     /* These first two rules setup Spring (4.2.0RC1+) injection support
-       without having to adopt the SpingJUnit4ClassRunner, so we can use
+       without having to adopt the SpringJUnit4ClassRunner, so we can use
        Runners such as the WildcardPatternSuite, or Parameterized, etc
 
        See http://docs.spring.io/spring/docs/4.2.0.RC1/spring-framework-reference/htmlsingle/#testing

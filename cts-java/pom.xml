@@ -27,7 +27,7 @@
             <version>${ga4gh.schema.local.version}</version>
         </dependency>
 
-        <!-- asserts, conditins, etc for the schema -->
+        <!-- asserts, conditions, etc for the schema -->
         <dependency>
             <groupId>org.ga4gh</groupId>
             <artifactId>ctk-domain</artifactId>
@@ -114,7 +114,7 @@
                 <version>2.18.1</version>
                 <configuration>
                     <useFile>false</useFile>
-                                        <includes>
+                    <includes>
                         <include>**/*Spec.java</include>
                         <include>**/*Test.java</include>
                     </includes>
@@ -183,7 +183,6 @@
                 </reportSets>
             </plugin>
             <plugin>
-
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.18.1</version>

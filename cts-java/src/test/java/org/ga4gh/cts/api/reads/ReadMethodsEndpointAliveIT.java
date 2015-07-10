@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.*;
  * (in {@code defaultReadgroupsetsRequestGetsResponse} and shows making an assertion about
  * a field of the return (in {@code defaultReadsRequestGetsNullAlignments})</p>
  *
- * <p>Created by wstidolph on 5/20/15.</p>
+ * <p>Created by Wayne Stidolph on 5/20/15.</p>
  */
 @Category(ReadsTests.class)
 @RunWith(JUnitParamsRunner.class)
@@ -86,7 +86,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
     })
     public void unmatchedReadgroupidElicitsErrorMsg(String rgid) throws Exception {
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .setReadGroupIds(Arrays.asList(rgid))
+                .setReadGroupIds(Collections.singletonList(rgid))
                 .build();
         WireTracker mywt = new WireTracker();
         GASearchReadsResponse grtn = client.searchReads(gsrr, mywt);
@@ -141,7 +141,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
      */
     private static Map<String,String> rgidMap;
     static {
-        rgidMap = new HashMap<String, String>();
+        rgidMap = new HashMap<>();
         rgidMap.put("TWO_GOOD","low-coverage:HG00534;low-coverage:HG00533");
         rgidMap.put("ONE_GOOD_ONE_BAD","low-coverage:HG00534;BAD_ID");
         rgidMap.put("TWO_BAD", "DUMB_ID;BAD_ID");
@@ -155,7 +155,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
     @Test
     public void emptyReadGroupIdIsNotFound() throws Exception {
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
-                .setReadGroupIds(Arrays.asList(""))
+                .setReadGroupIds(Collections.singletonList(""))
                 .build();
         WireTracker mywt = new WireTracker();
         GASearchReadsResponse grtn = client.searchReads(gsrr, mywt);

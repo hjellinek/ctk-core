@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  */
 public class zzCheckCoverageIT implements CtkLogs {
     /* These first two rules set up Spring (4.2.0RC1+) injection support
-   without having to adopt the SpingJUnit4ClassRunner, so we can use
+   without having to adopt the SpringJUnit4ClassRunner, so we can use
    Runners such as the WildcardPatternSuite, or Parameterized, etc
 
    See http://docs.spring.io/spring/docs/4.2.0.RC1/spring-framework-reference/htmlsingle/#testing
