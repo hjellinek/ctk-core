@@ -4,13 +4,10 @@ import com.google.common.collect.*;
 import org.ga4gh.ctk.config.*;
 import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.avrojson.*;
-import org.junit.runner.*;
-import org.junit.runner.notification.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.context.*;
-import org.tap4j.ext.junit.listener.*;
 
 import java.net.*;
 import java.util.*;
@@ -54,12 +51,6 @@ public class Application implements CommandLineRunner {
         this.props = props;
     }
 
-    @Autowired
-    private TestFinder testFinder;
-    public void setTestFinder(TestFinder testFinder) {
-        this.testFinder = testFinder;
-    }
-
     public void setTestExecListener(TestExecListener testExecListener) {
         this.testExecListener = testExecListener;
     }
@@ -97,12 +88,6 @@ public class Application implements CommandLineRunner {
             URLMAPPING.setUrlRoot(urlroot);
         }
 
-        /* ********* PRE-TEST SCRIPT ******* */
-        String scriptBefore = props.ctk_scripts_before;
-        if(scriptBefore != null && !scriptBefore.isEmpty()){
-            scriptRunner(scriptBefore);
-        }
-
         /* ********* TEST SELECTION ******** */
 
         String matchStr = props.ctk_matchstr;
@@ -114,74 +99,16 @@ public class Application implements CommandLineRunner {
         for(String mstr : matchStr.split(",")) {
             log.debug("seeking test classes that match < " + mstr + " >");
 
-            /*
-            Set<Class<?>> testClasses = testFinder.findTestClasses(mstr);
-
-            if (testClasses.isEmpty()) {
-                testlog.warn("Didn't do any testing for matchStr " + mstr);
-            } else {
-                testlog.debug("Matched classes count (can be >1 test in a class): " + testClasses.size());
-                testlog.trace("Matched test classes are " + testClasses.toString());
-                runTestClasses(testClasses);
-            }
-            */
                     /* ****** MAIN RUN-THE-TESTS *********** */
             antExecutor.executeAntTask(props.ctk_testjar, mstr);
         }
 
         /* ******* post-Test reporting ********* */
+        // ant file runs junitreporter, so those reports are done
 
         // just log the traffic, until I get the coverage-tests written
         for (Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()) {
             trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
         }
-    }
-
-    /**
-     * <p>Run the testClasses.</p>
-     * <p>Execute the test(s), and generate outputs.</p>
-
-     *
-     * @param testClasses Classes to be executed using JUnit runners
-     * @see <a href="http://tap4j.org/tap4j-ext/junit_support.html">Test Anything Protocol tap4j extension</a>
-     */
-    private void runTestClasses(Set<Class<?>> testClasses) {
-
-        JUnitCore junit = new JUnitCore();
-
-        Request req = Request.classes(
-                // the Request wants an array (a Vararg) of classes
-                testClasses.toArray(new Class[testClasses.size()]));
-
-        TapListenerSuite tapsuite = new TapListenerSuite();// TAP outputs per Suite
-        junit.addListener(tapsuite);
-
-        TapListenerClass tapclass = new TapListenerClass();// TAP outputs per class
-        junit.addListener(tapclass);
-
-        junit.addListener(testExecListener); // attaches logging
-
-        long starttime = System.currentTimeMillis();
-        Result result = junit.run(req);
-        long endtime = System.currentTimeMillis();
-
-        int passed = result.getRunCount() - result.getFailureCount() -result.getIgnoreCount();
-        testlog.info(result.getFailureCount() + " failed, "
-                + passed + " passed, "
-                + result.getIgnoreCount() + " skipped, "
-                + result.getRunTime() + " ms");
-        for (Failure failure : result.getFailures()) {
-            testlog.warn("FAIL: " + failure.toString());
-        }
-    }
-
-    void antRun(String buildXmlFileFullPath) {
-        // the buildfile might be null
-
-    }
-
-    private void scriptRunner(String str){
-
-        // use Apache Commons Exec, launch in seperate thread (non-block)
     }
 }

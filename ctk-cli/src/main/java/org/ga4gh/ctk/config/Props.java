@@ -99,13 +99,6 @@ public class Props {
     public String ctk_report_title;
 
 
-
-    /* pre/post scripts are a planned capability, not yet connected */
-    @Value("${ctk.scripts.before}")
-    public String ctk_scripts_before;
-    @Value("${ctk.scripts.after}")
-    public String ctk_scripts_after;
-
     /* logging control (name of the test/traffic logs) not yet working */
     /*
     @Value("${ctk.logging.systest}")

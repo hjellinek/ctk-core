@@ -107,14 +107,6 @@
             <version>${avro.version}</version>
         </dependency>
 
-        <!-- need Reflections to dynamically get the
-             test classes in the attached Test jar -->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.10</version>
-        </dependency>
-
         <!-- seems like we need the junit3 ant-junit, as well as the junit4! -->
         <dependency>
             <groupId>org.apache.ant</groupId>
@@ -181,10 +173,6 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-avro</artifactId>
-        </dependency>
 
         <!-- need BCEL during site build -->
         <dependency>
@@ -239,7 +227,6 @@
             <plugin> <!-- spring boot brings this in, too, but I need to exclude the systests -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
                 <configuration>
                     <useFile>false</useFile>
                     <includes>

@@ -1,20 +1,14 @@
 package org.ga4gh.ctk.transport.avrojson;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.apache.avro.generic.GenericDatumWriter;
-import org.ga4gh.GASearchReadsResponse;
-import org.ga4gh.GASearchReadsResponseAssert;
-import org.ga4gh.ctk.transport.testcategories.AvroTests;
-import org.ga4gh.ctk.transport.testcategories.TransportTests;
-import org.ga4gh.ctk.transport.avrojson.AvroMaker.DESER_MODE;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import junitparams.*;
+import org.apache.avro.generic.*;
+import org.ga4gh.*;
+import org.ga4gh.ctk.transport.testcategories.*;
+import org.junit.*;
+import org.junit.experimental.categories.*;
+import org.junit.runner.*;
 
-import java.io.ByteArrayOutputStream;
+import java.io.*;
 
 /**
  * AvroMaker Tester.
@@ -55,41 +49,17 @@ public class AvroMakerTest {
     /**
      * Demonstrate deserialize JSON built the "GA4GH way" - no type info,
      * undefined ordering of fields in each JSON block
-     * @param dmode set deserializer
      * @throws Exception
      */
     @Test
-    @Parameters({"JACKSON_RELAXED"})
-    public void testMakeAvroFromJson(DESER_MODE dmode) throws Exception {
+    public void testMakeAvroFromJson() throws Exception {
         GASearchReadsResponse examplar = new GASearchReadsResponse();
 
         AvroMaker<GASearchReadsResponse> av = new AvroMaker<>(examplar);
 
         GASearchReadsResponse deserializationResult =
                 av.makeAvroFromJson(localJson.toString(),
-                        "test deserializing using " + dmode, dmode);
-        // do field-by-field compare here
-        GASearchReadsResponseAssert.assertThat(deserializationResult)
-                .isNotNull()
-                .hasNextPageToken(TOKEN);
-    }
-
-    /**
-     * Demonstrate deserialize of Avro-generated serialed JSON; this has type
-     * info in the fields, ad demands field ordering be as in the Schema
-     * @param dmode set deserializer
-     * @throws Exception
-     */
-    @Test
-    @Parameters({"AVRO_DIRECT"})
-    public void testMakeAvroFromJsonGenByAvro(DESER_MODE dmode) throws Exception {
-        GASearchReadsResponse examplar = new GASearchReadsResponse();
-
-        AvroMaker<GASearchReadsResponse> av = new AvroMaker<>(examplar);
-
-        GASearchReadsResponse deserializationResult =
-                av.makeAvroFromJson(avroJson.toString(),
-                        "test deserializing using " + dmode, dmode);
+                        "test deserializing ");
         // do field-by-field compare here
         GASearchReadsResponseAssert.assertThat(deserializationResult)
                 .isNotNull()
