@@ -4,11 +4,11 @@ In this mode you are simply executing the CTS tests - not writing tests. (Writin
 
 ## Quickstart
 
-Get the `ga4gh-ctk-cli.zip` distribution ZIP from github (the [repository releases page](https://github.com/wstidolph/ctk-core/releases)) and just unzip in the directory you want to run from. The unzip will place a jar file(ctk-cli-*)  in this directory, and create `lib/` and `target/` directories; the tests jar and a couple control files will already be in the `lib/`.
+Get the `ga4gh-ctk-cli.zip` distribution ZIP from github (the [repository's releases page](https://github.com/wstidolph/ctk-core/releases)) and just unzip in the directory you want to run from.
 
-There are two ways to run the tests from the command line: you can use the 'java' command, or you can
-use the 'ctk' script (which will run the java command for you, and do a little support work to avoid
-overwriting test results when you run the tests multiple times.) 
+The unzip will place a jar file(ctk-cli-*.jar) and a runnable bash script ('ctk') in this directory, and create `lib/` and `target/`directories; the tests jar and a couple control files will already be in the `lib/`.
+
+There are two ways to run the CTK you just unzipped from the command line: you can use the '`java`' command, or you can use the '`ctk`' script. The `ctk` script will run the java command for you, and do a little support work to avoid overwriting test results when you run the tests multiple times.
 
 ### To use 'java' to run the tests:
 
@@ -18,10 +18,7 @@ so, for example,
 
     java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-cli-0.5.1-SNAPSHOT.jar
 
-Tip - if you're regularly testing against the same server, you can set an environment
-variable "ctk_tgt_urlRoot" to avoid having to re-enter that URL all the time on the
-command line. How you set environment variables varies with your shell, but a common
-example would be to add to your ~/.bashrc a line like"
+Tip - if you're regularly testing against the same server, you can set an environment variable "ctk_tgt_urlRoot" (or "ctk.tgt.urlRoot" if your environment prefers that) to avoid having to re-enter that URL all the time on the command line. How you set environment variables varies with your shell, but a common example would be to add to your ~/.bashrc a line like"
 
     export ctk_tgt_urlRoot='http://myserver:8000/v0.5.1/'
 
@@ -182,18 +179,35 @@ CTK output is to logs, not to "stdout" and such. The logging framework in the de
 
 The important thing to know is that there is a specific logger called "TESTLOG" used in all test classes to report on test progress, as well as the usual per-class loggers named after the class' full hierarchical name. You may want to send TESTLOG to a file, and leave the `org.ga4gh.*` loggers as console output; but,  the CTK default is to route all the loggers at the console, so you may see some duplicated information.
 
-If any tests fail, you'll get additional failure-specific logging at a WARN level. To demostrate, we'll use the "`propertyCanCauseTestFail`" test case. This test just passes or fails based on a property, so let's trigger it ...
+If any tests fail, you'll get additional failure-specific logging at a WARN level. To demonstrate, we'll use the "propertyCanCauseTestFail" test case in the LandingPage test class. This test just passes or fails based
+on a property; here's the example code:
 
-`java -Dcts.demofail=true -jar ctk-cli-v0.5.1-SNAPSHOT.jar`
+```java
+
+ @Test
+    public void propertyCanCauseTestFail() throws Exception {
+
+        if(Boolean.getBoolean("cts.demofail")) {
+            testlog.warn("Dummying failure because cts.demofail is true");
+            assertThat(false).isTrue();
+        }
+        else
+            assertThat(false).isFalse();
+    }
 
 ```
 
+Let's trigger it:
+
+```
+cmd_prompt>java -Dcts.demofail=true -Dctk.matchstr=.*Landing.* -jar ctk-cli-0.5.1-SNAPSHOT.jar
 [TESTLOG] Suite start org.ga4gh.cts.core.LandingPageIT
 [TESTLOG] Dummying failure because cts.demofail is true
 [TESTLOG] FAILED propertyCanCauseTestFail(org.ga4gh.cts.core.LandingPageIT) due to expected:<[tru]e> but was:<[fals]e>
-[TESTLOG] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.035 sec
-    ...
-
+[TESTLOG] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.752 sec
+[o.g.c.AntExecListener ] task [junit] tgt [tests] msg: Test org.ga4gh.cts.core.LandingPageIT FAILED
+[TESTLOG] task [junit] tgt [tests] msg: Test org.ga4gh.cts.core.LandingPageIT FAILED
+[TESTLOG] Overall: Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.000 sec
 ```
 
 The TESTLOG tells us:

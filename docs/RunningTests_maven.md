@@ -2,16 +2,13 @@
 
 # tl;dr
 
-- in `ctk-core`(or whatever you named your root directory) execute `mvn clean install`
-- in `cts-java` run `mvn failsafe:integration-test`
-	- if you want, you can run this with properties, such as `mvn -Dctk.tgt.urlRoot=http://192.168.2.214:8000/v0.5.1/ failsafe:integration-test
-`
-- (optional) in `ctk-core` (the root directory) run `mvn site` to generate integrated reports/source/doc in `ctk-core/target/site`
+- in `ctk-core`(or whatever you named your root directory) execute `mvn clean install` ... this will execute the maven "integration-test" phase, thus running the `failsafe:integration-test` goal in the `cts-java` module
+- (optional) in `ctk-core` (the root directory) you can then also run `mvn site` to generate integrated reports/source/doc under `ctk-core/target/site`
 
 Modify the behavior under maven using:
 - properties set in the `cts-java` maven `pom.xml`, or
 - on the command line using `mvn -D<property>=<value>`, or
-- `application.properties` to alter which tests are run by default,
+- `application.properties` to alter which tests are run by default (change `cts.matchstr`),
 - `defaulttransport.properties` to alter server endpoints
 
 # Introduction

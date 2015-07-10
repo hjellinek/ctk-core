@@ -9,15 +9,16 @@ so that will take place in your dev environment, under Maven.)
 
 Quickstart
 
-Get the `ga4gh-ctk-cli.zip` distribution ZIP from github; the repository releases page is at
+Get the `ga4gh-ctk-cli.zip` distribution ZIP from github; the repository's releases page is at
 https://github.com/wstidolph/ctk-core/releases). Unzip in the directory you want to run from.
 
-The unzip will place a jar file(ctk-cli-*.jar) and a runnabe bash script ('ctl') in this directory, and
-create `lib/` and `target/`directories; the tests jar and a couple control files will already be in the `lib/`.
+The unzip will place a jar file(ctk-cli-*.jar) and a runnable bash script ('ctk') in this directory,
+and create `lib/` and `target/`directories; the tests jar and a couple control files will already be
+in the `lib/`.
 
-There are two ways to run the tests from the command line: you can use the 'java' command, or you can
-use the 'ctk' script (which will run the java command for you, and do a little support work to avoid
-overwriting test results when you run the tests multiple times.) 
+There are two ways to run the CTK you just unzipped from the command line: you can use the 'java'
+command, or you can use the 'ctk' script. The `ctk` script will run the java command for you, and
+do a little support work to avoid overwriting test results when you run the tests multiple times.
 
 ** To use 'java' to run the tests::
 
@@ -28,11 +29,12 @@ so, for example,
 java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-cli-0.5.1-SNAPSHOT.jar
 
 Tip - if you're regularly testing against the same server, you can set an environment
-variable "ctk_tgt_urlRoot" to avoid having to re-enter that URL all the time on the
-command line. How you set environment variables varies with your shell, but a common
+variable "ctk_tgt_urlRoot" (or "ctk.tgt.urlRoot" if your environment prefers that)
+to avoid having to re-enter that URL all the time on the command line.
+How you set environment variables varies with your shell, but a common
 example would be to add to your ~/.bashrc a line like"
 
-  export ctk_tgt_urlRoot='http://myserver;8000/v0.5.1'
+  export ctk_tgt_urlRoot='http://myserver:8000/v0.5.1'
 
 We'll stop adding that ctk.tgt.urlRoot property to the example command lines now.
 
