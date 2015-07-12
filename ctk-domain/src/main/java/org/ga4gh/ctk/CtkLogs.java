@@ -15,16 +15,21 @@ import static org.slf4j.LoggerFactory.*;
  * <pre>
  * {@code
  *    static org.slf4j.Logger testlog = getLogger("TESTLOG");
+ *    static org.slf4j.Logger trafficlog = getLogger("TESTLOG.TRAFFIC");
  *    static org.slf4j.Logger log = getLogger(<myclass>.class);
  * }*
  * </pre>
  * <p>Created by Wayne Stidolph on 6/29/2015.</p>
  */
 public interface CtkLogs {
+    String SYSTEST = "TESTLOG";
     /**
      * The TESTLOG.
      */
-    static org.slf4j.Logger testlog = getLogger("TESTLOG");
+    static org.slf4j.Logger testlog = getLogger(SYSTEST);
+
+    static String TRAFFICLOG=SYSTEST + ".TRAFFIC";
+    static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
 
     /**
      * <p>Sets the log according to the name of the class which 'implements CtkLogs'.</p>

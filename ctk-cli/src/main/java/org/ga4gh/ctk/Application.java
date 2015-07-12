@@ -1,9 +1,6 @@
 package org.ga4gh.ctk;
 
-import com.google.common.collect.*;
 import org.ga4gh.ctk.config.*;
-import org.ga4gh.ctk.transport.*;
-import org.ga4gh.ctk.transport.avrojson.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
@@ -11,8 +8,6 @@ import org.springframework.context.*;
 
 import java.net.*;
 import java.util.*;
-
-import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>The Application - this is the main entry point for the CTK for running the entire CTK
@@ -37,13 +32,12 @@ import static org.slf4j.LoggerFactory.*;
  * <p>Created by Wayne Stidolph</p>
  */
 @SpringBootApplication
-public class Application implements CommandLineRunner {
+public class Application implements CtkLogs,CommandLineRunner {
 
-    private static org.slf4j.Logger log = getLogger(Application.class);
-    static String SYSTEST = "TESTLOG";
-    private static org.slf4j.Logger testlog = getLogger(SYSTEST);
-    static String TRAFFICLOG=SYSTEST + ".TRAFFIC";
-    private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
+   // private static org.slf4j.Logger log = getLogger(Application.class);
+
+    //private static org.slf4j.Logger testlog = getLogger(SYSTEST);
+
 
     @Autowired
     private Props props;
@@ -51,18 +45,9 @@ public class Application implements CommandLineRunner {
         this.props = props;
     }
 
-    public void setTestExecListener(TestExecListener testExecListener) {
-        this.testExecListener = testExecListener;
-    }
-
     @Autowired
-    private TestExecListener testExecListener;
-
-    @Autowired
-    private AntExecutor antExecutor;
-
-    @Value("${ctk.tgt.urlRoot}")
-    String urlroot;
+    private TestRunner testrunner;
+    public void setTestrunner(TestRunner testrunner){this.testrunner = testrunner;}
 
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
@@ -82,33 +67,6 @@ public class Application implements CommandLineRunner {
         log.debug("Application launched from " + location.getFile());
         log.debug("command line args: " + Arrays.toString(args));
 
-        // patch through config to URLMAPPING
-        if(urlroot != null){
-            log.debug("Setting urlroot to " + urlroot);
-            URLMAPPING.setUrlRoot(urlroot);
-        }
-
-        /* ********* TEST SELECTION ******** */
-
-        String matchStr = props.ctk_matchstr;
-        log.debug("matchstr: " + matchStr);
-
-        // work through each clause one at a time, even though it might mean re-run tests
-        // alternative is to get the classes all into a Set and run that
-
-        for(String mstr : matchStr.split(",")) {
-            log.debug("seeking test classes that match < " + mstr + " >");
-
-                    /* ****** MAIN RUN-THE-TESTS *********** */
-            antExecutor.executeAntTask(props.ctk_testjar, mstr);
-        }
-
-        /* ******* post-Test reporting ********* */
-        // ant file runs junitreporter, so those reports are done
-
-        // just log the traffic, until I get the coverage-tests written
-        for (Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()) {
-            trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
-        }
+        testrunner.doTestRun(); // does a single run
     }
 }

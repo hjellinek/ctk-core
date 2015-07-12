@@ -18,16 +18,11 @@
     <dependencies>
         <dependency>
             <groupId>org.ga4gh</groupId>
-            <artifactId>ctk-cli</artifactId>
-            <version>0.5.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ga4gh</groupId>
             <artifactId>ctk-schemas</artifactId>
             <version>${ga4gh.schema.local.version}</version>
         </dependency>
 
-        <!-- asserts, conditins, etc for the schema -->
+        <!-- asserts, conditions, etc for the schema -->
         <dependency>
             <groupId>org.ga4gh</groupId>
             <artifactId>ctk-domain</artifactId>
@@ -39,28 +34,13 @@
             <version>0.5.1-SNAPSHOT</version>
         </dependency>
 
-
-        <!-- bring in the Spring stuff -->
         <dependency>
-            <!-- The core Spring Boot starter, including
-            auto-configuration support, logging and YAML -->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <!-- std logging for Spring Boot is logback, but I
-            want to use log4j2 in the CTK so we exclude the default logging
-            here and add in log4j2 later -->
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId></groupId>
+            <artifactId>log4j2</artifactId>
         </dependency>
-        <!-- CTK uses log4j2, some of the tooling is more common than Logback -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-            <optional>true</optional>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
 
         <dependency>
@@ -77,19 +57,15 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- seems like we need the junit3 ant-junit, as well as the junit4! -->
-<!--        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant-junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant-junit4</artifactId>
-        </dependency>
-        -->
         <dependency>
             <groupId>pl.pragmatists</groupId>
             <artifactId>JUnitParams</artifactId>
+        </dependency>
+        <!-- use tap4j to get Test Anything Protocol support -->
+        <dependency>
+            <groupId>org.tap4j</groupId>
+            <artifactId>tap4j-ext</artifactId>
+            <version>${tap4j-ext.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.junit-toolbox</groupId>
@@ -115,47 +91,10 @@
             <version>${unirest-java.version}</version>
         </dependency>
 
-        <!-- bring in useful @Lggable aspect -->
-        <!-- except it's not working -->
-
-       <!-- <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-aspects</artifactId>
-            <version>0.22</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <version>1.6.12</version>
-            <scope>runtime</scope>
-        </dependency>-->
     </dependencies>
-
-    <!-- for the jcabi maven plugin -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>oss.sonatype.org</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <build>
         <plugins>
-            <!-- weave in the JCABI aspects -->
-            <!-- taking this out, since it doesn't seem to work,
-            but leaving the commented block while I work on it -->
-<!--            <plugin>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-maven-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>ajc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

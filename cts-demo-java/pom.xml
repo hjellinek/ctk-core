@@ -10,8 +10,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cts-java-technique</artifactId>
-
+    <artifactId>cts-demo-java</artifactId>
+    <name>CST Demo Java test techniques</name>
     <dependencies>
         <dependency>
             <groupId>org.ga4gh</groupId>
