@@ -12,13 +12,13 @@ There are two ways to run the CTK you just unzipped from the command line: you c
 
 ### To use 'java' to run the tests:
 
-    java -Dctk.tgt.urlRoot=<your server URL base> -jar ctk-cli-0.5.1-SNAPSHOT.jar
+    java -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=<your server URL base>
 
 so, for example,
 
-    java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-cli-0.5.1-SNAPSHOT.jar
+    java -jar ctk-cli-0.5.1-SNAPSHOT.jar -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1
 
-Tip - if you're regularly testing against the same server, you can set an environment variable "ctk_tgt_urlRoot" (or "ctk.tgt.urlRoot" if your environment prefers that) to avoid having to re-enter that URL all the time on the command line. How you set environment variables varies with your shell, but a common example would be to add to your ~/.bashrc a line like"
+Tip - if you're regularly testing against the same server, you can set an operating system environment variable "ctk_tgt_urlRoot" (or "ctk.tgt.urlRoot" if your environment prefers that) to avoid having to re-enter that URL all the time on the command line. How you set environment variables varies with your shell, but a common example would be to add to your ~/.bashrc a line like"
 
     export ctk_tgt_urlRoot='http://myserver:8000/v0.5.1/'
 
@@ -26,12 +26,14 @@ We'll stop adding that `ctk.tgt.urlRoot` property to the example command lines n
 
 If you want to see a failure example, add another property to your java command:
 
-    java -Dcts.demofail=true -jar ctk-cli-0.5.1-SNAPSHOT.jar
+    java -jar ctk-cli-0.5.1-SNAPSHOT.jar --cts.demofail=true
 
 There will be some console output, and you can check in `target/report` for details;
 if you have a browser, check out `target/report/html/index.html`.
 
-If you run the java command again, it will overwrite the results in your `target` directory.
+If you run the java command again, it will overwrite the results in your `target` directory. But if you're on bash and using the `ctk` script, it will rename your previous test results `target` directory to include the date/time of the new test
+
+(TODO fix this to rename to the date time of the actual tests!)
 
 Advanced tip: if you want to attach a debugger to the command-line CTK, use:
 

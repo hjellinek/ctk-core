@@ -24,7 +24,7 @@
     <modules>
         <module>ctk-schemas</module>
         <module>ctk-domain</module>
-        <module>transport</module>
+        <module>ctk-transport</module>
         <module>ctk-cli</module>
         <module>cts-java</module>
         <module>technique-demo</module>
