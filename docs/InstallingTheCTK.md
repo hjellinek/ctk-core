@@ -33,6 +33,6 @@ You now have custom assertions, as source, in `ctk-domain/src/main/assertj-asser
 manage these in your local git branch, or push them to your remotes like any other source.
 
 If you want the build process to regenerate the assertions for you (say you're changing the
-domain classes frequently) then uncomment the binds in `ctk-domain/pm.xml` and you waont have
+domain classes frequently) then uncomment the binds in `ctk-domain/pm.xml` and you won't have
 to do this by hand - BUT, you stand a chance of the generator overwriting any editing
 you've done on the domain-specific assertions.

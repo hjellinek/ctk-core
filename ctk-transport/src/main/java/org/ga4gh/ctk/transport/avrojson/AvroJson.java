@@ -17,7 +17,7 @@ import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Provide Avro/Json communications layer specific to GA4GH and with extensive logging in support of CTK use.</p>
- * <p>This class is paramaterized on the Avro reQuest (Q) and resPonse (P) type it handles.
+ * <p>This class is parameterized on the Avro reQuest (Q) and resPonse (P) type it handles.
  * Each instance handles one interaction, issuing a request and returning the response.</p>
  * <p>This class:<ul>
  *     <li>invokes the serializer/deserializer,</li>
@@ -98,7 +98,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
 
     /**
      * <p>Construct an AvroJson for a particular request/response interaction.</p>
-     * <p>The req and resp types are used to parameterize this generic interaction object.</p>
+     * <p>The req and resp types parameterize this generic interaction object.</p>
      *
      *
      *
@@ -173,7 +173,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
      * If this object has a WireTracker then the return JSON (if any) is copied into that.
      * This method also tracks all message types sent and received, in the 'messages' Table.
      *
-     * @return an instance of the response type (as set during onbject construction), can be null.
+     * @return an instance of the response type (as set during object construction), can be null.
      */
     public P doPostResp() {
         reqSchema = theAvroReq.getSchema();

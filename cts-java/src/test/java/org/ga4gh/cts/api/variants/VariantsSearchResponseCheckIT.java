@@ -47,7 +47,7 @@ public class VariantsSearchResponseCheckIT implements CtkLogs {
         GASearchVariantsRequest request = GASearchVariantsRequest.newBuilder()
                 // I ‘split’ the vsetIds param, that way if we’re given
                 // multiple variantsetIds, we can just join them with semicolons in the
-                // paramaters list before the first comma and then the split sections
+                // parameters list before the first comma and then the split sections
                 // become individual (multiple) variantSetIds entries in the array
                 .setVariantSetIds(Arrays.asList(vsetIds.split(";")))
                 .setReferenceName(refName)

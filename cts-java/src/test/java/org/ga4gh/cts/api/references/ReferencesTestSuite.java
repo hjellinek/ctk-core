@@ -5,7 +5,7 @@ import org.junit.runner.*;
 
 /**
  * <p>This suite runs the "REFERENCES" category of tests.</p>
- * <p>Uses WildcardPattermSuite runner, so use junittoolbox's {@code @IncludeCategories}
+ * <p>Uses {@link WildcardPatternSuite} runner, so use junittoolbox's {@code @IncludeCategories}
  * or {@code ExcludeCategories} if you need to customize.</p>
  * <p>If there are no tests categorized as {@code ReferencesTests} then you'll get
  * a {@code NoTestsRemainException}</p>
