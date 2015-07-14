@@ -9,23 +9,43 @@ so that will take place in your dev environment, under Maven.)
 
 Quickstart
 
-Get the `ga4gh-ctk-cli.zip` distribution ZIP from github; the repository releases page is at
+Get the `ga4gh-ctk-cli.zip` distribution ZIP from github; the repository's releases page is at
 https://github.com/wstidolph/ctk-core/releases). Unzip in the directory you want to run from.
 
-The unzip will place a jar file(ctk-cli-*)  in this directory, and create `lib/` and `target/` directories;
-the tests jar and a couple control files will already be in the `lib/`. You run the test with:
+The unzip will place a jar file(ctk-cli-*.jar) and a runnable bash script ('ctk') in this directory,
+and create `lib/` and `target/`directories; the tests jar and a couple control files will already be
+in the `lib/`.
 
-java -Dctk.tgt.urlRoot=... -jar ctk-cli-0.5.1-SNAPSHOT.jar
+There are two ways to run the CTK you just unzipped from the command line: you can use the 'java'
+command, or you can use the 'ctk' script. The `ctk` script will run the java command for you, and
+do a little support work to avoid overwriting test results when you run the tests multiple times.
 
-(Tip - set a environment variable "ctk_tgt_urlRoot" to avoid having to re-enter that property
-all the time on the command line)
+** To use 'java' to run the tests::
+
+java -Dctk.tgt.urlRoot=<your server URL base> -jar ctk-cli-0.5.1-SNAPSHOT.jar
+
+so, for example,
+
+java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-cli-0.5.1-SNAPSHOT.jar
+
+Tip - if you're regularly testing against the same server, you can set an environment
+variable "ctk_tgt_urlRoot" (or "ctk.tgt.urlRoot" if your environment prefers that)
+to avoid having to re-enter that URL all the time on the command line.
+How you set environment variables varies with your shell, but a common
+example would be to add to your ~/.bashrc a line like"
+
+  export ctk_tgt_urlRoot='http://myserver:8000/v0.5.1'
+
+We'll stop adding that ctk.tgt.urlRoot property to the example command lines now.
 
 If you want to see a failure example, add another property:
 
-java -Dcts.demofail=true -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=...
+java -Dcts.demofail=true -jar ctk-cli-0.5.1-SNAPSHOT.jar
 
 There will be some console output, and you can check in `target/report` for details;
 if you have a browser, check out `target/report/html/index.html`
+
+** To use 'ctk' to run the tests:
 
 DETAILS
 
@@ -187,22 +207,44 @@ You may want to send TESTLOG to a file, and leave the `org.ga4gh.*` loggers as c
 the CTK default is to route all the loggers at the console, so you may see some duplicated information.
 
 If any tests fail, you'll get additional failure-specific logging at a WARN level. To demonstrate, we'll use
-the "propertyCanCauseTestFail" test case. This test just passes or fails based on a property, so let's trigger it ...
+the "propertyCanCauseTestFail" test case in the LandingPage test class. This test just passes or fails based
+on a property; here's the example code:
 
-java -Dcts.demofail=true -jar ctk-cli-v0.5.1-SNAPSHOT.jar
+```java
 
+ @Test
+    public void propertyCanCauseTestFail() throws Exception {
+
+        if(Boolean.getBoolean("cts.demofail")) {
+            testlog.warn("Dummying failure because cts.demofail is true");
+            assertThat(false).isTrue();
+        }
+        else
+            assertThat(false).isFalse();
+    }
+
+```
+
+Let's trigger it:
+
+cmd_prompt>java -Dcts.demofail=true -Dctk.matchstr=.*Landing.* -jar ctk-cli-0.5.1-SNAPSHOT.jar
 [TESTLOG] Suite start org.ga4gh.cts.core.LandingPageIT
 [TESTLOG] Dummying failure because cts.demofail is true
 [TESTLOG] FAILED propertyCanCauseTestFail(org.ga4gh.cts.core.LandingPageIT) due to expected:<[tru]e> but was:<[fals]e>
-[TESTLOG] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.035 sec
-    ...
-
+[TESTLOG] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.752 sec
+[o.g.c.AntExecListener ] task [junit] tgt [tests] msg: Test org.ga4gh.cts.core.LandingPageIT FAILED
+[TESTLOG] task [junit] tgt [tests] msg: Test org.ga4gh.cts.core.LandingPageIT FAILED
+[TESTLOG] Overall: Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.000 sec
 
 The TESTLOG tells us:
 
 * the name of the failing method ("propertyCanCauseTestFail")
 * the name of the class that test case comes from ("org.ga4gh.cts.core.LandingPageIT")
 * what assertion didn't pass ("`expected:<[tru]e> but was:<[fals]e`")
+
+Note that the failure is reported several times - directly to the TESTLOG by the CTK, and the failure is noted by the
+test runner we use (the [junit] task of the Apache Ant build/test toolset). This way if you direct the
+TESTLOG and the CTK logs to different locations such as console vs log files, you don't lose failure awareness.
 
 (We get the odd-looking assertion message because we're doing a string compare rather than a boolean compare ...
 can you fix that? :)
@@ -218,6 +260,6 @@ on how to set up these configurations.
 ## What's Next
 
 If you have Maven installed, you will want to look into using it as the environment for running
-and developing tests - you 'll get cross-referenced/cross-linked source and test code and javadoc in HTML,
+and developing tests - you'll get cross-referenced/cross-linked source and test code and javadoc in HTML,
 and the HTML test reports have links from the failure messages directly into that source tree.
 

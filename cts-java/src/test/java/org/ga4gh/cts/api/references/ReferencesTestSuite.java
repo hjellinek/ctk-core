@@ -1,9 +1,7 @@
 package org.ga4gh.cts.api.references;
 
 import com.googlecode.junittoolbox.*;
-import org.junit.*;
 import org.junit.runner.*;
-import org.springframework.test.context.junit4.rules.*;
 
 /**
  * <p>This suite runs the "REFERENCES" category of tests.</p>
@@ -17,17 +15,4 @@ import org.springframework.test.context.junit4.rules.*;
 @IncludeCategories(ReferencesTests.class)
 @SuiteClasses({"**/*IT.class","**/*Test.class"})
 public class ReferencesTestSuite {
-
-    /* These first two rules set up Spring (4.2.0RC1+) injection support
-       without having to adopt the SpringJUnit4ClassRunner, so we can use
-       Runners such as the WildcardPatternSuite, or Parameterized, etc
-
-       See http://docs.spring.io/spring/docs/4.2.0.RC1/spring-framework-reference/htmlsingle/#testing
-       specifically Section 5.6
-     */
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
 }

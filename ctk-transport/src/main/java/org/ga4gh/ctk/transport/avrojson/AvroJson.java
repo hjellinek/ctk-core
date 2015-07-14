@@ -1,5 +1,6 @@
 package org.ga4gh.ctk.transport.avrojson;
 
+import com.google.common.base.*;
 import com.google.common.collect.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.*;
@@ -11,6 +12,7 @@ import org.apache.http.*;
 import org.apache.http.message.*;
 import org.ga4gh.ctk.transport.*;
 
+import static org.ga4gh.ctk.transport.RespCode.*;
 import static org.slf4j.LoggerFactory.*;
 
 /**
@@ -76,7 +78,6 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     Schema respSchema;
     String jsonStr;
     HttpResponse<JsonNode> httpResp;
-    AvroMaker.DESER_MODE deserMode = AvroMaker.DESER_MODE.GSON_RELAXED; // default
     private P theResp;
     private WireTracker wireTracker;
 
@@ -96,8 +97,10 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     }
 
     /**
-     * Construct an AvroJson for a particular request/response interaction.
-     * The req and resp types parameterize this interaction object.
+     * <p>Construct an AvroJson for a particular request/response interaction.</p>
+     * <p>The req and resp types parameterize this generic interaction object.</p>
+     *
+     *
      *
      * @param req     an instance of the avro *Request method object
      * @param resp    an instance of the avro *Response method object
@@ -108,9 +111,17 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         this.theAvroReq = req;
         this.theResp = resp;
         this.dw = new SpecificDatumWriter<Q>();
-        this.urlRoot = urlRoot;
-        this.path = path;
         this.wireTracker = null;
+
+        // neither urlRoot nor path should have spaces,
+        // the urlRoot should end with exactly one slash
+        String tsRoot = CharMatcher.WHITESPACE.removeFrom(urlRoot);
+        this.urlRoot = CharMatcher.is('/').trimTrailingFrom(tsRoot) + "/";
+
+        // and that the path does not begin or end with a slash
+        String tsPath = CharMatcher.WHITESPACE.removeFrom(path);
+        this.path = CharMatcher.is('/').trimFrom(tsPath);
+        log.info(toString());
     }
 
     /**
@@ -136,14 +147,6 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
      */
     public static Table<String, String, Integer> getMessages() {
         return messages;
-    }
-
-    public AvroMaker.DESER_MODE getDeserMode() {
-        return deserMode;
-    }
-
-    public void setDeserMode(AvroMaker.DESER_MODE deserialization_mode) {
-        this.deserMode = deserialization_mode;
     }
 
     /**
@@ -182,7 +185,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         httpResp = shouldDoComms ? jsonPost(urlRoot + path): NO_COMM_RESP;
 
         if(wireTracker != null){
-            wireTracker.setResponseStatus(RespCode.fromInt(httpResp.getStatus()));
+            wireTracker.setResponseStatus(fromInt(httpResp.getStatus()));
             //wireTracker.setActJson(json);
         }
 
@@ -196,7 +199,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         if (httpResp != null && httpResp.getStatus() == HttpStatus.SC_OK) {
             String json = httpResp.getBody().toString();
 
-            theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path, deserMode); // URL just for logging
+            theResp = new AvroMaker<>(theResp).makeAvroFromJson(json, urlRoot + path); // URL just for logging
         }
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null ? theResp.getClass().getSimpleName()  : "null";
@@ -248,7 +251,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
             wireTracker.theUrl = theURL;
             wireTracker.bodySent = jsonStr;
             wireTracker.bodyReceived = (jsonResponse != null? jsonResponse.getBody().toString(): null);
-            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse != null? jsonResponse.getStatus(): 0));
+            wireTracker.setResponseStatus(fromInt(jsonResponse != null ? jsonResponse.getStatus() : 0));
         }
         return jsonResponse;
     }
@@ -276,8 +279,14 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
             wireTracker.theUrl = theUrl + "/ " + id;
             wireTracker.bodySent = "";
             wireTracker.bodyReceived = (jsonResponse != null? jsonResponse.getBody().toString(): null);
-            wireTracker.setResponseStatus(RespCode.fromInt(jsonResponse != null? jsonResponse.getStatus(): 0));
+            wireTracker.setResponseStatus(fromInt(jsonResponse != null ? jsonResponse.getStatus() : 0));
         }
         return jsonResponse;
+    }
+
+    public String toString(){
+        String reqName = theAvroReq == null ? "null" : theAvroReq.getClass().getSimpleName();
+        String respName = theResp == null? "null" : theResp.getClass().getSimpleName();
+        return urlRoot+path + " " + reqName + " " + respName;
     }
 }

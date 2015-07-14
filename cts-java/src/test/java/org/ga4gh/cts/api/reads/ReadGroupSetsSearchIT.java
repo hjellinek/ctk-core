@@ -29,15 +29,15 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
         stringMap = new HashMap<>();
         stringMap.put("EMPTY", "");
         stringMap.put("foo", "foo");
-        stringMap.put("LO_COV_533_CHS", "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
-        stringMap.put("LO_COV_096_GBR", "low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522");
-        stringMap.put("LO_COV_534_CHS", "low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
+        stringMap.put("LO_COV_533_CHS","low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
+        stringMap.put("LO_COV_096_GBR","low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522");
+        stringMap.put("LO_COV_534_CHS","low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
     }
 
     /**
      * <p>Good readgroup sets name should retrieve only matching read group sets.</p>
      * <p>IDL says a GASearchReadGroupSetsRequest should match based on a substring:</p>
-     * <cite>"Only return read group sets for which a substring of the name matches this string."</cite>
+     * <cite>"Only return read group sets for which a substring of the name matches this string.</cite>
      * <p>This test accepts a key, looks up the long readgroup name for a static map,
      * extracts a substring from that valid name, and uses the subsctring in a search then verifies that
      * all the returned ReadGroupSets match the substring.</p>
@@ -81,7 +81,7 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
      *
      * @throws AvroRemoteException the exception thrown
      */
-/* ****************************************** */
+    /* ****************************************** */
     // DATASETID tests
     /* ****************************************** */
     @Ignore("datasetId not yet supported in v0.5.1 server")
@@ -124,22 +124,21 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
         //       http://localhost:8000/v0.5.1/readgroupsets/search
         String replacedDatasetid = stringMap.get(datasetid);
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
-                .setName(null)
-                .setDatasetIds(Arrays.asList(datasetid.split(":")))
-                .build();
+                                                                        .setName(null)
+                                                                        .setDatasetIds(Arrays.asList(datasetid
+                                                                                                             .split(":")))
+                                                                        .build();
 
         log.debug("SearchReadGroupSetsRequest: " + reqb.toString());
         GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
         log.debug("searchReadGroupSets " + datasetid + " returned: " + String.valueOf(rtnVal));
         GASearchReadGroupSetsResponseAssert.assertThat(rtnVal)
-                .isNotNull();
+                                           .isNotNull();
 
         List<GAReadGroupSet> rgs = rtnVal.getReadGroupSets();
 
         org.ga4gh.GAReadGroupSetAssert.assertThat(rgs.get(0)).hasDatasetId(datasetid);
     }
-
-
 
     @BeforeClass
     public static void setupTransport() throws Exception {

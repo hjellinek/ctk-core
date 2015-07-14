@@ -115,7 +115,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      * `POST /callsets/search` must accept a JSON version of `GASearchCallSetsRequest`
      * as the post body and will return a JSON version of `GASearchCallSetsResponse`.
      *
-     * @param request
+     * @param request the GASearchVariantsRequest we're issuing
      * @param wt the WireTracker contro/recording support object
      */
     public GASearchCallSetsResponse searchCallSets(GASearchCallSetsRequest request, WireTracker wt) throws AvroRemoteException, GAException {
