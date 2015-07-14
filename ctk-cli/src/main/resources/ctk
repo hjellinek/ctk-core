@@ -43,8 +43,6 @@ CMD_DIR="$(cd "$(dirname "$CMD")" && pwd -P)"
 [ "$VERBOSE" ] ||  VERBOSE=
 [ "$DEBUG" ]   ||  DEBUG=
 [ "$CTKJAR" ]  ||  CTKJAR="ctk-cli-0.5.1-SNAPSHOT.jar"
-[ "$ctk_tgt_urlRoot" ] || ctk_tgt_urlRoot="http://localhost:8000/v0.5.1/"
-[ "$ctk_matchstr" ] || ctk_matchstr=".*IT.class"
 [ "$TGTDIR" ] || TGTDIR="target"
 
 
@@ -74,11 +72,6 @@ NARGS=-1; while [ "$#" -ne "$NARGS" ]; do NARGS=$#; case $1 in
 		DEBUG=$(( DEBUG + 1 )) && VERBOSE="$DEBUG" && shift && echo "#-INFO: DEBUG=$DEBUG (implies VERBOSE=$VERBOSE)"; ;;
 	-v|--verbose)   # Enable verbose messages
 		VERBOSE=$(( VERBOSE + 1 )) && shift && echo "#-INFO: VERBOSE=$VERBOSE"; ;;
-	# PAIRS
-	-m|--ctk_matchstr)     # Set the matchstring to a value (DEFAULT: $ctk_matchstr)
-		shift && ctk_matchstr="$1" && shift && vrb "#-INFO: ctk_matchstr=$ctk_matchstr"; ;;
-	-u|--ctk_tgt_urlRoot)  # Set the urlRoot to a value (DEFAULT: $ctk_tgt_urlRoot)
-		shift && ctk_tgt_urlRoot="$1" && shift && vrb "#-INFO: ctk_tgt_urlRoot=$ctk_tgt_urlRoot"; ;;
 	*)
 		break;
 esac; done
@@ -87,27 +80,17 @@ esac; done
 
 ###############################################################################
 
-# Validate some things
-[ $# -gt 0 -a -z "$ctk.tgt.urlRoot" ]  &&  ctk_tgt_urlRoot="$1"  &&  shift
-# [ "$ctk_matchstr" ]  ||  die "You must provide a test-selecting match string (ctk_matchstr)!"
-# [ "$ctk_tgt_urlRoot" ]  ||  die "You must provide a target server (ctk_tgt_urlRoot)!"
-[ $# -eq 0 ]  ||  die "ERROR: Unexpected commands!"
-
 # if target/ exists, amend its name
 if [ -d "$TGTDIR" ]; then
-  NEWDIR=${TGTDIR}-`date -Iseconds`
+  NEWDIR=${TGTDIR}-`date "+%Y-%m-%d_%H_%M_%S"`
   mv ${TGTDIR} $NEWDIR
-  # if the just-renamed directory is empty, we can forget it
-  if [ "$(ls -A $NEWDIR)" ]; then
-        out "moved existing results to "${NEWDIR}
-  else
-      rmdir $NEWDIR
-  fi
 fi
 # if no target/ then create it
 mkdir ${TGTDIR}
 
 # run the CTK
+
+# pass along any command line params (mostly, property settings)
 # other properties are set in application.properties, log4j2.xml
 # Probably should use full-blown JAVACMD var to find/use specific JDK, props etc
-java -Dctk.matchstr=$ctk_matchstr -Dctk.tgt.urlRoot=$ctk_tgt_urlRoot -jar ${CTKJAR}
+exec java -jar ${CTKJAR} "$@"

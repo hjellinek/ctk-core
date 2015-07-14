@@ -49,17 +49,12 @@ public class TestRunner implements CtkLogs {
         /* ********* TEST SELECTION ******** */
 
         String matchStr = props.ctk_matchstr;
-        log.debug("matchstr: " + matchStr);
+        log.debug("matchStr: " + matchStr);
 
-        // work through each clause one at a time, even though it might mean re-run tests
-        // alternative is to get the classes all into a Set and run that
-
-        for (String mstr : matchStr.split(",")) {
-            log.debug("seeking test classes that match < " + mstr + " >");
 
                     /* ****** MAIN RUN-THE-TESTS *********** */
-            antExecutor.executeAntTask(props.ctk_testjar, mstr);
-        }
+        antExecutor.executeAntTask(props.ctk_testjar, matchStr);
+
 
         /* ******* post-Test reporting ********* */
         // ant file runs junitreporter, so those reports are done
