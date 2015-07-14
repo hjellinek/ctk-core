@@ -16,11 +16,16 @@
     <packaging>jar</packaging>
 
     <dependencies>
-  <!--      <dependency>
+        <dependency>
+            <groupId>org.ga4gh</groupId>
+            <artifactId>ctk-cli</artifactId>
+            <version>0.5.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.ga4gh</groupId>
             <artifactId>ctk-schemas</artifactId>
             <version>${ga4gh.schema.local.version}</version>
-        </dependency>-->
+        </dependency>
 
         <!-- asserts, conditions, etc for the schema -->
         <dependency>
@@ -33,42 +38,53 @@
             <artifactId>ctk-transport</artifactId>
             <version>0.5.1-SNAPSHOT</version>
         </dependency>
+
+
+        <!-- bring in the Spring stuff -->
         <dependency>
-            <groupId>org.ga4gh</groupId>
-            <artifactId>ctk-schemas</artifactId>
-            <version>${ga4gh.schema.local.version}</version>
+            <!-- The core Spring Boot starter, including
+            auto-configuration support, logging and YAML -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <!-- std logging for Spring Boot is logback, but I
+            want to use log4j2 in the CTK so we exclude the default logging
+            here and add in log4j2 later -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- CTK uses log4j2, some of the tooling is more common than Logback -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>pl.pragmatists</groupId>
-            <artifactId>JUnitParams</artifactId>
+            <!-- Support for common test dependencies, including JUnit, Hamcrest
+            and Mockito along with the spring-test module. -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
-        <!-- use tap4j to get Test Anything Protocol support -->
+
+        <!-- turn on @ConfigurationProcessor so we can have ctk.* automatic naming -->
         <dependency>
-            <groupId>org.tap4j</groupId>
-            <artifactId>tap4j-ext</artifactId>
-            <version>${tap4j-ext.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
+
+        <!-- seems like we need the junit3 ant-junit, as well as the junit4! -->
         <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit4</artifactId>
-            <version>2.18.1</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.junit-toolbox</groupId>
-            <artifactId>junit-toolbox</artifactId>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-junit</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-junit4</artifactId>
         </dependency>
 
         <!-- need BCEL during site build -->
@@ -76,31 +92,8 @@
             <groupId>org.apache.bcel</groupId>
             <artifactId>bcel</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>${unirest-java.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
 
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -121,7 +114,7 @@
                 <version>2.18.1</version>
                 <configuration>
                     <useFile>false</useFile>
-                                        <includes>
+                    <includes>
                         <include>**/*Spec.java</include>
                         <include>**/*Test.java</include>
                     </includes>
@@ -133,7 +126,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.18.1</version>
                 <!-- accept default config naming patterns, *IT || IT* -->
@@ -169,6 +161,27 @@
     </build>
     <reporting>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc-no-fork</report>
+                            <report>test-javadoc-no-fork</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
