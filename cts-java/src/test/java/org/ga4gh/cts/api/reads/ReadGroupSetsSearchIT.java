@@ -1,6 +1,7 @@
 package org.ga4gh.cts.api.reads;
 
 import junitparams.*;
+import org.apache.avro.AvroRemoteException;
 import org.ga4gh.*;
 import org.ga4gh.ctk.*;
 import org.ga4gh.ctk.transport.*;
@@ -22,29 +23,39 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
 
     private static ReadsProtocolClient client;
 
+    private static Map<String, String> stringMap;
+    static {
+        stringMap = new HashMap<>();
+        stringMap.put("EMPTY", "");
+        stringMap.put("foo", "foo");
+        stringMap.put("LO_COV_533_CHS", "low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
+        stringMap.put("LO_COV_096_GBR", "low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522");
+        stringMap.put("LO_COV_534_CHS", "low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
+    }
+
     /**
      * <p>Good readgroup sets name should retrieve only matching read group sets.</p>
      * <p>IDL says a GASearchReadGroupSetsRequest should match based on a substring:</p>
-     * <cite>"Only return read group sets for which a substring of the name matches this string.</cite>
+     * <cite>"Only return read group sets for which a substring of the name matches this string."</cite>
      * <p>This test accepts a key, looks up the long readgroup name for a static map,
      * extracts a substring from that valid name, and uses the subsctring in a search then verifies that
      * all the returned ReadGroupSets match the substring.</p>
      *
-     * @param rgName the rg name key
-     * @throws Exception the exception
+     * @param rgName the readgroup name key
+     * @throws AvroRemoteException the exception thrown
      */
     @Ignore("ReadGroupSets not yet supported, and returned 'name' is null")
     @Test
-    @Parameters({ // key into the 'stringmap' variable
+    @Parameters({ // key into the 'stringMap' variable
             "LO_COV_533_CHS",
             "LO_COV_096_GBR",
             "LO_COV_534_CHS"
     })
-    public void goodReadgroupSetsNameShouldRetrieveOnlyMatchingReadGroupSets(String rgName) throws Exception {
+    public void goodReadgroupSetsNameShouldRetrieveOnlyMatchingReadGroupSets(String rgName) throws AvroRemoteException {
         // IDL: "Only return read group sets for which a substring of the name
         // matches this string.
 
-        String replacedRgName = stringmap.get(rgName);
+        String replacedRgName = stringMap.get(rgName);
         // build a substring of the input name
         String substr = replacedRgName.substring(3, 9);
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
@@ -67,14 +78,14 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
      * <p>Pass in a syntactically valid but non-matching datasetID to a GASearchReadGroupSetsRequest
      * expect a valid GASearchReadGroupSetsResponse with no ReadGroupSets in it.</p>
      *
-     * @throws Exception the exception
+     * @throws AvroRemoteException the exception thrown
      */
 /* ****************************************** */
     // DATASETID tests
     /* ****************************************** */
     @Ignore("datasetId not yet supported in v0.5.1 server")
     @Test
-    public void readgroupSetResponseForDumbDatasetidShouldBeEmpty() throws Exception {
+    public void readgroupSetResponseForDumbDatasetidShouldBeEmpty() throws AvroRemoteException {
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
                 .setName(null)
                 .setDatasetIds(Collections.singletonList("realyUnlikelyQQQ"))
@@ -94,8 +105,8 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
      * <p>Test using an empty String, and an unused String</p>
      *
      *
-     * @param datasetid the datasetid (actually, a key to the static 'stringmap')
-     * @throws Exception possible exception, keep compiler happy
+     * @param datasetid the datasetid (actually, a key to the static 'stringMap')
+     * @throws AvroRemoteException a possible exception, keep compiler happy
      */
     @Ignore("datasetId not supported in v0.5.1 server")
     @Test
@@ -103,14 +114,14 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
             "EMPTY",
             "foo"
     })
-    public void badDatasetidInSearchReadGroupSetsRequestShouldReturnErrors(String datasetid) throws Exception {
+    public void badDatasetidInSearchReadGroupSetsRequestShouldReturnErrors(String datasetid) throws AvroRemoteException {
         log.info("testing searchReadGroupSets");
 
         //  Builder does validation and sets defaults
         // this is based on  the example from the demo writeup:
         // curl --data '{"datasetIds":[], "name":null}' --header 'Content-Type: application/json' \
         //       http://localhost:8000/v0.5.1/readgroupsets/search
-        String replacedDatasetid = stringmap.get(datasetid);
+        String replacedDatasetid = stringMap.get(datasetid);
         GASearchReadGroupSetsRequest reqb = GASearchReadGroupSetsRequest.newBuilder()
                 .setName(null)
                 .setDatasetIds(Arrays.asList(datasetid.split(":")))
@@ -127,15 +138,7 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
         org.ga4gh.GAReadGroupSetAssert.assertThat(rgs.get(0)).hasDatasetId(datasetid);
     }
 
-    private static Map<String, String> stringmap;
-    static {
-        stringmap = new HashMap<>();
-        stringmap.put("EMPTY", "");
-        stringmap.put("foo", "foo");
-        stringmap.put("LO_COV_533_CHS","low-coverage:HG00533.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
-        stringmap.put("LO_COV_096_GBR","low-coverage:HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522");
-        stringmap.put("LO_COV_534_CHS","low-coverage:HG00534.mapped.ILLUMINA.bwa.CHS.low_coverage.20120522");
-    }
+
 
     @BeforeClass
     public static void setupTransport() throws Exception {

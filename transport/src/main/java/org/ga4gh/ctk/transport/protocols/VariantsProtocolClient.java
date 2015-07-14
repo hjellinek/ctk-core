@@ -31,7 +31,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      * `GASearchVariantSetsRequest` as the post body and will return a JSON version
      * of `GASearchVariantSetsResponse`.
      *
-     * @param request
+     * @param request the GASearchVariantSetsRequest we're issuing
      */
     @Override
     public GASearchVariantSetsResponse searchVariantSets(GASearchVariantSetsRequest request) throws AvroRemoteException, GAException {
@@ -50,7 +50,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      * `GASearchVariantSetsRequest` as the post body and will return a JSON version
      * of `GASearchVariantSetsResponse`.
      *
-     * @param request
+     * @param request the GASearchVariantSetsRequest we're issuing
      * @param wt the WireTracker control/recording support object
      */
     public GASearchVariantSetsResponse searchVariantSets(GASearchVariantSetsRequest request, WireTracker wt) throws AvroRemoteException, GAException {
@@ -64,7 +64,7 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      * `POST /variants/search` must accept a JSON version of `GASearchVariantsRequest`
      * as the post body and will return a JSON version of `GASearchVariantsResponse`.
      *
-     * @param request
+     * @param request the GASearchVariantsRequest we're issuing
      */
     @Override
     public GASearchVariantsResponse searchVariants(GASearchVariantsRequest request) throws AvroRemoteException, GAException {
@@ -82,8 +82,8 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      * `POST /variants/search` must accept a JSON version of `GASearchVariantsRequest`
      * as the post body and will return a JSON version of `GASearchVariantsResponse`.
      *
-     * @param request
-     * @param wt the WireTracker contro/recording support object
+     * @param request the GASearchVariantsRequest we're issuing
+     * @param wt the WireTracker control/recording support object
      */
 
     public GASearchVariantsResponse searchVariants(GASearchVariantsRequest request, WireTracker wt) throws AvroRemoteException, GAException {
