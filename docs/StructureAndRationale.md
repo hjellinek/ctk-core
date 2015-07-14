@@ -13,28 +13,28 @@ ctk bash script, raw java invoke +--------------------------->ctk-cli           
                                                              |(command line java app runs  |
                            +-----------------------------+   |ant, generates junit reports)|
                            | ctk-core (maven)            |   |                             |
-command line 'mvn'+--------> (build env, run tests as    |   +--------+--------------+-----+
+command line 'mvn'+--------> (build env, run tests as    |   +--------+--------------^-----+
                            | 'integration test', makes   |            |              |      
 IDE with maven runner+-----> 'site' of code, javadoc)    |            |              |      
-                           +--------------------------+--+            |              |      
-                                                      |               |              |      
-                                                  +---v---------------v----+    +----v-----+
+                           +-----------------------------+            |              |      
+                                                                      |              |      
+                                                  +-------------------v----+    +----+-----+
 IDE with JUnit runner +--------------------------->                        |    |dist      |
                                                   |                        |    |(build zip|
               +-----------------------------------+      cts-java          |    |for CLI)  |
               |                                   |      (junit tests)     |    +----------+
               |                        +----------+                        |                
-              |                        |          +                        |    +----------+            
+              |                        |          |                        |    +----------+            
               |                        |           +-----------------+-----+    |cts-demo  |            
               |                        |                             |          |(show test|            
               |                        |                             |          |techniques|            
               |                        |                             |          +----------+            
               |                        |                             |                      
               |                        |                             |                      
-        +-----+--------+     +---------v------------+       +--------+------+               
-        |              |     | ctk-domain           |       | ctk-transport |         target
-        |cts-schemas   |     | (asserts, predicates,|       | to/from JSON, +-------> server
-IDL +--->(java classes)<-----+ test support)        <-------+ logging       |               
+        +-----v--------+     +---------v------------+       +--------v------+               
+        |cts-schemas   |     | ctk-domain           |       | ctk-transport |         
+        |(java classes)|     | (asserts, predicates,|       | to/from JSON, /-------\ target
+IDL <---+              <-----+ test support)        <-------+ logging       \-------/ server       
 avro    |              |     |                      |       |               |               
         +--------------+     +----------------------+       +---------------+               
 
@@ -61,4 +61,4 @@ The tests intentionally do not use dependency injection, aspect orientation, or 
 The simple environment for the tests (environment properties and normal junit environment, with server-specific communications delegated to the ctk-transport module) should help when the team starts using different JVM languages (groovy, javascript, jython, etc); as long as each language delivers a jar
 file of test classes that are JUnit-invocable, the tests should mix into the CTK reasonably well.
 
-(This has not yet been tried, and it isn't clear how the test documention and source get knotted together across languages.)
+(7/13/2015 Wayne S: This has not yet been tried, and it isn't clear how the test documention and source get knotted together across languages.)
