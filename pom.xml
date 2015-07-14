@@ -27,7 +27,7 @@
         <module>ctk-transport</module>
         <module>ctk-cli</module>
         <module>cts-java</module>
-        <module>technique-demo</module>
+        <module>cts-demo-java</module>
         <module>dist</module>
     </modules>
 

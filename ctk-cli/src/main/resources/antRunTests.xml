@@ -7,43 +7,48 @@
     <!-- 'basedir' seems to be the dir the buildfile is in (lib} -->
     <!-- the calling AntExecutor should set it explicitly -->
 
-    <target name="tests">
+    <target name="exposeTestClasses">
         <mkdir dir="${basedir}/../lib/test-classes"/>
-        <!-- empty out the test-classes, just in case -->
+
         <unjar src="${ctk.testjar}"
-               dest="${basedir}/../lib/test-classes"/>
-        <unjar src="${basedir}/../ctk-cli-0.5.1-SNAPSHOT.jar"
-               dest="${basedir}/../lib/test-classes">
+               dest="${basedir}/../lib/test-classes"
+               overwrite="false"/>
+        <!-- exclude logging - the ant classloader seems to pick it up from ctk -->
+        <!-- comment out unpack of launcher/framework jar, trying to enure deps directly in
+             cts-java for faster unpack/retest and to ensure limits on dependence on launcher -->
+ <!--       <unjar src="${basedir}/../ctk-cli-0.5.1-SNAPSHOT.jar"
+               dest="${basedir}/../lib/test-classes"
+               overwrite="false">
             <patternset>
                 <include name="lib/*.jar"/>
-                <!-- exclude logging - the ant classloader seems to pick it up from ctk -->
                 <exclude name="**/*slf4j*.jar"/>
                 <exclude name="**/*log4j*.jar"/>
             </patternset>
-        </unjar>
+        </unjar>-->
+    </target>
+    <target name="tests" depends="exposeTestClasses">
         <junit printsummary="on" fork="off" filtertrace="on" haltonfailure="false" showoutput="true">
             <classpath>
-                <fileset dir="${basedir}/../lib/test-classes/lib">
+                <fileset dir="${basedir}/../lib/test-classes">
                     <include name="**/*.jar"/>
                 </fileset>
                 <pathelement location="${basedir}/../target/test-classes"/>
             </classpath>
             <batchtest fork="off" todir="${basedir}/../target">
-                <fileset dir="${basedir}/../lib/test-classes">
-                    <filename regex="${ctk.matchstr}"/>
-                </fileset>
+                <!-- matchstr is comma-sep string of ant-style patterns, like
+                **/*IT.class,**/IT*.class -->
+                <zipfileset src="${ctk.testjar}" includes="${ctk.matchstr}"/>
             </batchtest>
             <formatter type="xml"/>
             <formatter type="brief"/>
             <!-- this "formatter" just bridges junit events to the CTK log -->
-            <formatter classname="org.ga4gh.ctk.TestExecListener" />
+            <formatter classname="org.ga4gh.ctk.TestExecListener"/>
         </junit>
     </target>
 
     <target name="reports" depends="tests">
         <mkdir dir="${basedir}/../target/report"/>
         <junitreport todir="${basedir}/../target/report">
-
             <fileset dir="${basedir}/../target">
                 <include name="TEST-*.xml"/>
             </fileset>
