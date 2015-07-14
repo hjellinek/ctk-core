@@ -2,15 +2,22 @@
 #
 # Run the GA4GH CTK
 #
-# When this script runs it will move aside any existing target/ (with your
-# previous test results) into a directory named target-`date -Iseconds`
+# This script launches the CTK, passing in properties you specify on the
+# command line using "--<property name>=<property value>". Example:
 #
-# This script passes in the most important properties to control
-# the CTK, but you can also control the CTK using the application.properties
+# ./ctk --ctk.tgt.urlRoot=http://localhost:8000/v0.5.1 --cts.matchstr=**/*IT.class
+#
+# You can also control the CTK using the application.properties
 # and log4j2.xml files, or by simply setting the controlling properties in
 # your general environment.
 #
+# When this script runs it will move aside any existing target/ (with your
+# previous test results) into a directory named target-`date -Iseconds`
 ###############################################################################
+
+# using a bash template script, so there's support here for verbose etc flags in
+# in case the script grows in complexity later
+
 set -e          # exit on command errors (so you MUST handle exit codes properly!)
 set -E          # pass trap handlers down to subshells
 set -o pipefail # capture fail exit codes in piped commands
@@ -56,7 +63,7 @@ die() { err "EXIT: $1" && [ "$2" ] && [ "$2" -ge 0 ] && exit "$2" || exit 1; }
 # Show help function to be used below
 show_help() {
 	awk 'NR>1{print} /^(###|$)/{exit}' "$CMD"
-	echo "USAGE: $(basename "$CMD") [arguments]"
+	echo "USAGE: $(basename "$CMD") [arguments] --<propname>=<propval> --<propname>=<propval> ..."
 	echo "ARGS:"
 	MSG=$(awk '/^NARGS=-1; while/,/^esac; done/' "$CMD" | sed -e 's/^[[:space:]]*/  /' -e 's/|/, /' -e 's/)//' | grep '^  -')
 	EMSG=$(eval "echo \"$MSG\"")
@@ -80,13 +87,25 @@ esac; done
 
 ###############################################################################
 
-# if target/ exists, amend its name
+# if target/ exists, amend its name by suffixing the time the test run started
 if [ -d "$TGTDIR" ]; then
-  NEWDIR=${TGTDIR}-`date "+%Y-%m-%d_%H_%M_%S"`
-  mv ${TGTDIR} $NEWDIR
+  # the target may have been created in any of 3 ways (unzip, or java, or this
+  # script). If the script created it, we have a .teststart to give us a nice
+  # renaming suffix. But, if java or unzip created it, then we don't know when it
+  # actually ran.
+  if [ -f "$TGTDIR"/.teststart ]; then
+      NEWDIR=${TGTDIR}-`head -n 1 ${TGTDIR}/.testinfo`
+  else
+      # no .teststart to give us a start time
+      # so we'll use the access time on directory, in seconds_since_epoch
+      NEWDIR=${TGTDIR}-`stat -c %X ${TGTDIR}`
+  fi
+  mv ${TGTDIR} ${NEWDIR}
 fi
-# if no target/ then create it
+# no target dir so create it, with timestamp file
+# using timestamp because no POSIX creation that is certain to be available
 mkdir ${TGTDIR}
+echo `date "+%Y-%m-%d_%H_%M_%S"` > ${TGTDIR}/.testinfo
 
 # run the CTK
 

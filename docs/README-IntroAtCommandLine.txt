@@ -20,13 +20,16 @@ There are two ways to run the CTK you just unzipped from the command line: you c
 command, or you can use the 'ctk' script. The `ctk` script will run the java command for you, and
 do a little support work to avoid overwriting test results when you run the tests multiple times.
 
-** To use 'java' to run the tests::
+When the tests are done, the reports will be in the `target/` directory. There are normal ant-junit reports
+in txt and XML in `target`, and HTML versions in `target/report/html/`
 
-java -Dctk.tgt.urlRoot=<your server URL base> -jar ctk-cli-0.5.1-SNAPSHOT.jar
+** To use 'java' to run the tests:
+
+  java -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=<your server URL base>
 
 so, for example,
 
-java -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1 -jar ctk-cli-0.5.1-SNAPSHOT.jar
+  java -jar ctk-cli-0.5.1-SNAPSHOT.jar -Dctk.tgt.urlRoot=http://myserver:8000/v0.5.1
 
 Tip - if you're regularly testing against the same server, you can set an environment
 variable "ctk_tgt_urlRoot" (or "ctk.tgt.urlRoot" if your environment prefers that)
@@ -40,12 +43,45 @@ We'll stop adding that ctk.tgt.urlRoot property to the example command lines now
 
 If you want to see a failure example, add another property:
 
-java -Dcts.demofail=true -jar ctk-cli-0.5.1-SNAPSHOT.jar
+  java -jar ctk-cli-0.5.1-SNAPSHOT.jar --cts.demofail=true
 
 There will be some console output, and you can check in `target/report` for details;
 if you have a browser, check out `target/report/html/index.html`
 
 ** To use 'ctk' to run the tests:
+
+The `ctk` command has a help function, so you can start with
+
+    ctk -h
+
+and see that you can run with just:
+    ./ctk
+
+This will use defaults and environment variables and property files. If you want to override
+some properties, add the property and new value to the command line:
+
+    ./ctk --ctk.tgt.urRoot=http://myserver:8000/v0.5.1/
+
+Just as when running using the 'java' command, there will be some console output, and you can
+check in `target/report` for details; if you have a browser, check out
+target/report/html/index.html
+
+If you set environment variables (or property file properties) those will still get picked up
+when you run via the `ctk` script; all `ctk` does about properties is give you a shortcut to
+setting a couple common properties and then run the same java program you get running the
+`java` command.
+
+#### Previous Results
+If you run the CTK using `java` and then run it again using `java`, the new results overwrite
+the previous results in the `target/` directory. But if you're on bash and using the `ctk` script,
+the script will rename your previous test results `target` directory so you don't lose any data.
+The new name will depend on what created the `target/` directory in the first place:
+- if the `ctk` script creates it, the script places a file `.testinfo` in the directory
+  in which the first line is the time the test begins, and so the new name will be something like
+  `target-2015-07-14_12_08_22/`
+- if target is created by the unzipping or some process which doesn't create a `.testinfo` then
+  the `ctk` script will suffix the name with the number of seconds since Unix Epoch of the `target/`'s
+  last access, so the new name for the previous results will be something like `target-1436900900/`
 
 DETAILS
 
@@ -90,31 +126,12 @@ So you end up with:
       |       |- antRunTests.xml
       | - target/
 
-Alternate ways to run
 
-There are three major ways to run the CTK - two from the command line, or from inside your maven setup.
-(If you're running from an IDE, you'lll probably want to drive the CTK through Maven, as discussed in other documents.)
-
-The two command line techniques are to:
-- directly run the executable java jar (as will be mostly discussed here)
-- use a wrapper script (which will directly drive the java jar; we supply a starting point for a bash script, in `ctk`)
-
-Run and Results
-
-The simplest way to run is to simply execute all tests from the launch dir, passing in
-the address of your target server; if you're on bash, you can do this using the `ctk` script (start with `ctk -h` for usage),
-or in any case you can just invoke `java`:
-
-- ctk ... (from a bash command line)
-- java -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.tgt.urlRoot=http://myserver:8000/v0.5.1
 
 Advanced tip: if you want to attach a debugger to the command-line CTK, use:
 
     java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
          -jar ctk-cli-0.5.1-SNAPSHOT.jar
-
-When the tests are done, the reports will be in the `target/` directory. There are normal ant-junit reports
-in txt and XML in `target`, and HTML versions in `target/report/html/`
 
 Altering the run
 
@@ -142,7 +159,7 @@ If you want to alter which tests get run, you can do that on the command line
 matched against class names:
 
 
-    ~/temp>java -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethodsEndpointAliveIT.* /
+    ~/temp>java -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.matchstr=**/*ReadMethodsEndpointAliveIT.class /
            --ctk.tgt.urlRoot=http://192.168.2.115:8000/v0.5.1/
     [TESTLOG] 4 failed, 6 passed, 0 skipped, 1068 ms
     [TESTLOG] FAIL: [0] TWO_GOOD, NOT_IMPLEMENTED (multipleReadGroupsNotSupported)(org.ga4gh.cts.api.reads.ReadMethodsEndpointAliveIT):
@@ -185,11 +202,11 @@ but we'll describe it nonetheless:
 
 To run a selected test, we just match its name as a regex to the ctk.matchstr property:
 
-    java -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.matchstr=.*ReadMethods.*
+    java -jar ctk-cli-0.5.1-SNAPSHOT.jar --ctk.matchstr=**/*ReadMethodsIT.class
 
  or
 
-    ctk -m ".*ReadMethods.*"
+    ctk --ctk.matchstr=**/*ReadMethodsIT*"
 
 Actually, `ctk.matchstr` allows a comma-separated string of regex'es so you could select a couple tests,
 but between the regex-ness and the command-line escaping it's usually better to set anything complicated
@@ -227,7 +244,7 @@ on a property; here's the example code:
 
 Let's trigger it:
 
-cmd_prompt>java -Dcts.demofail=true -Dctk.matchstr=.*Landing.* -jar ctk-cli-0.5.1-SNAPSHOT.jar
+cmd_prompt>java -jar ctk-cli-0.5.1-SNAPSHOT.jar --cts.demofail=true --ctk.matchstr=**/*Landing*.class
 [TESTLOG] Suite start org.ga4gh.cts.core.LandingPageIT
 [TESTLOG] Dummying failure because cts.demofail is true
 [TESTLOG] FAILED propertyCanCauseTestFail(org.ga4gh.cts.core.LandingPageIT) due to expected:<[tru]e> but was:<[fals]e>
