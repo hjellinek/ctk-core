@@ -116,14 +116,14 @@ public class AntExecutor implements CtkLogs {
             project.addReference("ant.projectHelper", projectHelper);
             projectHelper.parse(project, buildFile);
         } catch (Exception e) {
-            log.warn("Exception setting up ant project based on " + antFile, e.getCause());
+            CtkLogs.log.warn("Exception setting up ant project based on " + antFile, e.getCause());
             e.printStackTrace();
         }
 
 
-        log.debug("ctk.antlog.consolelogger is " + props.ctk_antlog_consolelogger);
+        CtkLogs.log.debug("ctk.antlog.consolelogger is " + props.ctk_antlog_consolelogger);
         if("ON".equals(props.ctk_antlog_consolelogger)) {
-            log.debug("enabling ConsoleLogger");
+            CtkLogs.log.debug("enabling ConsoleLogger");
             project.addBuildListener(consoleLogger);
         }
         String targetToExecute = "";
@@ -136,11 +136,11 @@ public class AntExecutor implements CtkLogs {
             targetToExecute = project.getDefaultTarget();
             project.executeTarget(targetToExecute);
             project.fireBuildFinished(null);
-            testlog.info("Overall: " + TestExecListener.getTestReport());
+            CtkLogs.testlog.info("Overall: " + TestExecListener.getTestReport());
         } catch (BuildException buildException) {
             project.fireBuildFinished(buildException);
             success = false;
-            log.warn("Failed attempt to run " + targetToExecute + " due to " + buildException.getMessage());
+            CtkLogs.log.warn("Failed attempt to run " + targetToExecute + " due to " + buildException.getMessage());
         }
         if ("ON".equals(props.ctk_antlog_clearstats))
             TestExecListener.resetStats(); // these are static fields which accumulate results

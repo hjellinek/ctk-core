@@ -38,7 +38,7 @@ http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 ">
             <fileMode>0744</fileMode>
         </file>
         <file>
-            <source>../ctk-cli/target/classes/application.properties</source>
+            <source>../ctk-testrunner/target/classes/application.properties</source>
             <outputDirectory>/</outputDirectory>
         </file>
         <file>
@@ -46,7 +46,7 @@ http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 ">
             <outputDirectory>lib</outputDirectory>
         </file>
         <file>
-            <source>../ctk-cli/target/classes/antRunTests.xml</source>
+            <source>../ctk-testrunner/target/classes/antRunTests.xml</source>
             <outputDirectory>lib</outputDirectory>
         </file>
     </files>
