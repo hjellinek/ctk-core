@@ -26,8 +26,10 @@
         <module>ctk-domain</module>
         <module>ctk-transport</module>
         <module>ctk-cli</module>
+        <module>ctk-testrunner</module>
         <module>cts-java</module>
         <module>cts-demo-java</module>
+        <module>ctk-server</module>
         <module>dist</module>
     </modules>
 
