@@ -52,13 +52,13 @@ avro    |              |     |                      |       |               |
 - **cts-demo--java** is a module of examples test techniques (using the custom asserts, etc)
 - **dist** is a maven assembly module, to build the distributions of the CTK (22 June 2015 builds a single ZIP which unpacks to be the command-line tool)
 
-The design intent is that the centralvalue (the tests) be independent of the launchers so that tests can be run from command lines, build processes, IDEs, web servers or other environments. The test framework itself should be stable and well-documented (hence JUnit 4).
+The design intent is that the central value (the tests) be independent of the launchers so that tests can be run from command lines, build processes, IDEs, web servers or other environments. The test framework itself should be stable and well-documented (hence JUnit 4).
 
-Therefore, while the launchers have sophisticated backing softare such as maven, or Spring Framework, the tests themselves are organized as ant-runnable JUnit with output to JUnit listeners and normal java logging.
+Therefore, while the launchers have sophisticated backing software such as Maven, or Spring Framework, the tests themselves are organized as ant-runnable JUnit with output to JUnit listeners and normal java logging.
 
 The tests intentionally do not use dependency injection, aspect orientation, or other support mechanisms which may themselves increase the mental or maintenance workload for test writers, or limit future migration of the tests to improved environments.
 
 The simple environment for the tests (environment properties and normal junit environment, with server-specific communications delegated to the ctk-transport module) should help when the team starts using different JVM languages (groovy, javascript, jython, etc); as long as each language delivers a jar
 file of test classes that are JUnit-invocable, the tests should mix into the CTK reasonably well.
 
-(7/13/2015 Wayne S: This has not yet been tried, and it isn't clear how the test documention and source get knotted together across languages.)
+(7/13/2015 Wayne S: This has not yet been tried, and it isn't clear how the test documentation and source get knotted together across languages.)

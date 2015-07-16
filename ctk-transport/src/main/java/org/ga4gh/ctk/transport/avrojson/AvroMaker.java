@@ -7,7 +7,7 @@ import org.apache.avro.specific.*;
 import static org.slf4j.LoggerFactory.*;
 
 /**
- * Deserialize GA4GH JSON to JVM object defined by Avro IDL
+ * Deserialize GA4GH JSON to JVM object defined by Avro IDL.
  * Created by Wayne Stidolph on 6/3/2015.
  */
 public class AvroMaker<T extends SpecificRecordBase> {

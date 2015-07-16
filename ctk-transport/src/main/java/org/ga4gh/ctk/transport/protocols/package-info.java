@@ -7,7 +7,7 @@
  * (extracted from the IDL comments).</p>
  * <p>This package provides RespCode as an enumeration/abstraction for the HTTP response
  * code integers. This class will provide GA4GH-specific comparators and trackers. This
- * is intended to be additonal isolation from the HTTP layer in case the GA4GH effort
+ * is intended to be additional isolation from the HTTP layer in case the GA4GH effort
  * moves away from JSON/HTTP to a binary protocol while still needing to track communications
  * success/fail states.</p>
  * <p>Each API 'Protocol' has a matching "ProtocolClient" class. This class implements
