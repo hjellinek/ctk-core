@@ -42,7 +42,7 @@ import java.io.*;
  * </ul>
  * <p>The class starts
  * from the "ctk.matchstr" property, splits it on commas, and loops over the split-out
- * values passing each into the ant task as a seperate ant run. (So, multiple comma-
+ * values passing each into the ant task as a separate ant run. (So, multiple comma-
  * separated values in ctk.matchstr cause multiple ant executions and independent reports)</p>
  * <p>As ant runs, it emits "build event" notices - that the run has started, or finished, etc. This
  * class attaches an {@link AntExecListener} to map those events into the application logs</p>
@@ -68,7 +68,7 @@ public class AntExecutor implements CtkLogs {
     // private static org.slf4j.Logger log = getLogger(AntExecutor.class);
 
     @Value("${ctk.antfile}")
-    private File antFile; // use direct invjection; let Spring convert the String to a File
+    private File antFile; // use direct injection; let Spring convert the String to a File
     public void setAntfile(File theFile){
         antFile = theFile;
     }

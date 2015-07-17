@@ -40,7 +40,7 @@ Each API has a ProtocolClient class which is responsible for getting requests to
 
 The methods such as `searchRead(...) can generally take an optional WireTracker object; if it included, then when the method returns the provided WireTracker will be filled out with the actual "on the wire" JSON and the RespCode, for detailed evaluation.
 
-**TODO** add the entire HttpResponse to the WireTracker forfuture assertions about returned header data, cookies, etc.
+**TODO** add the entire HttpResponse to the WireTracker for future assertions about returned header data, cookies, etc.
 
 Each test class also hooks into the logging framework, with a class static:
 
@@ -50,7 +50,7 @@ Test classes provide the normal object-oriented coherence/coupling tradeoffs: pu
 
 ### Runners
 
-When JUnit is told to run a class as a test class, it uses a "Runner" to do this; there is a default Runner, but there are alternatives which give us varying extra capabilities ... but not all Runners have all capabilities. So, one way that test methods get grouped into different test classes is by the Runners they use. For example, the default JUnit Runner doesn't support parametrizing test methods with externally-supplied data, so we use a special runner by annotating the test class:
+When JUnit is told to run a class as a test class, it uses a "Runner" to do this; there is a default Runner, but there are alternatives which give us varying extra capabilities ... but not all Runners have all capabilities. So, one way that test methods get grouped into different test classes is by the Runners they use. For example, the default JUnit Runner doesn't support parameterizing test methods with externally-supplied data, so we use a special runner by annotating the test class:
 
 ```java
     @RunWith(JUnitParamsRunner.class)

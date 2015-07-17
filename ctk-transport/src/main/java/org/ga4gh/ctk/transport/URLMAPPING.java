@@ -6,7 +6,7 @@ import java.util.*;
 import static org.slf4j.LoggerFactory.*;
 
 /**
- * <p>Mapping support to get from an IDL enpoint to an implementation endpoint.</p>
+ * <p>Mapping support to get from an IDL endpoint to an implementation endpoint.</p>
  * <p>Probably this would be better-done using e.g., Apache Commons Configuration,
  * but that seems to get more complicated than this code needs to be so I  just put
  * this together fairly quick and only anecdotally tested it - so, don't have a lot
@@ -130,10 +130,10 @@ public class URLMAPPING {
      * Load properties by resource or file name.
      *
      * <p>Looks on classpath for resource with provided name;
-     * if found, loads the included properties matcing prefix "ctk.tgt."</p>
+     * if found, loads the included properties matching prefix "ctk.tgt."</p>
      *
-     * <p>Looks on file system for resource matching name; loads thos props
-     * (which allows for file system to override classpath.</p>
+     * <p>Looks on file system for resource matching name; loads those props
+     * (which allows for file system to override classpath).</p>
      *
      * @param resName the res name
      * @return the properties
@@ -220,7 +220,7 @@ public class URLMAPPING {
         }
     }
 
-    // Syntactic suger, mostly to help IDEs autocomplete
+    // Syntactic sugar, mostly to help IDEs autocomplete
     // These methods are an incomplete list, I just added them when
     // I needed them. You can always just do
     // URLMAPPING.endpoints.get("mykey") etc

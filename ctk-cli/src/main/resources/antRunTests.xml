@@ -14,7 +14,7 @@
                dest="${basedir}/../lib/test-classes"
                overwrite="false"/>
         <!-- exclude logging - the ant classloader seems to pick it up from ctk -->
-        <!-- comment out unpack of launcher/framework jar, trying to enure deps directly in
+        <!-- comment out unpack of launcher/framework jar, trying to ensure deps directly in
              cts-java for faster unpack/retest and to ensure limits on dependence on launcher -->
  <!--       <unjar src="${basedir}/../ctk-cli-0.5.1-SNAPSHOT.jar"
                dest="${basedir}/../lib/test-classes"

@@ -155,7 +155,7 @@
             <version>${gson.version}</version>
         </dependency>
 
-        <!-- lombok saves us some typing in the COnfig class -->
+        <!-- lombok saves us some typing in the Config class -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

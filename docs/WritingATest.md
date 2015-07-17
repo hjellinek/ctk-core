@@ -62,7 +62,7 @@ You select the Runner with a `@RunWith` annotation at the class level. The CTK-a
 Creating a new API "Foo" has two major steps - creating the FooProtocolClient which communicates with the new endpoints, and creating the classes and/or marker interfaces that we can use to control which tests get executed (the test-control infrastructure). Then we just write normal JUnit tests.
 
 #### Creating a FooProtocolClient
->**Design note**: doing this is going to be pretty much a cut/paste, but making a code-gen facility doesn't seem worth the overhead for the few clients we'll need... and concrete inheritance or even genericizing seems a bit premature for the payoff, since we won't make many ProtocolCients and we don't know that the evolving GA4GH APIs will follow the pattern we have used to date. So we'll leave these as disconnected classes for now.
+>**Design note**: doing this is going to be pretty much a cut/paste, but making a code-gen facility doesn't seem worth the overhead for the few clients we'll need... and concrete inheritance or even genericizing seems a bit premature for the payoff, since we won't make many ProtocolClients and we don't know that the evolving GA4GH APIs will follow the pattern we have used to date. So we'll leave these as disconnected classes for now.
 
 The FooProtocolClient goes in the `transport` package:
 
