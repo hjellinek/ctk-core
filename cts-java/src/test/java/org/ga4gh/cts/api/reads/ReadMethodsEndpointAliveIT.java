@@ -165,10 +165,10 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
 
     @BeforeClass
     public static void setupTransport() throws Exception {
-        //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
-        // service = new SimpleOrderServiceEndpoint(endpointAddress);
-        URLMAPPING.doInit();
-        client = new ReadsProtocolClient();
+        URLMAPPING urls = URLMAPPING.getInstance();
+        log.info("ReadMethodsEndpointAliveIT set up urls.getUrlRoot of " + urls.getUrlRoot());
+        log.trace("ReadMethodsEndpointAliveIT set up urls of " + String.valueOf(urls.getEndpoints()));
+        client = new ReadsProtocolClient(urls);
     }
 
     @AfterClass

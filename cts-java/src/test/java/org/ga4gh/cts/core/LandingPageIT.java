@@ -14,7 +14,7 @@ import com.mashape.unirest.request.GetRequest;
 import junitparams.JUnitParamsRunner;
 import org.ga4gh.ctk.CtkLogs;
 import org.ga4gh.ctk.testcategories.CoreTests;
-import org.ga4gh.ctk.transport.URLMAPPING;
+import org.ga4gh.ctk.transport.*;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -41,7 +41,7 @@ public class LandingPageIT implements CtkLogs {
      */
     @Test
     public void landingPageIsProper() throws Exception {
-        final String urlStrWithVersion = URLMAPPING.getUrlRoot();
+        final String urlStrWithVersion = URLMAPPING.getInstance().getUrlRoot();
 
         URL urlWithVersion = new URL(urlStrWithVersion);
         URL urlWithoutVersion =

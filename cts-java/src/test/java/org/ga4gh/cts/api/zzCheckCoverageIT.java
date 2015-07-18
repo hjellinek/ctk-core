@@ -12,18 +12,8 @@ import static org.junit.Assert.*;
  * <p>Created by Wayne Stidolph on 5/30/2015.</p>
  */
 public class zzCheckCoverageIT implements CtkLogs {
-    /* These first two rules set up Spring (4.2.0RC1+) injection support
-       without having to adopt the SpringJUnit4ClassRunner, so we can use
-       Runners such as the WildcardPatternSuite, or Parameterized, etc
 
-       See http://docs.spring.io/spring/docs/4.2.0.RC1/spring-framework-reference/htmlsingle/#testing
-       specifically Section 5.6
-    */
-    /*@ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();*/
+    static URLMAPPING urls;
 
     @Ignore("Unimplemented")
     @Test
@@ -56,7 +46,7 @@ public class zzCheckCoverageIT implements CtkLogs {
     public static void setupTransport() throws Exception {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
-        URLMAPPING.doInit(); // reload defaults
+        urls = URLMAPPING.getInstance(); // reload defaults
         //client = new VariantsProtocolClient();
     }
 }

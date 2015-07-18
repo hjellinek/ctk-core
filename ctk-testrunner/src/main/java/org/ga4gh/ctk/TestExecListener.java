@@ -172,7 +172,7 @@ public class TestExecListener extends RunListener implements JUnitResultFormatte
      */
     @Override
     public void addError(Test test, Throwable e) {
-
+        testlog.error("ERROR: " + test.toString() + " due to " + e.getMessage());
     }
 
     /**

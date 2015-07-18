@@ -142,8 +142,8 @@ public class VariantsMethodsEndpointAliveIT implements CtkLogs {
     public static void setupTransport() throws Exception {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
-        URLMAPPING.doInit(); // reload defaults
-        client = new VariantsProtocolClient();
+
+        client = new VariantsProtocolClient(URLMAPPING.getInstance());
         // TODO verify correct data installed? Maybe a null client to cause fast-fail and test-skipping?
 
     }

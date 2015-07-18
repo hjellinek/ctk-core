@@ -121,7 +121,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         // and that the path does not begin or end with a slash
         String tsPath = CharMatcher.WHITESPACE.removeFrom(path);
         this.path = CharMatcher.is('/').trimFrom(tsPath);
-        log.info(toString());
+        log.info("create interaction for " + this.toString());
     }
 
     /**
@@ -184,11 +184,6 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
 
         httpResp = shouldDoComms ? jsonPost(urlRoot + path): NO_COMM_RESP;
 
-        if(wireTracker != null){
-            wireTracker.setResponseStatus(fromInt(httpResp.getStatus()));
-            //wireTracker.setActJson(json);
-        }
-
         updateTheRespAndLogMessages("POST");
 
         return theResp;
@@ -228,6 +223,12 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         return theResp;
     }
 
+    /**
+     * JDo actual post with logging/tracking
+     *
+     * @param theURL the the uRL
+     * @return the http response (can be null, if Unirest throws exception)
+     */
     HttpResponse<JsonNode> jsonPost(String theURL) {
         if (log.isDebugEnabled()) {
             log.debug("begin jsonPost to " + theURL + " of " + jsonStr);
@@ -240,7 +241,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
                     .body(jsonStr)
                     .asJson();
         } catch (UnirestException e) {
-            log.warn("stubbing future comms due to problem communicating JSON with " + theURL, e);
+            log.warn("stubbing future comms due to problem communicating JSON with " + theURL, e.getMessage());
             shouldDoComms = false;
         }
         if (log.isDebugEnabled()) {

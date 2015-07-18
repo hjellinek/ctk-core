@@ -22,10 +22,12 @@ import static org.assertj.core.api.Assertions.*;
 @Deprecated
 public class URLMAPPINGTest {
 
-    URLMAPPING urlmapping;
+    URLMAPPINGImpl urlmapping;
 
     @Before
     public void before() throws Exception {
+        urlmapping=new URLMAPPINGImpl();
+        urlmapping.doInit();
     }
 
     @After

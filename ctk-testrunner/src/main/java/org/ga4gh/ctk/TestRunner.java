@@ -38,21 +38,35 @@ public class TestRunner implements CtkLogs {
     @Value("${ctk.tgt.urlRoot}")
     String urlroot;
 
-    public void doTestRun() {
-        // patch through config to URLMAPPING
-        if (urlroot != null) {
-            CtkLogs.log.debug("Setting urlroot to " + urlroot);
-            URLMAPPING.setUrlRoot(urlroot);
-        }
-
-        /* ********* TEST SELECTION ******** */
+    /**
+     * Do test run using properties ctk.tgt.urlRoot, ctk_matchstr, ctk_testjar;
+     *
+     * @return the string to use as a testrun identifier.
+     */
+    public String doTestRun() {
 
         String matchStr = props.ctk_matchstr;
         CtkLogs.log.debug("matchStr: " + matchStr);
 
+        String testRunId = doTestRun(urlroot,matchStr,props.ctk_testjar);
+        return testRunId;
+    }
 
+    /**
+     * Do test run using specific parameters.
+     *
+     * @param urlRoot the url root
+     * @param matchStr the match str
+     * @param testJar the test jar
+     * @return the string to use as a testrun identifier.
+     */
+    public String doTestRun(String urlRoot, String matchStr, String testJar){
+        URLMAPPING urls = URLMAPPING.getInstance();
+        urls.setUrlRoot(urlRoot);
+
+        AvroJson.shouldDoComms = true; // always start from assumption of goodness!
                     /* ****** MAIN RUN-THE-TESTS *********** */
-        antExecutor.executeAntTask(props.ctk_testjar, matchStr);
+        antExecutor.executeAntTask(testJar, matchStr, urls);
 
 
         /* ******* post-Test reporting ********* */
@@ -62,6 +76,9 @@ public class TestRunner implements CtkLogs {
         for (Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()) {
             trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
         }
+
+        return "HAPPY";
+
     }
 
 }

@@ -35,8 +35,7 @@ public class VariantsMethodsPagingChecksIT implements CtkLogs {
     public static void setupTransport() throws Exception {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
-        URLMAPPING.doInit(); // reload defaults
-        client = new VariantsProtocolClient();
+        client = new VariantsProtocolClient(URLMAPPING.getInstance());
 
     }
 }

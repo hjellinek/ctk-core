@@ -144,8 +144,8 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
     public static void setupTransport() throws Exception {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
-        URLMAPPING.doInit(); // reload defaults
-        client = new ReadsProtocolClient();
+        //URLMAPPINGImpl.doInit(); // reload defaults
+        client = new ReadsProtocolClient(URLMAPPING.getInstance());
 
         //client.start(); start binary transceiver to Server Under Test
     }

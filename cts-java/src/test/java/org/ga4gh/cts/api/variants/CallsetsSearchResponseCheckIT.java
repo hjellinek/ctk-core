@@ -25,7 +25,8 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 public class CallsetsSearchResponseCheckIT implements CtkLogs {
     // implements CtkLogsprivate static org.slf4j.Logger log = getLogger(CallsetsSearchResponseCheckIT.class);
 
-    private static final VariantsProtocolClient client = new VariantsProtocolClient();
+    static URLMAPPING urls;
+    private static final VariantsProtocolClient client = new VariantsProtocolClient(urls);
 
     /*
      REF MATERIAL from the  variantmethods IDL re GASearchCallSetRequest
@@ -38,15 +39,17 @@ public class CallsetsSearchResponseCheckIT implements CtkLogs {
      union { null, string } name = null;
      */
 
+
+
     @BeforeClass
     public static void setupTransport() throws Exception {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
-        URLMAPPING.doInit(); // reload defaults
+        urls = URLMAPPING.getInstance(); // reload defaults
     }
 
     private static String makeUrl(String partialUrl) {
-        return URLMAPPING.getUrlRoot() + "/" + partialUrl;
+        return urls.getUrlRoot() + "/" + partialUrl;
     }
 
     /**
@@ -84,7 +87,7 @@ public class CallsetsSearchResponseCheckIT implements CtkLogs {
      */
     @Test
     public void checkCallSetsRouting() throws Exception {
-        String callsetsPartialUrl = URLMAPPING.getSearchCallsets();
+        String callsetsPartialUrl = urls.getSearchCallsets();
 
         testHttpMethods(makeUrl(callsetsPartialUrl));
     }
@@ -99,19 +102,19 @@ public class CallsetsSearchResponseCheckIT implements CtkLogs {
      */
     @Test
     public void checkVariantSearchMethods() throws Exception {
-        String partialUrl = URLMAPPING.getSearchVariants();
+        String partialUrl = urls.getSearchVariants();
 
         testHttpMethods(makeUrl(partialUrl));
     }
 
     private String[] allSearchUrls() {
         return new String[] {
-                makeUrl(URLMAPPING.getSearchCallsets()),
-                makeUrl(URLMAPPING.getSearchReadGroupSets()),
-                makeUrl(URLMAPPING.getSearchReads()),
-                makeUrl(URLMAPPING.getSearchReferencesets()), // this fails (404 instead of 405)
-                makeUrl(URLMAPPING.getSearchVariants()),
-                makeUrl(URLMAPPING.getSearchVariantSets())
+                makeUrl(urls.getSearchCallsets()),
+                makeUrl(urls.getSearchReadGroupSets()),
+                makeUrl(urls.getSearchReads()),
+                makeUrl(urls.getSearchReferencesets()), // this fails (404 instead of 405)
+                makeUrl(urls.getSearchVariants()),
+                makeUrl(urls.getSearchVariantSets())
         };
     }
 

@@ -2,8 +2,7 @@ package org.ga4gh.ctk.transport.protocols;
 
 import org.apache.avro.AvroRemoteException;
 import org.ga4gh.*;
-import org.ga4gh.ctk.transport.URLMAPPING;
-import org.ga4gh.ctk.transport.WireTracker;
+import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
 
 /**
@@ -11,16 +10,15 @@ import org.ga4gh.ctk.transport.avrojson.AvroJson;
  */
 public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
 
-
-    public String urlRoot = URLMAPPING.getUrlRoot(); //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
-
     public WireTracker wireTracker = null;
 
-    public VariantsProtocolClient(){
-
+    URLMAPPING urls;
+    public VariantsProtocolClient(URLMAPPING urls){
+        this.urls = urls;
     }
 
-    public VariantsProtocolClient(WireTracker wt){
+    public VariantsProtocolClient(URLMAPPING urls, WireTracker wt){
+        this.urls=urls;
         this.wireTracker = wt;
     }
 
@@ -35,10 +33,10 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      */
     @Override
     public GASearchVariantSetsResponse searchVariantSets(GASearchVariantSetsRequest request) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getSearchVariantSets();
+        String path = urls.getSearchVariantSets();
         GASearchVariantSetsResponse response = new GASearchVariantSetsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireTracker);
+                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
         response = (GASearchVariantSetsResponse) aj.doPostResp();
         return response;
     }
@@ -68,10 +66,10 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
      */
     @Override
     public GASearchVariantsResponse searchVariants(GASearchVariantsRequest request) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getSearchVariants();
+        String path = urls.getSearchVariants();
         GASearchVariantsResponse response = new GASearchVariantsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireTracker);
+                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
         response = (GASearchVariantsResponse) aj.doPostResp();
         return response;
     }
@@ -101,10 +99,10 @@ public class VariantsProtocolClient implements org.ga4gh.GAVariantMethods {
          */
     @Override
     public GASearchCallSetsResponse searchCallSets(GASearchCallSetsRequest request) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getSearchCallsets();
+        String path = urls.getSearchCallsets();
         GASearchCallSetsResponse response = new GASearchCallSetsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireTracker);
+                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
         response = (GASearchCallSetsResponse) aj.doPostResp();
         return response;
     }

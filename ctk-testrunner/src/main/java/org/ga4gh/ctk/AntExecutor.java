@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * <p>This class executes ant (ver 1.9.5 in the initial CTK) to do
@@ -85,7 +86,11 @@ public class AntExecutor implements CtkLogs {
      *
      */
     public boolean executeAntTask() {
-        return executeAntTask(props.ctk_testjar,props.ctk_matchstr);
+        return
+                executeAntTask( // use the properties and defaults
+                        props.ctk_testjar,
+                        props.ctk_matchstr,
+                        URLMAPPING.getInstance());
     }
 
     /**
@@ -93,9 +98,9 @@ public class AntExecutor implements CtkLogs {
      *
      * @param testjar tests jar to unpack/run in Ant
      */
-    public boolean executeAntTask(String testjar, String matchstr) {
+    public boolean executeAntTask(String testjar, String matchstr, URLMAPPING urls) {
 
-        String expandedReportTitle = props.ctk_report_title + " " + URLMAPPING.getUrlRoot();
+        String expandedReportTitle = props.ctk_report_title + " " + urls.getUrlRoot();
 
         boolean success = false;
         DefaultLogger consoleLogger = getConsoleLogger();
@@ -134,7 +139,23 @@ public class AntExecutor implements CtkLogs {
             // If no target specified then default target will be executed.
            // targetToExecute = (target != null && target.trim().length() > 0) ? target.trim() : project.getDefaultTarget();
             targetToExecute = project.getDefaultTarget();
+
+            Properties sysprops = new Properties(System.getProperties());
+            log.trace("passed-in urls has " + urls.getEndpoints());
+            log.info("passed-in urls.getUrlRoot " + urls.getUrlRoot());
+            Properties copySysProp = new Properties(System.getProperties());
+
+            // we add the URLs to the system props so when the tests use
+            // URLMAPPING.doInit() they pick these up as highest-priority
+            // and use the passed-in values. Passing via system props
+            // should work for getting into Ant-launched tests
+            sysprops.putAll(urls.getEndpoints());
+            System.setProperties(sysprops);
+            log.debug("About to run ant, sysprop ctk.tgt.urlRoot " + System.getProperty("ctk.tgt.urlRoot"));
             project.executeTarget(targetToExecute);
+            System.setProperties(copySysProp); // restore the system
+            log.debug("Done with ant, restored system props, ctk.tgt.urlRoot " + System.getProperty("ctk.tgt.urlRoot"));
+
             project.fireBuildFinished(null);
             CtkLogs.testlog.info("Overall: " + TestExecListener.getTestReport());
         } catch (BuildException buildException) {
