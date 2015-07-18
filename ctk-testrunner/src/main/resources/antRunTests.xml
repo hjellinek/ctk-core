@@ -8,25 +8,24 @@
     <!-- the calling AntExecutor should set it explicitly -->
 
     <target name="exposeTestClasses">
-        <mkdir dir="${basedir}/../lib/test-classes"/>
+        <mkdir dir="lib/test-classes"/>
 
-        <unjar src="${ctk.testjar}"
-               dest="${basedir}/../lib/test-classes"
+        <unjar src="lib/${ctk.testjar}"
+               dest="lib/test-classes"
                overwrite="false"/>
     </target>
-    <target name="tests" depends="exposeTestClasses">
+    <target name="tests" > <!--depends="exposeTestClasses"> -->
+        <mkdir dir="${ctk.todir}"/>
         <junit printsummary="on" fork="off" filtertrace="on"
                haltonfailure="false" showoutput="true">
             <classpath>
-                <fileset dir="${basedir}/../lib/test-classes">
+                <fileset dir="lib">
                     <include name="**/*.jar"/>
                 </fileset>
-                <pathelement location="${basedir}/../target/test-classes"/>
+                <pathelement location="target/test-classes"/>
             </classpath>
-            <batchtest fork="off" todir="${basedir}/../${ctk.todir}">
-                <!-- matchstr is comma-sep string of ant-style patterns, like
-                **/*IT.class,**/IT*.class -->
-                <zipfileset src="${ctk.testjar}" includes="${ctk.matchstr}"/>
+            <batchtest fork="off" todir="${ctk.todir}">
+                <zipfileset src="lib/${ctk.testjar}" includes="${ctk.matchstr}"/>
             </batchtest>
             <formatter type="xml"/>
             <formatter type="brief"/>
@@ -36,12 +35,12 @@
     </target>
 
     <target name="reports" depends="tests">
-        <mkdir dir="${basedir}/../${ctk.todir}/report"/>
-        <junitreport todir="${basedir}/../${ctk.todir}/report">
-            <fileset dir="${basedir}/../${ctk.todir}">
+        <mkdir dir="${ctk.todir}/report"/>
+        <junitreport todir="${ctk.todir}/report">
+            <fileset dir="${ctk.todir}">
                 <include name="TEST-*.xml"/>
             </fileset>
-            <report format="frames" todir="${basedir}/../${ctk.todir}/report/html">
+            <report format="frames" todir="${ctk.todir}/report/html">
                 <param name="TITLE" expression="${ctk.reporttitle}"/>
             </report>
         </junitreport>

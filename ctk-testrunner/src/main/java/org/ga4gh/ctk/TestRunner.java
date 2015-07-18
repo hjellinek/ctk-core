@@ -68,12 +68,12 @@ public class TestRunner implements CtkLogs {
         AvroJson.shouldDoComms = true; // always start from assumption of goodness!
 
         // is there a pattern we should enforce?
-        String tgtDir = "testresults/" +
+        String tgtDir =
                 ((null == toDir || toDir.isEmpty()) ? "target/" : toDir);
         // TODO ensure the toDir exists, create here
 
                     /* ****** MAIN RUN-THE-TESTS *********** */
-        antExecutor.executeAntTask(testJar, matchStr, urls, toDir);
+        antExecutor.executeAntTask(testJar, matchStr, urls, tgtDir);
 
 
         /* ******* post-Test reporting ********* */
@@ -84,7 +84,7 @@ public class TestRunner implements CtkLogs {
             trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
         }
 
-        return "redirect:"+toDir+"report/index.html";
+        return toDir+"report/index.html";
 
     }
 

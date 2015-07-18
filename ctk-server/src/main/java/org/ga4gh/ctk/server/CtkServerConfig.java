@@ -13,7 +13,7 @@ public class CtkServerConfig extends WebMvcConfigurerAdapter{
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry){
         registry
-                .addResourceHandler("/results/**")
+                .addResourceHandler("/testresults/**")
                 .addResourceLocations("/testresults/")
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());

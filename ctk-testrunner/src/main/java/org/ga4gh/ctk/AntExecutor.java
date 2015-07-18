@@ -111,6 +111,7 @@ public class AntExecutor implements CtkLogs {
         Project project = new Project();
         try {
             File buildFile = antFile;
+            project.setUserProperty("basedir",System.getProperty("user.dir"));
             project.setUserProperty("ant.file", buildFile.getName());
             project.setUserProperty("ctk.testjar", testjar);
             project.setUserProperty("ctk.matchstr", matchstr);

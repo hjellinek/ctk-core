@@ -35,7 +35,7 @@ public class ServerTestController implements CtkLogs {
             mstr = props.ctk_matchstr;
         log.info("about to run tests " + urlRoot + " " + mstr + " " + props.ctk_testjar);
         String testResultId =
-                testrunner.doTestRun(urlRoot,mstr,props.ctk_testjar);
+                testrunner.doTestRun(urlRoot,mstr,props.ctk_testjar,"testresults/1/");
         log.info("test complete " + testResultId);
         return "redirect:"+testResultId;
     }

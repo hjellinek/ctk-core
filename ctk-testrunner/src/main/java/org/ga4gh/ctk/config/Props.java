@@ -66,7 +66,7 @@ import org.springframework.stereotype.*;
  */
 @Component
 @ConfigurationProperties(prefix = "ctk")
-@PropertySource("classpath:application.properties.hidden")
+@PropertySource("classpath:application.properties")
 @Data
 public class Props {
 
