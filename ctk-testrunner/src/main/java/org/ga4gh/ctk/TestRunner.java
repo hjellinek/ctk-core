@@ -48,7 +48,7 @@ public class TestRunner implements CtkLogs {
         String matchStr = props.ctk_matchstr;
         CtkLogs.log.debug("matchStr: " + matchStr);
 
-        String testRunId = doTestRun(urlroot,matchStr,props.ctk_testjar);
+        String testRunId = doTestRun(urlroot,matchStr,props.ctk_testjar,".");
         return testRunId;
     }
 
@@ -58,15 +58,22 @@ public class TestRunner implements CtkLogs {
      * @param urlRoot the url root
      * @param matchStr the match str
      * @param testJar the test jar
+     * @param toDir the directory to put result into (default =".")
      * @return the string to use as a testrun identifier.
      */
-    public String doTestRun(String urlRoot, String matchStr, String testJar){
+    public String doTestRun(String urlRoot, String matchStr, String testJar, String toDir){
         URLMAPPING urls = URLMAPPING.getInstance();
         urls.setUrlRoot(urlRoot);
 
         AvroJson.shouldDoComms = true; // always start from assumption of goodness!
+
+        // is there a pattern we should enforce?
+        String tgtDir = "testresults/" +
+                ((null == toDir || toDir.isEmpty()) ? "target/" : toDir);
+        // TODO ensure the toDir exists, create here
+
                     /* ****** MAIN RUN-THE-TESTS *********** */
-        antExecutor.executeAntTask(testJar, matchStr, urls);
+        antExecutor.executeAntTask(testJar, matchStr, urls, toDir);
 
 
         /* ******* post-Test reporting ********* */
@@ -77,7 +84,7 @@ public class TestRunner implements CtkLogs {
             trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
         }
 
-        return "HAPPY";
+        return "redirect:"+toDir+"report/index.html";
 
     }
 

@@ -2,6 +2,7 @@ package org.ga4gh.ctk.server;
 
 import org.ga4gh.ctk.*;
 import org.ga4gh.ctk.config.*;
+import org.ga4gh.ctk.transport.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @RequestMapping("/servertest")
-public class ServerTestController {
+public class ServerTestController implements CtkLogs {
 
     @Autowired
     private TestRunner testrunner;
@@ -26,14 +27,17 @@ public class ServerTestController {
     @RequestMapping(method = RequestMethod.GET)
     public
     @ResponseBody
-    String runTests() {
-
+    String runTests(@RequestParam(value="urlRoot", required = false) String urlRoot,
+                    @RequestParam(value="matchstr",required = false) String mstr) {
+        if(urlRoot == null)
+            urlRoot = URLMAPPING.getInstance().getUrlRoot();
+        if(mstr == null)
+            mstr = props.ctk_matchstr;
+        log.info("about to run tests " + urlRoot + " " + mstr + " " + props.ctk_testjar);
         String testResultId =
-                testrunner.doTestRun(
-                        "https://192.168.2.214:8000/v0.5.1/",
-                        "**/*ReadMethods*",//props.ctk_matchstr,
-                        props.ctk_testjar);
-        return testResultId;
+                testrunner.doTestRun(urlRoot,mstr,props.ctk_testjar);
+        log.info("test complete " + testResultId);
+        return "redirect:"+testResultId;
     }
 /*    protected ModelAndView redirect(){
         return new ModelAndView(new RedirectView());

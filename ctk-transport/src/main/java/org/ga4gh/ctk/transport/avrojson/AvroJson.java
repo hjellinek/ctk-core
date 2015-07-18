@@ -242,6 +242,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
                     .asJson();
         } catch (UnirestException e) {
             log.warn("stubbing future comms due to problem communicating JSON with " + theURL, e.getMessage());
+            log.debug(e.toString());
             shouldDoComms = false;
         }
         if (log.isDebugEnabled()) {

@@ -13,28 +13,17 @@
         <unjar src="${ctk.testjar}"
                dest="${basedir}/../lib/test-classes"
                overwrite="false"/>
-        <!-- exclude logging - the ant classloader seems to pick it up from ctk -->
-        <!-- comment out unpack of launcher/framework jar, trying to enure deps directly in
-             cts-java for faster unpack/retest and to ensure limits on dependence on launcher -->
- <!--       <unjar src="${basedir}/../ctk-cli-0.5.1-SNAPSHOT.jar"
-               dest="${basedir}/../lib/test-classes"
-               overwrite="false">
-            <patternset>
-                <include name="lib/*.jar"/>
-                <exclude name="**/*slf4j*.jar"/>
-                <exclude name="**/*log4j*.jar"/>
-            </patternset>
-        </unjar>-->
     </target>
     <target name="tests" depends="exposeTestClasses">
-        <junit printsummary="on" fork="off" filtertrace="on" haltonfailure="false" showoutput="true">
+        <junit printsummary="on" fork="off" filtertrace="on"
+               haltonfailure="false" showoutput="true">
             <classpath>
                 <fileset dir="${basedir}/../lib/test-classes">
                     <include name="**/*.jar"/>
                 </fileset>
                 <pathelement location="${basedir}/../target/test-classes"/>
             </classpath>
-            <batchtest fork="off" todir="${basedir}/../target">
+            <batchtest fork="off" todir="${basedir}/../${ctk.todir}">
                 <!-- matchstr is comma-sep string of ant-style patterns, like
                 **/*IT.class,**/IT*.class -->
                 <zipfileset src="${ctk.testjar}" includes="${ctk.matchstr}"/>
@@ -47,12 +36,12 @@
     </target>
 
     <target name="reports" depends="tests">
-        <mkdir dir="${basedir}/../target/report"/>
-        <junitreport todir="${basedir}/../target/report">
-            <fileset dir="${basedir}/../target">
+        <mkdir dir="${basedir}/../${ctk.todir}/report"/>
+        <junitreport todir="${basedir}/../${ctk.todir}/report">
+            <fileset dir="${basedir}/../${ctk.todir}">
                 <include name="TEST-*.xml"/>
             </fileset>
-            <report format="frames" todir="${basedir}/../target/report/html">
+            <report format="frames" todir="${basedir}/../${ctk.todir}/report/html">
                 <param name="TITLE" expression="${ctk.reporttitle}"/>
             </report>
         </junitreport>

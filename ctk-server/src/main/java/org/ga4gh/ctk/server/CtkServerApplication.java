@@ -13,4 +13,5 @@ public class CtkServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(CtkServerApplication.class, args);
     }
+
 }
