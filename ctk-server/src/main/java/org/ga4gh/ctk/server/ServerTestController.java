@@ -70,10 +70,13 @@ public class ServerTestController implements CtkLogs {
      * just named with an integer, so we have, for example,
      * testresults/192.168.2.214_8000/1, testresults/192.168.2.214:8000/2, ...</p>
      *
+     *
      * @param urlRoot the target server's url root
-     * @return the string name for the target directory (does NOT exist when this returns)
+     * @return the string name for the just-created target directory
      */
-    String getResultsDir(String urlRoot) {
+    synchronized String getResultsDir(String urlRoot) {
+        // we could cut down the synchronized size a lot, or even
+        // do a temp dir and just rebame it when done, but no need yet
         String resultsbase = "testresults/"; // TODO move to property
         File resultDir = null;
         URL tgt;
@@ -99,7 +102,9 @@ public class ServerTestController implements CtkLogs {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String tgtdir = dir.toString() + "/" + (maxseen + 1) + "/";
+        String paddedMax = String.format("%05d", maxseen+1);
+        String tgtdir = dir.toString() + "/" + paddedMax + "/";
+        new File(tgtdir).mkdir();
         log.debug("calculated test results dir of " + tgtdir);
         return tgtdir;
     }
