@@ -1,6 +1,0 @@
-Testsuite: org.ga4gh.cts.api.reads.ReadGroupSetsSearchIT
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 3, Time elapsed: 0.016 sec
-
-Testcase: goodReadgroupSetsNameShouldRetrieveOnlyMatchingReadGroupSets(org.ga4gh.cts.api.reads.ReadGroupSetsSearchIT):SKIPPED
-Testcase: badDatasetidInSearchReadGroupSetsRequestShouldReturnErrors(org.ga4gh.cts.api.reads.ReadGroupSetsSearchIT):SKIPPED
-Testcase: readgroupSetResponseForDumbDatasetidShouldBeEmpty(org.ga4gh.cts.api.reads.ReadGroupSetsSearchIT):SKIPPED

@@ -1,6 +1,0 @@
-Testsuite: org.ga4gh.cts.api.zzCheckCoverageIT
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 3, Time elapsed: 0.004 sec
-
-Testcase: allIdlMessagesShouldBeUsed(org.ga4gh.cts.api.zzCheckCoverageIT):SKIPPED
-Testcase: allIdlDatatypesShouldBeUsed(org.ga4gh.cts.api.zzCheckCoverageIT):SKIPPED
-Testcase: allEndpointsShouldBeUsed(org.ga4gh.cts.api.zzCheckCoverageIT):SKIPPED
