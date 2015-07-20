@@ -139,7 +139,7 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
     }
 
     ///
-    //// From ReadsProtocolClient
+    //// From ReadsProtocolClient.
     ///
 
     /**
