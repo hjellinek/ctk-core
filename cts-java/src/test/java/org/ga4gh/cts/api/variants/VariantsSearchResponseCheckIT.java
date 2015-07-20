@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.*;
 public class VariantsSearchResponseCheckIT implements CtkLogs {
     // private static org.slf4j.Logger log = getLogger(VariantsSearchResponseCheckIT.class);
 
-    private static VariantsProtocolClient client;
+    private static Client client;
 
     /**
      * Method: searchVariants(GASearchVariantsRequest request)
@@ -66,6 +66,6 @@ public class VariantsSearchResponseCheckIT implements CtkLogs {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
         URLMAPPING.doInit(); // reload defaults
-        client = new VariantsProtocolClient();
+        client = new Client();
     }
 }

@@ -15,7 +15,9 @@ import static org.slf4j.LoggerFactory.*;
  */
 
 public class URLMAPPING {
+
     private static org.slf4j.Logger log = getLogger(URLMAPPING.class);
+
     /**
      * <p>Map IDL message name to target server endpoint.</p>
      * <p>This Map,is initialized inn code with defaults from the
@@ -97,20 +99,27 @@ public class URLMAPPING {
 
         endpoints = new HashMap<>(defaultendpoints); // start fresh using baked-in defaults
 
-        if (resName == null || resName.isEmpty())
+        if (resName == null || resName.isEmpty()) {
             resName = "defaulttransport.properties";
+        }
 
-        if(dumpToStdOut) System.out.println("\nprocess resource/file " + resName);
+        if (dumpToStdOut) {
+            System.out.println("\nprocess resource/file " + resName);
+        }
         tempProps = loadPropsName(resName);
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
         }
-        if(dumpToStdOut)  System.out.println("\nprocess Env");
+        if (dumpToStdOut) {
+            System.out.println("\nprocess Env");
+        }
         tempProps = loadPropsEnv("ctk.tgt.");
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
         }
-        if(dumpToStdOut)  System.out.println("\nprocess Sys");
+        if (dumpToStdOut) {
+            System.out.println("\nprocess Sys");
+        }
         tempProps = loadPropsSystem("ctk.tgt.");
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
@@ -119,19 +128,19 @@ public class URLMAPPING {
 
     /**
      * Do init, defaults.
-     *
+     * <p>
      * Just syntactic sugar for doInit("").
      */
-    public static void doInit(){
+    public static void doInit() {
         doInit("");
     }
 
     /**
      * Load properties by resource or file name.
-     *
+     * <p>
      * <p>Looks on classpath for resource with provided name;
      * if found, loads the included properties matching prefix "ctk.tgt."</p>
-     *
+     * <p>
      * <p>Looks on file system for resource matching name; loads those props
      * (which allows for file system to override classpath).</p>
      *
@@ -145,22 +154,31 @@ public class URLMAPPING {
 
         // first we load anything on the classpath
         instream = Thread.currentThread()
-                .getContextClassLoader()
-                .getResourceAsStream(resName);
+                         .getContextClassLoader()
+                         .getResourceAsStream(resName);
         try {
             tempProps.load(instream);
-            if(dumpToStdOut) System.out.println("loaded props from classpath " + resName);
+            if (dumpToStdOut) {
+                System.out.println("loaded props from classpath " + resName);
+            }
         } catch (Exception ioe) { // just ignore not-found
-            if(dumpToStdOut) System.out.println("Did not find resource " + resName);;
+            if (dumpToStdOut) {
+                System.out.println("Did not find resource " + resName);
+            }
+            ;
         }
 
         // then we try the same name on the file system
         try {
             instream = new FileInputStream(resName);
             tempProps.load(instream);
-            if(dumpToStdOut) System.out.println("loaded props from file " + resName);
+            if (dumpToStdOut) {
+                System.out.println("loaded props from file " + resName);
+            }
         } catch (Exception ioe) {
-            if(dumpToStdOut) System.out.println("Did not find property file " + resName);
+            if (dumpToStdOut) {
+                System.out.println("Did not find property file " + resName);
+            }
         }
 
         return tempProps;
@@ -172,8 +190,10 @@ public class URLMAPPING {
             String ks = key.toString();
 
             if (ks.startsWith(prefix)) {
-                if(dumpToStdOut) System.out.println("Sys prop has "
-                        + ks + " => " + System.getProperty(ks));
+                if (dumpToStdOut) {
+                    System.out.println("Sys prop has "
+                                               + ks + " => " + System.getProperty(ks));
+                }
                 props.put(ks, System.getProperty(ks));
             }
         }
@@ -187,7 +207,9 @@ public class URLMAPPING {
         for (String key : env.keySet()) {
 
             if (key.startsWith(prefix)) {
-                if (dumpToStdOut) System.out.println("env has " + key + " => " + env.get(key));
+                if (dumpToStdOut) {
+                    System.out.println("env has " + key + " => " + env.get(key));
+                }
                 props.put(key, env.get(key));
             }
         }
@@ -198,9 +220,11 @@ public class URLMAPPING {
     public static void mergePropertiesIntoMap(Properties props, Map map) {
         if (map != null && props != null) {
             for (Enumeration en = props.propertyNames(); en.hasMoreElements(); ) {
-                String key = (String) en.nextElement();
+                String key = (String)en.nextElement();
                 map.put(key, props.getProperty(key));
-                if(dumpToStdOut) System.out.println("merging " + key + " => " + props.getProperty(key));
+                if (dumpToStdOut) {
+                    System.out.println("merging " + key + " => " + props.getProperty(key));
+                }
             }
         }
     }
@@ -212,8 +236,9 @@ public class URLMAPPING {
 
     public static void setUrlRoot(String urlRoot) {
         if (urlRoot != null && !urlRoot.isEmpty()) {
-            if (!urlRoot.endsWith("/"))
+            if (!urlRoot.endsWith("/")) {
                 urlRoot = urlRoot + "/";
+            }
             endpoints.put("ctk.tgt.urlRoot", urlRoot);
         } else {
             log.debug("setUrlRoot got null/empty argument, not making change");
@@ -238,6 +263,22 @@ public class URLMAPPING {
 
     public static void setSearchReadGroupSets(String searchReadGroupSets) {
         endpoints.put("ctk.tgt.searchReadGroupSets", searchReadGroupSets);
+    }
+
+    public static String getReference() {
+        return endpoints.get("ctk.tgt.getReferences");
+    }
+
+    public static String getReferenceSets() {
+        return endpoints.get("ctk.tgt.getReferencesets");
+    }
+
+    public static String getSearchReferences() {
+        return endpoints.get("ctk.tgt.searchReferences");
+    }
+
+    public static String getSearchReferenceBases() {
+        return endpoints.get("ctk.tgt.getReferencesBases");
     }
 
     public static String getSearchReferencesets() {
