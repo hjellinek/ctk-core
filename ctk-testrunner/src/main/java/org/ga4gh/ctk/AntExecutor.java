@@ -91,16 +91,20 @@ public class AntExecutor implements CtkLogs {
                         props.ctk_testjar,
                         props.ctk_matchstr,
                         URLMAPPING.getInstance(),
-                        "testresults/target/"
+                        "testresults/target/",
+                        null
                     );
     }
 
     /**
-     * Execute the tests under ant build script (runAntTests.xml)
+     * Execute the tasks in ant build script (runAntTests.xml)
      *
      * @param testjar tests jar to unpack/run in Ant
      */
-    public boolean executeAntTask(String testjar, String matchstr, URLMAPPING urls, String toDir) {
+    public boolean executeAntTask(String testjar, String matchstr, URLMAPPING urls, String toDir, BuildListener theBoss) {
+
+        log.trace("passed-in urls has " + urls.getEndpoints());
+        log.info("passed-in urls.getUrlRoot " + urls.getUrlRoot());
 
         String expandedReportTitle = props.ctk_report_title + " " + urls.getUrlRoot();
 
@@ -118,6 +122,9 @@ public class AntExecutor implements CtkLogs {
             project.setUserProperty("ctk.reporttitle", expandedReportTitle);
             project.setUserProperty("ctk.todir", toDir);
             project.addBuildListener(antExecListener);
+            // if there's an interested listener, hook them up
+            if(theBoss != null)
+                project.addBuildListener(theBoss);
 
             project.fireBuildStarted();
             project.init();
@@ -129,7 +136,6 @@ public class AntExecutor implements CtkLogs {
             e.printStackTrace();
         }
 
-
         CtkLogs.log.debug("ctk.antlog.consolelogger is " + props.ctk_antlog_consolelogger);
         if("ON".equals(props.ctk_antlog_consolelogger)) {
             CtkLogs.log.debug("enabling ConsoleLogger");
@@ -139,26 +145,24 @@ public class AntExecutor implements CtkLogs {
 
         // Capture event for Ant script build start / stop / failure
         try {
-
             // If no target specified then default target will be executed.
-           // targetToExecute = (target != null && target.trim().length() > 0) ? target.trim() : project.getDefaultTarget();
             targetToExecute = project.getDefaultTarget();
 
-            Properties sysprops = new Properties(System.getProperties());
-            log.trace("passed-in urls has " + urls.getEndpoints());
-            log.info("passed-in urls.getUrlRoot " + urls.getUrlRoot());
-            Properties copySysProp = new Properties(System.getProperties());
+            // capture system properties so we can edit them to get props into ant build being launched
+            Properties copySysProp = new Properties(System.getProperties()); // this is the replacement
 
-            // we add the URLs to the system props so when the tests use
+            // we add the URLs to the system props, so when the tests use
             // URLMAPPING.doInit() they pick these up as highest-priority
-            // and use the passed-in values. Passing via system props
-            // should work for getting into Ant-launched tests
+            // and thereby use the passed-in values.
+            Properties sysprops = new Properties(System.getProperties()); // this one we'll alter
             sysprops.putAll(urls.getEndpoints());
             System.setProperties(sysprops);
+
             log.debug("About to run ant, sysprop ctk.tgt.urlRoot " + System.getProperty("ctk.tgt.urlRoot"));
             project.executeTarget(targetToExecute);
             System.setProperties(copySysProp); // restore the system
-            log.debug("Done with ant, restored system props, ctk.tgt.urlRoot " + System.getProperty("ctk.tgt.urlRoot"));
+            log.debug("Done with ant, restored system props, ctk.tgt.urlRoot "
+                    + System.getProperty("ctk.tgt.urlRoot"));
 
             project.fireBuildFinished(null);
             CtkLogs.testlog.info("Overall: " + TestExecListener.getTestReport());
