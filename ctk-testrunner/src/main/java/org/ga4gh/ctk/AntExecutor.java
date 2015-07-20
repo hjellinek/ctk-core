@@ -9,6 +9,7 @@ import org.apache.tools.ant.*;
 import org.ga4gh.ctk.config.*;
 import org.ga4gh.ctk.transport.*;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
 import java.io.*;
@@ -64,6 +65,7 @@ import java.util.*;
  * @version 1.0
  */
 @Component
+@Scope("prototype")
 public class AntExecutor implements CtkLogs {
 
     // private static org.slf4j.Logger log = getLogger(AntExecutor.class);

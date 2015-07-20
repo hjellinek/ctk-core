@@ -7,6 +7,7 @@ import org.ga4gh.ctk.transport.*;
 import org.ga4gh.ctk.transport.avrojson.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
 import java.util.concurrent.*;
@@ -17,6 +18,7 @@ import java.util.concurrent.*;
  * Created by Wayne Stidolph on 7/11/2015.
  */
 @Component
+@Scope("prototype")
 public class TestRunner implements BuildListener, CtkLogs {
     static String SYSTEST = "TESTLOG";
     static String TRAFFICLOG=SYSTEST + ".TRAFFIC";
@@ -137,7 +139,7 @@ public class TestRunner implements BuildListener, CtkLogs {
         for (Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()) {
             trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
         }
-
+        log.debug("buildFinished for " + acceptedTargetDir);
         result.complete(acceptedTargetDir +"report/html/index.html");
     }
 
