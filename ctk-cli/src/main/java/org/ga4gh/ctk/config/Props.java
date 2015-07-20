@@ -29,7 +29,7 @@ import org.springframework.stereotype.*;
  * <p>Note that the properties can be supplied with dots or underscores, but will be
  * accessed via the java names (e.g., property "ctk.pattern.testclass" or property
  * "ctk_pattern_testclass" would both be injected into the variable named "ctk_pattern_testclass".
- * Spring handles the step of understanding dots and underscores in the environment and properies files,
+ * Spring handles the step of understanding dots and underscores in the environment and properties files,
  * but you have to decide what the properties name is here in this class.</p>
  * <p>This class collects the "ctk.*" config values supplied via Spring's
  * normal configuration precedence order:

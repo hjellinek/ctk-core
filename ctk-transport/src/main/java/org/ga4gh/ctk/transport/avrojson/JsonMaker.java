@@ -60,8 +60,8 @@ public class JsonMaker<T> {
     /**
      * Jackson to json bytes.
      *
-     * Use Jacskon to create simplified JSON, won't work with
-     * Avro deserializing, but is like the Ref Server currenty generates.
+     * Use Jackson to create simplified JSON, won't work with
+     * Avro deserializing, but is like the Ref Server currently generates.
      *
      * @param src the src
      * @return the byte array output stream

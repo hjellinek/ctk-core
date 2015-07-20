@@ -126,7 +126,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>${maven.project.info.reports.version}</version>
-                <!-- config for less details becuse of "no file" bug, probably
+                <!-- config for less details because of "no file" bug, probably
 https://issues.apache.org/jira/browse/MPIR-251 -->
                 <configuration>
                     <dependencyDetailsEnabled>false</dependencyDetailsEnabled>

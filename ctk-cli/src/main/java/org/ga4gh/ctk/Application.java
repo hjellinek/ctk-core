@@ -15,7 +15,7 @@ import java.util.*;
  * packaging.</p>
  * <p>(You can also run the CTK using {@code mvn spring-boot:run}, or you can run tests/suites one at a time
  * in your IDE.)</p>
- * <p>This entry is a Spring Boot app, so you can refer to their documention for alternative run-methods.
+ * <p>This entry is a Spring Boot app, so you can refer to their documentation for alternative run-methods.
  *
  * <p>Test tracking to TESTLOG is:
  * <ul>
