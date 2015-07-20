@@ -15,6 +15,8 @@ import org.springframework.stereotype.*;
 import java.io.*;
 import java.util.*;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * <p>This class executes ant (ver 1.9.5 in the initial CTK) to do
  * junit testing controlled by an <a href="http://ant.apache.org/">Apache Ant</a> file.</p>
@@ -66,9 +68,9 @@ import java.util.*;
  */
 @Component
 @Scope("prototype")
-public class AntExecutor implements CtkLogs {
+public class AntExecutor {
 
-    // private static org.slf4j.Logger log = getLogger(AntExecutor.class);
+    private static org.slf4j.Logger log = getLogger(AntExecutor.class);
 
     @Value("${ctk.antfile}")
     private File antFile; // use direct invjection; let Spring convert the String to a File
@@ -162,6 +164,8 @@ public class AntExecutor implements CtkLogs {
 
             log.debug("About to run ant, sysprop ctk.tgt.urlRoot " + System.getProperty("ctk.tgt.urlRoot"));
             project.executeTarget(targetToExecute);
+            success = true;// well, we got a good launch at least!
+
             System.setProperties(copySysProp); // restore the system
             log.debug("Done with ant, restored system props, ctk.tgt.urlRoot "
                     + System.getProperty("ctk.tgt.urlRoot"));
@@ -169,9 +173,13 @@ public class AntExecutor implements CtkLogs {
             project.fireBuildFinished(null);
             CtkLogs.testlog.info("Overall: " + TestExecListener.getTestReport());
         } catch (BuildException buildException) {
+            // NOTE just because we get a BuildException doesn't mean the
+            // build (the test run) halted, since we have haltonerror=false
+            // in theantTestRun.xml file for the junit task
             project.fireBuildFinished(buildException);
             success = false;
-            CtkLogs.log.warn("Failed attempt to run " + targetToExecute + " due to " + buildException.getMessage());
+            CtkLogs.log.warn("Got BuildException starting from ant task " + targetToExecute
+                    + " from location " + buildException.getLocation() + " due to " + buildException.getMessage());
         }
         if ("ON".equals(props.ctk_antlog_clearstats))
             TestExecListener.resetStats(); // these are static fields which accumulate results

@@ -12,6 +12,8 @@ import org.springframework.stereotype.*;
 
 import java.util.concurrent.*;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * <p>This class runs the tests; it can be invoked from the command line runner,
  * or from a server-runner.</p>
@@ -19,10 +21,11 @@ import java.util.concurrent.*;
  */
 @Component
 @Scope("prototype")
-public class TestRunner implements BuildListener, CtkLogs {
+public class TestRunner implements BuildListener {
     static String SYSTEST = "TESTLOG";
     static String TRAFFICLOG=SYSTEST + ".TRAFFIC";
-    private static org.slf4j.Logger trafficlog = LoggerFactory.getLogger(TRAFFICLOG);
+    private static org.slf4j.Logger trafficlog = getLogger(TRAFFICLOG);
+    private static Logger log = getLogger(TestRunner.class);
 
     @Autowired
     private Props props;
@@ -43,7 +46,7 @@ public class TestRunner implements BuildListener, CtkLogs {
     String urlroot;
 
     // this is the object we use to pass final result status back
-    CompletableFuture<String> result = new CompletableFuture<>();
+    CompletableFuture<String> result;
 
     /**
      * String name of the directory under which to put the test results
@@ -90,7 +93,7 @@ public class TestRunner implements BuildListener, CtkLogs {
 
                     /* ****** MAIN RUN-THE-TESTS *********** */
 
-
+        result = new CompletableFuture<String>();
         boolean goodLaunch = antExecutor.executeAntTask(testJar,
                 matchStr,
                 urls,
@@ -141,6 +144,7 @@ public class TestRunner implements BuildListener, CtkLogs {
         }
         String todir = event.getProject().getUserProperty("ctk.todir");
         log.debug("buildFinished for " + todir);
+        // signal the listener to proceed
         result.complete(todir +"report/html/index.html");
     }
 
