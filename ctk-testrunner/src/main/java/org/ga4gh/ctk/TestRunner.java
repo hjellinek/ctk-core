@@ -139,8 +139,9 @@ public class TestRunner implements BuildListener, CtkLogs {
         for (Table.Cell<String, String, Integer> cell : AvroJson.getMessages().cellSet()) {
             trafficlog.info(cell.getRowKey() + " " + cell.getColumnKey() + " " + cell.getValue());
         }
-        log.debug("buildFinished for " + acceptedTargetDir);
-        result.complete(acceptedTargetDir +"report/html/index.html");
+        String todir = event.getProject().getUserProperty("ctk.todir");
+        log.debug("buildFinished for " + todir);
+        result.complete(todir +"report/html/index.html");
     }
 
     /**

@@ -6,6 +6,7 @@ import org.apache.tools.ant.taskdefs.optional.junit.*;
 import org.junit.runner.*;
 import org.junit.runner.notification.*;
 import org.slf4j.*;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
 import java.io.*;
@@ -17,6 +18,7 @@ import java.io.*;
  * <p>Created by Wayne Stidolph on 6/23/2015.</p>
  */
 @Component
+@Scope("prototype")
 public class TestExecListener extends RunListener implements JUnitResultFormatter  {
 
     static long runCount = 0L; // these are the overall run totals
