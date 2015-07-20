@@ -33,7 +33,7 @@ The CTK also sends test-specific data to special logs so you can redirect that o
 
 The Properties list is available by looking at the javadoc for the `transport/src/main/java/org.ga4gh/ctk/config/Props.java` class. 
 
-> **NOTE**: The target server endpoints are controlled by a class `transport/src/main/java/org/ga4gh/ctk/transport/URLMAPPING.java` which loads the target server URL from the `ctk.tgt.urlRoot` property, which is set in the `transport/src/main/resources/defaulttransport.properties` file and can be overriden by replacing the properties file or with an external config element like an environment variable or on a command line.
+> **NOTE**: The target server endpoints are controlled by a class `transport/src/main/java/org/ga4gh/ctk/transport/URLMAPPING.java` which loads the target server URL from the `ctk.tgt.urlRoot` property, which is set in the `transport/src/main/resources/defaulttransport.properties` file and can be overridden by replacing the properties file or with an external config element like an environment variable or on a command line.
 
 ### Debugging URLMAPPER Initialization
 

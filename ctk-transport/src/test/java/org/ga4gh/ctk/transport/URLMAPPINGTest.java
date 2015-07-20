@@ -7,8 +7,8 @@ import static org.assertj.core.api.Assertions.*;
 /**
  * URLMAPPING Tester.
  * Problem - this test will fail if any of the URLMAPPING property file
- * or systemor environment variable endpoint-setting mechanisms are in
- * use. Also, since it's loading up a *static* class, it might be that
+ * or system or environment variable endpoint-setting mechanisms are in
+ * use. Also, since it's loading up a <b>static</b> class, it might be that
  * these simple tests could affect later uses of URLMAPPING in the same JVM.
  *
  * So, it's not really useful as a test right now, it's just for

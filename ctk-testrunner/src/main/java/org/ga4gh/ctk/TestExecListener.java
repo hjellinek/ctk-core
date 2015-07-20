@@ -14,7 +14,7 @@ import java.io.*;
 /**
  * <p>Route JUnit test events into the TESTLOG</p>
  * <p>Normal use is to be attached to a JunitCore as a listener, or to
- * be instantiated as a junit taks "formatter" inside an ant buildfile.</p>
+ * be instantiated as a junit task "formatter" inside an ant buildfile.</p>
  * <p>Created by Wayne Stidolph on 6/23/2015.</p>
  */
 @Component
@@ -129,9 +129,9 @@ public class TestExecListener extends RunListener implements JUnitResultFormatte
         skipCount    += suiteFailureCount;
         ms           += suiteMs;
 
-        String suitesummary= String.format("Tests run: %d, Failures: %d, Errors: %d, Skipped: %d, Time elapsed: %.3f sec",
+        String suiteSummary= String.format("Tests run: %d, Failures: %d, Errors: %d, Skipped: %d, Time elapsed: %.3f sec",
                 suiteRunCount, suiteFailureCount,suiteErrorCount,suiteSkipCount, suiteMs);
-        testlog.info(suitesummary);
+        testlog.info(suiteSummary);
     }
 
 

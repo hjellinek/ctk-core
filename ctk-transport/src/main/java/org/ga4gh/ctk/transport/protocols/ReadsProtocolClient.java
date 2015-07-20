@@ -79,8 +79,8 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
     public GASearchReadGroupSetsResponse searchReadGroupSets(GASearchReadGroupSetsRequest request) throws AvroRemoteException, GAException {
         String path = urls.getSearchReadGroupSets();
         // we use an empty concrete response class to pass into the Parameterized AvroJson
-        // as a quickway to get the class name and such; this bject actually gets replaced
-        // with the filled-in Repsonse object constructed in AvroJson and passed back
+        // as a quick way to get the class name and such; this object actually gets replaced
+        // with the filled-in Response object constructed in AvroJson and passed back
         GASearchReadGroupSetsResponse response = new GASearchReadGroupSetsResponse();
         AvroJson aj =
                 new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);

@@ -159,7 +159,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     }
 
     /**
-     * Setter for the WireTracker (if present, tiggers JSON collection).
+     * Setter for the WireTracker (if present, we collect the JSON).
      *
      * @param wireTracker holds wire info for this single transaction
      */
@@ -211,7 +211,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
      *
      * @param id string to be used as route param to the URL
      *
-     * @return an instance of the response type (as set during onbject construction), can be null.
+     * @return an instance of the response type (as set during object construction), can be null.
      */
     public P doGetResp(String id) {
 

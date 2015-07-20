@@ -67,7 +67,7 @@ public class JsonMakerTest {
      * for non-null fields, like ... "start": { "long" : "0"}
      *
      * This is fine for an Avro deserializer, but doesn't work with
-     * defaul Jackson deserializing, so we'll have a distinct test
+     * default Jackson deserializing, so we'll have a distinct test
      * for Jackson.
      */
     //@Test
