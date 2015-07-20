@@ -5,7 +5,7 @@
 
     <groupId>org.ga4gh</groupId>
     <artifactId>ctk-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>CTK Web Server</name>

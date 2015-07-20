@@ -30,6 +30,11 @@
         </dependency>
         <dependency>
             <groupId>org.ga4gh</groupId>
+            <artifactId>ctk-server</artifactId>
+            <version>0.5.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ga4gh</groupId>
             <artifactId>cts-java</artifactId>
             <version>0.5.1-SNAPSHOT</version>
             <classifier>tests</classifier>
@@ -55,6 +60,22 @@
                             </formats>
                             <descriptors>
                                 <descriptor>src/assembly/cli.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>server</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>ga4gh-ctk</finalName>
+                            <formats>
+                                <format>zip</format>
+                            </formats>
+                            <descriptors>
+                                <descriptor>src/assembly/server.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>

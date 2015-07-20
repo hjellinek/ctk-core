@@ -63,8 +63,9 @@ public class TestRunner implements BuildListener {
 
         String matchStr = props.ctk_matchstr;
         CtkLogs.log.debug("matchStr: " + matchStr);
+        String resultDir = ResultsSupport.getResultsDir(urlroot);
 
-        return doTestRun(urlroot,matchStr,props.ctk_testjar,".");
+        return doTestRun(urlroot,matchStr,props.ctk_testjar,resultDir);
 
     }
 
