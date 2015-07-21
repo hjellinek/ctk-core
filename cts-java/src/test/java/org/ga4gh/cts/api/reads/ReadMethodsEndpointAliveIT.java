@@ -38,7 +38,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
 
    // private static org.slf4j.Logger log = getLogger(ReadMethodsEndpointAliveIT.class);
 
-    private static ReadsProtocolClient client;
+    private static Client client;
 
     @Rule
     public final JUnitSoftAssertions softly = new JUnitSoftAssertions();
@@ -168,7 +168,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
         URLMAPPING.doInit();
-        client = new ReadsProtocolClient();
+        client = new Client();
     }
 
     @AfterClass

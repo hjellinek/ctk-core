@@ -5,11 +5,10 @@ import org.apache.tools.ant.*;
 import org.apache.tools.ant.taskdefs.optional.junit.*;
 import org.junit.runner.*;
 import org.junit.runner.notification.*;
+import org.slf4j.*;
 import org.springframework.stereotype.*;
 
 import java.io.*;
-
-import static org.slf4j.LoggerFactory.*;
 
 /**
  * <p>Route JUnit test events into the TESTLOG</p>
@@ -26,7 +25,7 @@ public class TestExecListener extends RunListener implements JUnitResultFormatte
     static long skipCount  = 0L;
     static float ms = 0.0f;
 
-    private static org.slf4j.Logger testlog = getLogger("TESTLOG");
+    private static org.slf4j.Logger testlog = LoggerFactory.getLogger("TESTLOG");
 
     /**
      * <p>Gets test report summary string.</p>

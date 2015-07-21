@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 public class ReadsSearchIT implements CtkLogs {
     // private static org.slf4j.Logger log = getLogger(ReadsSearchIT.class);
 
-    private static ReadsProtocolClient client;
+    private static Client client;
 
 
     @BeforeClass
@@ -32,7 +32,7 @@ public class ReadsSearchIT implements CtkLogs {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
         URLMAPPING.doInit(); // reload defaults
-        client = new ReadsProtocolClient();
+        client = new Client();
 
         //client.start(); start binary transceiver to Server Under Test
     }

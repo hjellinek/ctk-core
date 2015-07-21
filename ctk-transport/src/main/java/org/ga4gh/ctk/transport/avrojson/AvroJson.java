@@ -100,8 +100,6 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
      * <p>Construct an AvroJson for a particular request/response interaction.</p>
      * <p>The req and resp types parameterize this generic interaction object.</p>
      *
-     *
-     *
      * @param req     an instance of the avro *Request method object
      * @param resp    an instance of the avro *Response method object
      * @param urlRoot String the server base (often includes a version number)
@@ -125,6 +123,41 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     }
 
     /**
+     * <p>Construct an AvroJson for an interaction which requires no request object.</p>
+     * @param resp    an instance of the avro *Response method object
+     * @param urlRoot String the server base (often includes a version number)
+     * @param path    String the request target path as identified in the avdl
+     */
+    public AvroJson(P resp, String urlRoot, String path) {
+        this.theAvroReq = null;
+        this.theResp = resp;
+        this.dw = new SpecificDatumWriter<Q>();
+        this.wireTracker = null;
+
+        // neither urlRoot nor path should have spaces,
+        // the urlRoot should end with exactly one slash
+        String tsRoot = CharMatcher.WHITESPACE.removeFrom(urlRoot);
+        this.urlRoot = CharMatcher.is('/').trimTrailingFrom(tsRoot) + "/";
+
+        // and that the path does not begin or end with a slash
+        String tsPath = CharMatcher.WHITESPACE.removeFrom(path);
+        this.path = CharMatcher.is('/').trimFrom(tsPath);
+        log.info(toString());
+    }
+
+    /**
+     * <p>Construct an AvroJson for an interaction which requires no request object.</p>
+     * @param resp    an instance of the avro *Response method object
+     * @param urlRoot String the server base (often includes a version number)
+     * @param path    String the request target path as identified in the avdl
+     * @param wt If supplied, captures the data going across the wire
+     */
+    public AvroJson(P resp, String urlRoot, String path, WireTracker wt) {
+        this(resp, urlRoot, path);
+        this.wireTracker = wt;
+    }
+
+    /**
      * Construct an AvroJson for a particular request/response interaction.
      * The req and resp types parameterize this interaction object.
      *
@@ -132,7 +165,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
      * @param resp     an instance of the avro *Response method object
      * @param urlRoot  String the server base (often includes a version number)
      * @param path     String the request target path as identified in the avdl
-     * @param wireTracker {@code WireTracker} control and transfer of on-the-wire data
+     * @param wireTracker If supplied, captures the data going across the wire
      */
     public AvroJson(Q req, P resp, String urlRoot, String path, WireTracker wireTracker) {
         this(req, resp, urlRoot, path);
@@ -184,7 +217,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
 
         httpResp = shouldDoComms ? jsonPost(urlRoot + path): NO_COMM_RESP;
 
-        if(wireTracker != null){
+        if (wireTracker != null) {
             wireTracker.setResponseStatus(fromInt(httpResp.getStatus()));
             //wireTracker.setActJson(json);
         }
@@ -204,7 +237,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null ? theResp.getClass().getSimpleName()  : "null";
         messages.put(theAvroReq.getClass().getSimpleName() + postOrGet + " <" + jsonStr + ">", respName,
-                httpResp != null ? httpResp.getStatus(): 0);
+                     httpResp != null ? httpResp.getStatus() : 0);
     }
 
     /**
@@ -245,7 +278,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         }
         if (log.isDebugEnabled()) {
             log.debug("exit jsonPost to " + theURL + " with status "
-                    + jsonResponse != null? jsonResponse.getStatusText() : "FAILED");
+                    + jsonResponse != null ? jsonResponse.getStatusText() : "FAILED");
         }
         if (wireTracker != null) {
             wireTracker.theUrl = theURL;
@@ -273,7 +306,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         }
         if (log.isDebugEnabled()) {
             log.debug("exit jsonGet to " + theUrl + " id=" + id + " with status "
-                    + jsonResponse != null? jsonResponse.getStatusText() : "FAILED");
+                    + jsonResponse != null ? jsonResponse.getStatusText() : "FAILED");
         }
         if (wireTracker != null) {
             wireTracker.theUrl = theUrl + "/ " + id;
