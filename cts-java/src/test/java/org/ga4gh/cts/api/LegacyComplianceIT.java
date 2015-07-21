@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -32,6 +31,10 @@ public class LegacyComplianceIT implements CtkLogs {
 
     private static Client client;
 
+    private List<String> oneSingle(String s) {
+        return Collections.singletonList(s);
+    }
+
     @BeforeClass
     public static void setupTransport() throws Exception {
         URLMAPPING.doInit(); // reload defaults
@@ -42,26 +45,34 @@ public class LegacyComplianceIT implements CtkLogs {
      * Search read group sets.  Fetches read group sets from the specified dataset.
      * <ul>
      * <li>Query 1: <pre>/readgroupsets/search <dataset ID></pre>
-     * <li>Test 1: assert that we received a result of type {@link GASearchReadGroupSetsResponse}, and that every
-     * {@link GAReadGroupSet} it contains has field datasetId == &lt;dataset ID&gt;</li>
-     * <li>Test 2: every {@link GAReadGroup} in that {@link GAReadGroupSet}
-     * has: an 'experiment' of type GAExperiment with datasetId == &lt;dataset ID&gt; AND
-     * a program of type {@link GAProgram} which is not empty
+     * <li>Test 1: assert that we received a result of type {@link GASearchReadGroupSetsResponse},
+     * and that every {@link GAReadGroupSet} it contains has field datasetId == &lt;dataset ID&gt;</li>
+     * <li>Test 2: every {@link GAReadGroup} in that {@link GAReadGroupSet} has: an 'experiment'
+     * of type GAExperiment; datasetId == &lt;dataset ID&gt;; a program of type {@link GAProgram}
+     * which is not empty.
      * </ul>
      */
     @Test
     public void searchReadGroupSets() throws AvroRemoteException {
         final GASearchReadGroupSetsRequest req =
-                GASearchReadGroupSetsRequest.newBuilder().setDatasetIds(Collections.singletonList(DATASET_ID)).
+                GASearchReadGroupSetsRequest.newBuilder().setDatasetIds(oneSingle(DATASET_ID)).
                         build();
         final GASearchReadGroupSetsResponse resp = client.searchReadGroupSets(req);
         final List<GAReadGroupSet> readGroupSets = resp.getReadGroupSets();
         assertThat(readGroupSets.stream().
                 filter(rgs -> !DATASET_ID.equals(rgs.getDatasetId())).count()).isZero();
-        // XXX the next two tests are inexpressible (won't compile) in the current schemas, so they're commented out
-//        assertThat(readGroupSets.stream().filter(rgs -> !DATASET_ID.equals(rgs.getExperiment().getDatasetId())).
-//                count()).isZero();
-//        assertThat(readGroupSets.stream().filter(rgs -> (rgs.getProgram() == null)).count()).isZero();
+
+        // use a local var to avoid varargs confusion:
+        final GAProgram aNullOfTheRightType = null;
+        for (GAReadGroupSet readGroupSet : readGroupSets) {
+            for (GAReadGroup readGroup : readGroupSet.getReadGroups()) {
+                assertThat(readGroup).isNotNull();
+                assertThat(readGroup.getDatasetId()).isEqualTo(DATASET_ID);
+                assertThat(readGroup.getExperiment()).isInstanceOf(GAExperiment.class);
+                assertThat(readGroup.getPrograms()).isNotEmpty();
+                assertThat(readGroup.getPrograms()).doesNotContain(aNullOfTheRightType);
+            }
+        }
     }
 
     /**
@@ -70,13 +81,14 @@ public class LegacyComplianceIT implements CtkLogs {
      * <li>Query 1: <pre>/variantsets/search &lt;dataset ID&gt;</re></li>
      * <li>Test 1: assert that we received a {@link GASearchVariantSetsResponse} containing an array of
      * {@link GAVariantSet} of length > 0 (should have a definite #, actually)</li>
-     * <li>Test 2: assert that the 'metadata' field of that {@link GAVariantSet} is of type {@link GAVariantSetMetadata}.</li>
+     * <li>Test 2: assert that the 'metadata' field of that {@link GAVariantSet} is of type
+     * {@link GAVariantSetMetadata}.</li>
      * </ul>
      */
     @Test
     public void searchVariantSets() throws AvroRemoteException {
         final GASearchVariantSetsRequest req =
-                GASearchVariantSetsRequest.newBuilder().setDatasetIds(singletonList(DATASET_ID)).build();
+                GASearchVariantSetsRequest.newBuilder().setDatasetIds(oneSingle(DATASET_ID)).build();
         final GASearchVariantSetsResponse resp = client.searchVariantSets(req);
 
         final List<GAVariantSet> sets = resp.getVariantSets();
@@ -96,9 +108,12 @@ public class LegacyComplianceIT implements CtkLogs {
      * {@link GAVariant} objects.  Get the ID of the first one.</li>
      * <li>Query 2: <pre>/variants/search variantSetIds: [variantSetId] referenceName: '22' start:
      *     51005353 end: 51015354 pageSize: 1</pre></li>
-     * <li>Test 2: assert that the first result is of type {@link GAVariant} AND has reference name == "22".</li>
-     * <li>Test 3: assert that the <tt>calls</tt> field (a {@link GACall}) of that {@link GAVariant} is not null.</li>
-     * <li>Test 4: assert that the <tt>genotype</tt> field of the first {@link GACall} is an array of integers.</li>
+     * <li>Test 2: assert that the first result is of type {@link GAVariant} AND has reference name
+     * == "22".</li>
+     * <li>Test 3: assert that the <tt>calls</tt> field (a {@link GACall}) of that {@link GAVariant}
+     * is not null.</li>
+     * <li>Test 4: assert that the <tt>genotype</tt> field of the first {@link GACall} is an array
+     * of integers.</li>
      * </ul>
      */
     @Test
@@ -108,7 +123,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final GASearchVariantsRequest req =
                 GASearchVariantsRequest.newBuilder().
 //                        XXX the next line won't compile: setDatasetIds is missing
-//                        setDatasetIds(Collections.singletonList(DATASET_ID)).
+//                        setDatasetIds(oneSingle(DATASET_ID)).
                                                build();
         final GASearchVariantsResponse resp = client.searchVariants(req);
 
@@ -117,8 +132,9 @@ public class LegacyComplianceIT implements CtkLogs {
         final String id = variants.get(0).getId();
 
         final GASearchVariantsRequest vReq = GASearchVariantsRequest.newBuilder().
-                setVariantSetIds(singletonList(id)).setReferenceName(referenceName).setStart(51005353).setEnd(51015354).
-                                                                            setPageSize(1).build();
+                setVariantSetIds(oneSingle(id)).setReferenceName(referenceName).
+                    setStart(51005353).setEnd(51015354).
+                    setPageSize(1).build();
         final GASearchVariantsResponse vResp = client.searchVariants(vReq);
         final List<GAVariant> searchVariants = vResp.getVariants();
         final GAVariant firstVariant = searchVariants.get(0);
@@ -146,17 +162,19 @@ public class LegacyComplianceIT implements CtkLogs {
      */
     @Test
     public void searchCallSets() throws AvroRemoteException {
-        final GASearchVariantSetsRequest vReq = GASearchVariantSetsRequest.newBuilder()
-                                                                          .setDatasetIds(singletonList(DATASET_ID)).
-                                                                                  build();
+        final GASearchVariantSetsRequest vReq =
+                GASearchVariantSetsRequest.newBuilder()
+                                          .setDatasetIds(oneSingle(DATASET_ID)).
+                                                  build();
         final GASearchVariantSetsResponse vResp = client.searchVariantSets(vReq);
 
         assertThat(vResp.getVariantSets()).isNotEmpty();
         for (GAVariantSet set : vResp.getVariantSets()) {
             final String id = set.getId();
 
-            final GASearchCallSetsRequest csReq = GASearchCallSetsRequest.newBuilder()
-                                                                         .setVariantSetIds(singletonList(id)).build();
+            final GASearchCallSetsRequest csReq =
+                    GASearchCallSetsRequest.newBuilder()
+                                           .setVariantSetIds(oneSingle(id)).build();
             final GASearchCallSetsResponse csResp = client.searchCallSets(csReq);
 
             assertThat(csResp.getCallSets()).isNotEmpty();
@@ -182,7 +200,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final String assemblyId = "GRCh38";
 
         final GASearchReferenceSetsRequest req = GASearchReferenceSetsRequest.newBuilder().
-                setAccessions(Collections.singletonList(accessionNumber)).setPageSize(1).build();
+                setAccessions(oneSingle(accessionNumber)).setPageSize(1).build();
         final GASearchReferenceSetsResponse resp = client.searchReferenceSets(req);
         final List<GAReferenceSet> refSets = resp.getReferenceSets();
 
@@ -219,7 +237,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final int expectedRefs = 5; // XXX made up number -- fix this
 
         final GASearchReferencesRequest req = GASearchReferencesRequest.newBuilder().
-                setMd5checksums(Collections.singletonList(expectedMd5)).setPageSize(1).build();
+                setMd5checksums(oneSingle(expectedMd5)).setPageSize(1).build();
         final GASearchReferencesResponse resp = client.searchReferences(req);
 
         final List<GAReference> refs = resp.getReferences();
@@ -240,7 +258,8 @@ public class LegacyComplianceIT implements CtkLogs {
      * Reference bases.  Searches for chr1 of GRCh37 by MD5 checksum and then fetches 10 bases for
      * that reference at offset 15000.
      * <ul>
-     *     <li>Query 1: <pre>/references/search md5checksums: [1b22b98cdeb4a9304cb5d48026a85128] pageSize: 1</pre></li>
+     *     <li>Query 1: <pre>/references/search md5checksums: [1b22b98cdeb4a9304cb5d48026a85128]
+     *     pageSize: 1</pre></li>
      *     <li>Test 1: assert that we received a {@link GASearchReferencesResponse} object</li>
      *     <li>Query 2: <pre>/references/(ref id)/bases start: 15000 end: 15010</pre></li>
      *     <li>Test 2: assert that we received a {@link GAReference} object with fields
@@ -257,7 +276,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final String expectedSequence = "ATCCGACATC";
 
         final GASearchReferencesRequest req = GASearchReferencesRequest.newBuilder().
-                setMd5checksums(Collections.singletonList(expectedMd5)).setPageSize(1).build();
+                setMd5checksums(oneSingle(expectedMd5)).setPageSize(1).build();
         final GASearchReferencesResponse resp = client.searchReferences(req);
         assertThat(resp).isNotNull();
         final List<GAReference> refs = resp.getReferences();
@@ -278,11 +297,11 @@ public class LegacyComplianceIT implements CtkLogs {
      * Search reads. Looks up a read group set for NA12878 from the specified dataset, then fetches
      * reads.
      * <ul>
-     *     <li>Query 1: <pre>/readgroupsets/search datasetIds: 1 </pre> (passed in) <pre> name: 'NA12878',
-     *     pageSize: 1</pre></li>
+     *     <li>Query 1: <pre>/readgroupsets/search datasetIds: 1 </pre> (passed in) <pre> name:
+     *     'NA12878', pageSize: 1</pre></li>
      *     <li>Test 1: assert that we received a {@link GASearchReadGroupSetsResponse} containing an
-     *     array of {@link GAReadGroupSet}, length 1, with name 'NA12878'. Pull field 'id' from the first
-     *     returned readGroups.</li>
+     *     array of {@link GAReadGroupSet}, length 1, with name 'NA12878'. Pull field 'id' from the
+     *     first returned readGroups.</li>
      *     <li>Query 2: <pre>/reads/search readGroupIds: [id] referenceName: '22' start:
      *     51005353 end: 51005354</pre></li>
      *     <li>Test 2: assert that the result is a {@link GASearchReadsResponse} containing an
@@ -302,7 +321,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final long end = 51005354;
 
         final GASearchReadGroupSetsRequest req = GASearchReadGroupSetsRequest.newBuilder().
-                setDatasetIds(Collections.singletonList(DATASET_ID)).setName(datasetName).
+                setDatasetIds(oneSingle(DATASET_ID)).setName(datasetName).
                 setPageSize(1).build();
         final GASearchReadGroupSetsResponse resp = client.searchReadGroupSets(req);
 
@@ -317,7 +336,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final String readGroupSetId = readGroupSet.getId();
         final GASearchReadsRequest srReq = GASearchReadsRequest.newBuilder().
                 // XXX next line won't compile
-                // setDatasetIds(Collections.singletonList(readGroupSetId)).
+                // setDatasetIds(oneSingle(readGroupSetId)).
                 setReferenceName(referenceName).
                 setStart(start).setEnd(end).build();
         final GASearchReadsResponse srResp = client.searchReads(srReq);
@@ -325,9 +344,10 @@ public class LegacyComplianceIT implements CtkLogs {
         // test 2
         final List<GAReadAlignment> alignments = srResp.getAlignments();
         assertThat(alignments).isNotEmpty();
+
         // use a local var to avoid varargs confusion:
-        final GAReadAlignment noNullsNeedApply = null;
-        assertThat(alignments).doesNotContain(noNullsNeedApply);
+        final GAReadAlignment aNullOfTheRightType = null;
+        assertThat(alignments).doesNotContain(aNullOfTheRightType);
 
         // test 3
         for (GAReadAlignment alignment : alignments) {

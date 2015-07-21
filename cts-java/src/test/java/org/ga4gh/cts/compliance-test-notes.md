@@ -12,11 +12,8 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1).
     *Test 1*: assert that we received a result of type GASearchReadGroupSetsResponse, and that every
               GASearchReadGroupSet it contains has field `datasetId == <dataset ID>`
 
-    *Test 2*: every GAReadGroup in that GASearchReadGroupSet has: an 'experiment' of type GAExperiment with datasetId == <dataset ID> AND
+    *Test 2*: every GAReadGroup in that GASearchReadGroupSet has: an 'experiment' of type GAExperiment; datasetId == <dataset ID>;
               a program of type GAProgram which is not empty
-
-    **Problems:** GAReadGroup is missing fields `program` (holds `GAProgram`), `experiment` (holds
-`GAExperiment`) fields.
 
 2. Search variant sets (11 tests) [converted]
     - Fetches variant sets from the specified dataset.
