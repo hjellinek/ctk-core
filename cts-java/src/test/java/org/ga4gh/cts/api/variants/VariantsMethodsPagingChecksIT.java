@@ -14,7 +14,7 @@ import org.junit.experimental.categories.*;
 public class VariantsMethodsPagingChecksIT implements CtkLogs {
     // private static org.slf4j.Logger log = getLogger(VariantsMethodsPagingChecksIT.class);
 
-    private static VariantsProtocolClient client;
+    private static Client client;
 
     /**
      * <p>Page through big variants response.</p>
@@ -35,7 +35,8 @@ public class VariantsMethodsPagingChecksIT implements CtkLogs {
     public static void setupTransport() throws Exception {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
-        client = new VariantsProtocolClient(URLMAPPING.getInstance());
+        URLMAPPING.doInit(); // reload defaults
+        client = new Client();
 
     }
 }

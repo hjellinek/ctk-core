@@ -22,7 +22,7 @@ import java.util.*;
 public class ReadGroupSetsSearchIT implements CtkLogs {
     // private static org.slf4j.Logger log = getLogger(ReadGroupSetsSearchIT.class);
 
-    private static ReadsProtocolClient client;
+    private static Client client;
 
     private static Map<String, String> stringMap;
     static {
@@ -144,8 +144,8 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
     public static void setupTransport() throws Exception {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
-        //URLMAPPINGImpl.doInit(); // reload defaults
-        client = new ReadsProtocolClient(URLMAPPING.getInstance());
+        URLMAPPING.doInit(); // reload defaults
+        client = new Client();
 
         //client.start(); start binary transceiver to Server Under Test
     }

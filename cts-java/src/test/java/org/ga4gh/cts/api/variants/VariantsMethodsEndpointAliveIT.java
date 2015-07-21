@@ -39,7 +39,7 @@ public class VariantsMethodsEndpointAliveIT implements CtkLogs {
 
     //private static org.slf4j.Logger log = getLogger(VariantsMethodsEndpointAliveIT.class);
 
-    private static VariantsProtocolClient client;
+    private static Client client;
 
     @Before
     public void before() throws Exception {
@@ -71,7 +71,7 @@ public class VariantsMethodsEndpointAliveIT implements CtkLogs {
     //@Ignore
     @Test
     public void testSearchVariantSetsForRequestWdEndpointAlive() throws Exception {
-//TODO: Test goes here... 
+//TODO: Test goes here...
     }
 
     /**
@@ -142,8 +142,8 @@ public class VariantsMethodsEndpointAliveIT implements CtkLogs {
     public static void setupTransport() throws Exception {
         //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
         // service = new SimpleOrderServiceEndpoint(endpointAddress);
-
-        client = new VariantsProtocolClient(URLMAPPING.getInstance());
+        URLMAPPING.doInit(); // reload defaults
+        client = new Client();
         // TODO verify correct data installed? Maybe a null client to cause fast-fail and test-skipping?
 
     }

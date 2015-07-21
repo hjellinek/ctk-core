@@ -26,7 +26,7 @@ public class CallsetsSearchResponseCheckIT implements CtkLogs {
     // implements CtkLogsprivate static org.slf4j.Logger log = getLogger(CallsetsSearchResponseCheckIT.class);
 
     static URLMAPPING urls;
-    private static final VariantsProtocolClient client = new VariantsProtocolClient(urls);
+    private static final Client client = new Client();
 
     /*
      REF MATERIAL from the  variantmethods IDL re GASearchCallSetRequest

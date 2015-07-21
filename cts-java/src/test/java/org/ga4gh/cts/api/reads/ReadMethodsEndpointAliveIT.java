@@ -38,7 +38,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
 
    // private static org.slf4j.Logger log = getLogger(ReadMethodsEndpointAliveIT.class);
 
-    private static ReadsProtocolClient client;
+    private static Client client;
 
     @Rule
     public final JUnitSoftAssertions softly = new JUnitSoftAssertions();
@@ -165,10 +165,13 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
 
     @BeforeClass
     public static void setupTransport() throws Exception {
+        //InetSocketAddress endpointAddress = new InetSocketAddress("127.0.0.1", 8000);
+        // service = new SimpleOrderServiceEndpoint(endpointAddress);
         URLMAPPING urls = URLMAPPING.getInstance();
         log.info("ReadMethodsEndpointAliveIT set up urls.getUrlRoot of " + urls.getUrlRoot());
         log.trace("ReadMethodsEndpointAliveIT set up urls of " + String.valueOf(urls.getEndpoints()));
-        client = new ReadsProtocolClient(urls);
+        URLMAPPING.doInit();
+        client = new Client();
     }
 
     @AfterClass

@@ -2,7 +2,8 @@ package org.ga4gh.ctk.transport.protocols;
 
 import org.apache.avro.AvroRemoteException;
 import org.ga4gh.*;
-import org.ga4gh.ctk.transport.*;
+import org.ga4gh.ctk.transport.URLMAPPING;
+import org.ga4gh.ctk.transport.WireTracker;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -15,14 +16,11 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
     private org.slf4j.Logger log = getLogger(ReadsProtocolClient.class);
 
     public WireTracker wireTracker;
-    URLMAPPING urls;
 
-    public ReadsProtocolClient(URLMAPPING urls) {
-        this.urls = urls;
+    public ReadsProtocolClient() {
     }
 
-    public ReadsProtocolClient(URLMAPPING urls, WireTracker wt) {
-        this.urls = urls;
+    public ReadsProtocolClient( WireTracker wt) {
         this.wireTracker = wt;
     }
 
@@ -38,10 +36,10 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
      */
     @Override
     public GASearchReadsResponse searchReads(GASearchReadsRequest request) throws AvroRemoteException, GAException {
-        String path = urls.getSearchReads();
+        String path = URLMAPPING.getSearchReads();
         GASearchReadsResponse response = new GASearchReadsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
+                new AvroJson<>(request, response, URLMAPPING.getUrlRoot(), path, wireTracker);
         response = (GASearchReadsResponse) aj.doPostResp();
         return response;
     }
@@ -77,13 +75,13 @@ public class ReadsProtocolClient implements org.ga4gh.GAReadMethods {
      */
     @Override
     public GASearchReadGroupSetsResponse searchReadGroupSets(GASearchReadGroupSetsRequest request) throws AvroRemoteException, GAException {
-        String path = urls.getSearchReadGroupSets();
+        String path = URLMAPPING.getSearchReadGroupSets();
         // we use an empty concrete response class to pass into the Parameterized AvroJson
         // as a quick way to get the class name and such; this object actually gets replaced
         // with the filled-in Response object constructed in AvroJson and passed back
         GASearchReadGroupSetsResponse response = new GASearchReadGroupSetsResponse();
         AvroJson aj =
-                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
+                new AvroJson<>(request, response, URLMAPPING.getUrlRoot(), path, wireTracker);
         //aj.setDeserMode(AvroJson.DESER_MODE.AVRO_DIRECT);
         response = (GASearchReadGroupSetsResponse) aj.doPostResp();
 
