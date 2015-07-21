@@ -2,9 +2,9 @@
 
 ### These are the categories of the tests in the existing [ga4gh/compliance](https://github.com/ga4gh/compliance) repo.
 
-The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1):
+The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1).
 
-1. Search read group sets (25 tests) [not yet - missing types]
+1. Search read group sets (25 tests) [converted partially - missing fields]
     - Fetches read group sets from the specified dataset.
 
     *Query 1*: `/readgroupsets/search <dataset ID>`
@@ -14,6 +14,9 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1):
 
     *Test 2*: every GAReadGroup in that GASearchReadGroupSet has: an 'experiment' of type GAExperiment with datasetId == <dataset ID> AND
               a program of type GAProgram which is not empty
+
+    **Problems:** GAReadGroup is missing fields `program` (holds `GAProgram`), `experiment` (holds
+`GAExperiment`) fields.
 
 2. Search variant sets (11 tests) [converted]
     - Fetches variant sets from the specified dataset.
@@ -25,7 +28,7 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1):
 
     *Test 2*: assert that the 'metadata' field of that GAVariantSet is of type GAVariantSetMetadata.
 
-3. Reference sets (11 tests)
+3. Reference sets (11 tests) [converted]
     -  Searches for reference set GRCh37 by accession (GCA_000001405.15) and then fetches that same reference set by ID.
 
     *Query 1*: `/referencesets/search accessions: ["GCA_000001405.15"] pageSize: 1`
@@ -37,7 +40,7 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1):
 
     *Test 2*: assert that the ID of the returned object == ref set ID above.
 
-4. References (11 tests)
+4. References (11 tests) [converted]
     - Searches for chr1 of GRCh37 by MD5 checksum (`1b22b98cdeb4a9304cb5d48026a85128`) and then fetches that same reference by ID.
 
     *Query 1*: `/references/search md5checksums: [md5checksum] pageSize: 1`
@@ -49,7 +52,7 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1):
 
     *Test 2*: assert that the returned GAReference has `ID == ref ID`
 
-5. Reference bases (this is known by a different name in the schema, no?) (2 tests)
+5. Reference bases (2 tests) [converted]
     - Searches for chr1 of GRCh37 by MD5 checksum and then fetches 10 bases for that reference at offset 15000.
 
     *Query 1*: `/references/search md5checksums: [1b22b98cdeb4a9304cb5d48026a85128] pageSize: 1`
@@ -60,7 +63,7 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1):
 
     *Test 2*: assert that we received a GAReference object with fields `offset == 15000 AND sequence == "ATCCGACATC"`
 
-6. Search reads (28 tests)
+6. Search reads (28 tests) [converted partially - missing fields]
     - Looks up a read group set for NA12878 from the specified dataset, then fetches reads.
 
     *Query 1*: `/readgroupsets/search datasetIds: 1 `(passed in)` name: 'NA12878', pageSize: 1`
@@ -75,6 +78,8 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1):
     *Test 3*: assert that each of the GAReadAlignment objects contains a nextMatePosition of type GAPosition with
         reference name == "22" AND alignment of type GALinearAlignment with field cigar holding a GACigarUnit.
 
+    **Problems:** `GASearchReadsRequest` is missing `datasetIds` field, `setDatasetIds` method.
+
 7. Search call sets (8 tests) [converted]
     - Fetches call sets from the specified dataset.
 
@@ -88,7 +93,7 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1):
     *Test 2*: assert that the returned object is a GASearchCallSetsResponse, and that it contains > 0 GACallSet objects. We can check that the
         cal sets have distinct ID values.
 
-8. Search variants (21 tests) [converted, but can't compile yet]
+8. Search variants (21 tests) [converted partially - missing fields]
     - Fetches variants from the specified dataset.
 
     *Query 1*: `/variantsets/search datasetIds: 1 `(passed in)
@@ -103,18 +108,17 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1):
 
     *Test 4*: assert that the genotype field of that GACall is an array of integers.
 
+    **Problems:** `GASearchVariantsRequest` is missing `datasetIds` field, `setDatasetIds` method.
+
 ### Comments
 
 Tests fields' presence and types (string, float, long, date, array, keyvalue, int, boolean).
 
-Does not test values (except implicitly - as in "we did/did not receive an object in reply to this request").
-
 Does not test HTTP methods or status codes.
-Every method in the API must be annotated with the request types it accepts.
 
 Ensure no extra fields in returned objects. (Test that this is impossible in ProtoBuf.)
 
 I'd like to start filling GAException with useful information.  This should be in a future version of the schemas.
 
-()Would love it if the mentions of the types in the text of methods used `{@link}` or equivalent.)
+(Would love it if the mentions of the types in the text of methods used `{@link}` or equivalent.)
 
