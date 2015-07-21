@@ -87,26 +87,6 @@ esac; done
 
 ###############################################################################
 
-# if target/ exists, amend its name by suffixing the time the test run started
-#if [ -d "$TGTDIR" ]; then
-  # the target may have been created in any of 3 ways (unzip, or java, or this
-  # script). If the script created it, we have a .teststart to give us a nice
-  # renaming suffix. But, if java or unzip created it, then we don't know when it
-  # actually ran.
-#  if [ -f "$TGTDIR"/.teststart ]; then
-#      NEWDIR=${TGTDIR}-`head -n 1 ${TGTDIR}/.testinfo`
-#  else
-      # no .teststart to give us a start time
-      # so we'll use the access time on directory, in seconds_since_epoch
-#      NEWDIR=${TGTDIR}-`stat -c %X ${TGTDIR}`
-#  fi
-#  mv ${TGTDIR} ${NEWDIR}
-#fi
-# no target dir so create it, with timestamp file
-# using timestamp because no POSIX creation that is certain to be available
-#mkdir ${TGTDIR}
-#echo `date "+%Y-%m-%d_%H_%M_%S"` > ${TGTDIR}/.testinfo
-
 # run the CTK
 
 # pass along any command line params (mostly, property settings)
