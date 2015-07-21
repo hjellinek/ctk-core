@@ -77,9 +77,10 @@ public class URLMAPPINGImpl implements URLMAPPING {
     }
 
 
-    public URLMAPPINGImpl(){
+    public URLMAPPINGImpl() {
         doInit("");// empty string will cause defaulttransport.properties to load
     }
+
     /**
      * <p>Initialize URLMAPPING.</p>
      * <p>Given a resource name, this looks loads (in order):
@@ -101,17 +102,17 @@ public class URLMAPPINGImpl implements URLMAPPING {
         if (resName == null || resName.isEmpty())
             resName = "defaulttransport.properties";
 
-        if(dumpToStdOut) System.out.println("\nprocess resource/file " + resName);
+        if (dumpToStdOut) System.out.println("\nprocess resource/file " + resName);
         tempProps = loadPropsName(resName);
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
         }
-        if(dumpToStdOut)  System.out.println("\nprocess Env");
+        if (dumpToStdOut) System.out.println("\nprocess Env");
         tempProps = loadPropsEnv("ctk.tgt.");
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
         }
-        if(dumpToStdOut)  System.out.println("\nprocess Sys");
+        if (dumpToStdOut) System.out.println("\nprocess Sys");
         tempProps = loadPropsSystem("ctk.tgt.");
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
@@ -120,19 +121,19 @@ public class URLMAPPINGImpl implements URLMAPPING {
 
     /**
      * Do init, defaults.
-     *
+     * <p>
      * Just syntactic sugar for doInit("").
      */
-    public void doInit(){
+    public void doInit() {
         doInit("");
     }
 
     /**
      * Load properties by resource or file name.
-     *
+     * <p>
      * <p>Looks on classpath for resource with provided name;
      * if found, loads the included properties matcing prefix "ctk.tgt."</p>
-     *
+     * <p>
      * <p>Looks on file system for resource matching name; loads thos props
      * (which allows for file system to override classpath.</p>
      *
@@ -150,18 +151,19 @@ public class URLMAPPINGImpl implements URLMAPPING {
                 .getResourceAsStream(resName);
         try {
             tempProps.load(instream);
-            if(dumpToStdOut) System.out.println("loaded props from classpath " + resName);
+            if (dumpToStdOut) System.out.println("loaded props from classpath " + resName);
         } catch (Exception ioe) { // just ignore not-found
-            if(dumpToStdOut) System.out.println("Did not find resource " + resName);;
+            if (dumpToStdOut) System.out.println("Did not find resource " + resName);
+            ;
         }
 
         // then we try the same name on the file system
         try {
             instream = new FileInputStream(resName);
             tempProps.load(instream);
-            if(dumpToStdOut) System.out.println("loaded props from file " + resName);
+            if (dumpToStdOut) System.out.println("loaded props from file " + resName);
         } catch (Exception ioe) {
-            if(dumpToStdOut) System.out.println("Did not find property file " + resName);
+            if (dumpToStdOut) System.out.println("Did not find property file " + resName);
         }
 
         return tempProps;
@@ -173,7 +175,7 @@ public class URLMAPPINGImpl implements URLMAPPING {
             String ks = key.toString();
 
             if (ks.startsWith(prefix)) {
-                if(dumpToStdOut) System.out.println("Sys prop has "
+                if (dumpToStdOut) System.out.println("Sys prop has "
                         + ks + " => " + System.getProperty(ks));
                 props.put(ks, System.getProperty(ks));
             }
@@ -201,7 +203,7 @@ public class URLMAPPINGImpl implements URLMAPPING {
             for (Enumeration en = props.propertyNames(); en.hasMoreElements(); ) {
                 String key = (String) en.nextElement();
                 map.put(key, props.getProperty(key));
-                if(dumpToStdOut) System.out.println("merging " + key + " => " + props.getProperty(key));
+                if (dumpToStdOut) System.out.println("merging " + key + " => " + props.getProperty(key));
             }
         }
     }
@@ -243,6 +245,46 @@ public class URLMAPPINGImpl implements URLMAPPING {
         endpoints.put("ctk.tgt.searchReadGroupSets", searchReadGroupSets);
     }
 
+    @Override
+    public String getReference() {
+        return endpoints.get("ctk.tgt.getReferences");
+    }
+
+    @Override
+    public void setReference(String reference) {
+        endpoints.put("ctk.tgt.getReferences", reference);
+    }
+
+    @Override
+    public String getSearchReferences() {
+        return endpoints.get("ctk.tgt.searchReferences");
+    }
+
+    @Override
+    public void setSearchReferences(String searchReferences) {
+        endpoints.put("ctk.tgt.searchReferences", searchReferences);
+    }
+
+    @Override
+    public String getSearchReferenceBases() {
+        return endpoints.get("ctk.tgt.getReferencesBases");
+    }
+
+    @Override
+    public void setSearchReferenceBases(String searchReferenceBases) {
+        endpoints.put("ctk.tgt.getReferencesBases", searchReferenceBases);
+    }
+
+    @Override
+    public String getReferenceSets() {
+        return endpoints.get("ctk.tgt.getReferencesets");
+    }
+
+    @Override
+    public void setReferenceSets(String referenceSets) {
+        endpoints.put("ctk.tgt.getReferencesets", referenceSets);
+    }
+
     public String getSearchReferencesets() {
         return endpoints.get("ctk.tgt.searchReferencesets");
     }
@@ -282,7 +324,7 @@ public class URLMAPPINGImpl implements URLMAPPING {
     }
 
     @Override
-    public void setEndpoint(Map<String, String> endpoints) {
+    public void setEndpoints(Map<String, String> endpoints) {
         this.endpoints = endpoints;
     }
 }

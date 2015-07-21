@@ -11,26 +11,32 @@ import org.ga4gh.ctk.transport.avrojson.AvroJson;
  */
 public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMethods, org.ga4gh.GAReferenceMethods {
 
+    URLMAPPING urls;
+
     ///
     //// From VariantsProtocolClient.
     ///
 
-    public String urlRoot = URLMAPPING
-            .getUrlRoot(); //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
+    //public String urlRoot = URLMAPPING
+    //        .getUrlRoot(); //"http://192.168.2.115:8000/v0.5.1/"; // public for test code access clarity
 
     public WireTracker wireTracker = null;
 
     /**
      * Create a new client that can make requests on a GA4GH server.
+     * @param urls an URLMAPPING object that gives us the paths to use
      */
-    public Client() {
+    public Client(URLMAPPING urls) {
+        this.urls = urls;
     }
 
     /**
      * Create a new client that can make requests on a GA4GH server.
+     * @param urls an URLMAPPING object that gives us the paths to use
      * @param wt If not null, capture the data going across the wire
      */
-    public Client(WireTracker wt) {
+    public Client(URLMAPPING urls, WireTracker wt) {
+        this.urls = urls;
         wireTracker = wt;
     }
 
@@ -45,10 +51,10 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
      */
     @Override
     public GASearchVariantSetsResponse searchVariantSets(GASearchVariantSetsRequest request) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getSearchVariantSets();
+        String path = urls.getSearchVariantSets();
         GASearchVariantSetsResponse response = new GASearchVariantSetsResponse();
         final AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireTracker);
+                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
         response = (GASearchVariantSetsResponse)aj.doPostResp();
         return response;
     }
@@ -80,10 +86,10 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
     @Override
     public GASearchVariantsResponse searchVariants(GASearchVariantsRequest request)
             throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getSearchVariants();
+        String path = urls.getSearchVariants();
         GASearchVariantsResponse response = new GASearchVariantsResponse();
         final AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireTracker);
+                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
         response = (GASearchVariantsResponse)aj.doPostResp();
         return response;
     }
@@ -115,10 +121,10 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
     @Override
     public GASearchCallSetsResponse searchCallSets(GASearchCallSetsRequest request)
             throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getSearchCallsets();
+        String path = urls.getSearchCallsets();
         GASearchCallSetsResponse response = new GASearchCallSetsResponse();
         final AvroJson aj =
-                new AvroJson<>(request, response, urlRoot, path, wireTracker);
+                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
         response = (GASearchCallSetsResponse)aj.doPostResp();
         return response;
     }
@@ -155,10 +161,10 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
     @Override
     public GASearchReadsResponse searchReads(GASearchReadsRequest request)
             throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getSearchReads();
+        String path = urls.getSearchReads();
         GASearchReadsResponse response = new GASearchReadsResponse();
         final AvroJson aj =
-                new AvroJson<>(request, response, URLMAPPING.getUrlRoot(), path, wireTracker);
+                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
         response = (GASearchReadsResponse)aj.doPostResp();
         return response;
     }
@@ -195,13 +201,13 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
     @Override
     public GASearchReadGroupSetsResponse searchReadGroupSets(GASearchReadGroupSetsRequest request)
             throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getSearchReadGroupSets();
+        String path = urls.getSearchReadGroupSets();
         // we use an empty concrete response class to pass into the Parameterized AvroJson
         // as a quick way to get the class name and such; this object actually gets replaced
         // with the filled-in Response object constructed in AvroJson and passed back
         GASearchReadGroupSetsResponse response = new GASearchReadGroupSetsResponse();
         final AvroJson aj =
-                new AvroJson<>(request, response, URLMAPPING.getUrlRoot(), path, wireTracker);
+                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
         //aj.setDeserMode(AvroJson.DESER_MODE.AVRO_DIRECT);
         response = (GASearchReadGroupSetsResponse)aj.doPostResp();
 
@@ -242,13 +248,13 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
     @Override
     public GASearchReferenceSetsResponse searchReferenceSets(GASearchReferenceSetsRequest request)
             throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getSearchReferencesets();
+        String path = urls.getSearchReferencesets();
         // we use an empty concrete response class to pass into the Parameterized AvroJson
         // as a quick way to get the class name and such; this object actually gets replaced
         // with the filled-in Response object constructed in AvroJson and passed back
         GASearchReferenceSetsResponse response = new GASearchReferenceSetsResponse();
         final AvroJson aj =
-                new AvroJson<>(request, response, URLMAPPING.getUrlRoot(), path, wireTracker);
+                new AvroJson<>(request, response,urls.getUrlRoot(), path, wireTracker);
         response = (GASearchReferenceSetsResponse)aj.doPostResp();
 
         return response;
@@ -262,9 +268,9 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
      */
     @Override
     public GAReferenceSet getReferenceSet(String id) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getReferenceSets();
+        String path = urls.getReferenceSets();
         GAReferenceSet response = new GAReferenceSet();
-        final AvroJson aj = new AvroJson<>(response, URLMAPPING.getUrlRoot(), path);
+        final AvroJson aj = new AvroJson<>(response, urls.getUrlRoot(), path);
         response = (GAReferenceSet)aj.doGetResp(id);
         return response;
     }
@@ -310,10 +316,10 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
     public GASearchReferencesResponse searchReferences(GASearchReferencesRequest request)
             throws AvroRemoteException, GAException {
 
-        String path = URLMAPPING.getSearchReferences();
+        String path = urls.getSearchReferences();
         GASearchReferencesResponse response = new GASearchReferencesResponse();
         final AvroJson aj =
-                new AvroJson<>(request, response, URLMAPPING.getUrlRoot(), path, wireTracker);
+                new AvroJson<>(request, response, urls.getUrlRoot(), path, wireTracker);
         response = (GASearchReferencesResponse)aj.doPostResp();
 
         return response;
@@ -327,13 +333,13 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
      */
     @Override
     public GAReference getReference(String id) throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getReference();
+        String path = urls.getReference();
         // we use an empty concrete response class to pass into the Parameterized AvroJson
         // as a quick way to get the class name and such; this object actually gets replaced
         // with the filled-in Response object constructed in AvroJson and passed back
         GAReference response = new GAReference();
         final AvroJson aj =
-                new AvroJson<>(response, URLMAPPING.getUrlRoot(), path, wireTracker);
+                new AvroJson<>(response, urls.getUrlRoot(), path, wireTracker);
         response = (GAReference)aj.doGetResp(id);
 
         return response;
@@ -350,10 +356,10 @@ public class Client implements org.ga4gh.GAReadMethods, org.ga4gh.GAVariantMetho
     @Override
     public GAListReferenceBasesResponse getReferenceBases(String id, GAListReferenceBasesRequest request)
             throws AvroRemoteException, GAException {
-        String path = URLMAPPING.getSearchReferenceBases();
+        String path = urls.getSearchReferenceBases();
         GAListReferenceBasesResponse response = new GAListReferenceBasesResponse();
         final AvroJson aj =
-                new AvroJson<>(response, URLMAPPING.getUrlRoot(), path, wireTracker);
+                new AvroJson<>(response, urls.getUrlRoot(), path, wireTracker);
         response = (GAListReferenceBasesResponse)aj.doGetResp(id);
 
         return response;

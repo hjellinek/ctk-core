@@ -5,8 +5,8 @@
  * and the Server's JSON/HTTP endpoints (with messages and data elements as defined
  * in the Avro IDL).</p>
  *
- * <p>(There is an URLMAPPING class to hold static strings defining Server endpoints
- * (extracted from the IDL comments).</p>
+ * <p>(There is an URLMAPPING interface for access to static strings defining
+ * Server endpoints (as extracted from the IDL comments).</p>
  *
  * <p>This package provides RespCode as an enumeration/abstraction for the HTTP response
  * code integers. This class will provide GA4GH-specific comparators and trackers. This

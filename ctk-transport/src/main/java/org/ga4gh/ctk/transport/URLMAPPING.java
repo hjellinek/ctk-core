@@ -25,6 +25,18 @@ public interface URLMAPPING {
     String getSearchReadGroupSets();
     void setSearchReadGroupSets(String searchReadGroupSets);
 
+    String getReference();
+    void setReference(String reference);
+
+    String getSearchReferences();
+    void setSearchReferences(String searchReferences);
+
+    String getSearchReferenceBases();
+    void setSearchReferenceBases(String searchReferenceBases);
+
+    String getReferenceSets();
+    void setReferenceSets(String referenceSets);
+
     String getSearchReferencesets();
     void setSearchReferencesets(String searchReferencesets);
 
@@ -39,7 +51,7 @@ public interface URLMAPPING {
     void setSearchCallsets(String searchCallsets);
 
     Map<String, String> getEndpoints();
-    void setEndpoint(Map<String, String> endpoints);
+    void setEndpoints(Map<String, String> endpoints);
 
     /**
      * load with default properties
@@ -69,6 +81,7 @@ public interface URLMAPPING {
      */
     static URLMAPPING getInstance(){
         URLMAPPING u = new URLMAPPINGImpl();
-        u.doInit();
+        //u.doInit(); the URLMAPPINGImpl constructor does this
         return u;}
+
 }

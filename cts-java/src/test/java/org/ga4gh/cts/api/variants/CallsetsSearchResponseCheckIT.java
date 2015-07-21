@@ -25,8 +25,8 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 public class CallsetsSearchResponseCheckIT implements CtkLogs {
     // implements CtkLogsprivate static org.slf4j.Logger log = getLogger(CallsetsSearchResponseCheckIT.class);
 
-    static URLMAPPING urls;
-    private static final Client client = new Client();
+    static URLMAPPING urls = URLMAPPING.getInstance();
+    private static final Client client = new Client(urls);
 
     /*
      REF MATERIAL from the  variantmethods IDL re GASearchCallSetRequest
