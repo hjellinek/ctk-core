@@ -104,8 +104,8 @@ public class LegacyComplianceIT implements CtkLogs {
      * Search variants.  Fetches variants from the specified dataset.
      * <ul>
      * <li>Query 1: `/variantsets/search datasetIds: 1 `(passed in)</li>
-     * <li>Test 1: assert that we received a {@link GASearchVariantsResponse} containing (how many? > 0)
-     * {@link GAVariant} objects.  Get the ID of the first one.</li>
+     * <li>Test 1: assert that we received a {@link GASearchVariantSetsResponse} containing (how many? > 0)
+     * {@link GAVariantSet} objects.  Get the ID of the first one.</li>
      * <li>Query 2: <pre>/variants/search variantSetIds: [variantSetId] referenceName: '22' start:
      *     51005353 end: 51015354 pageSize: 1</pre></li>
      * <li>Test 2: assert that the first result is of type {@link GAVariant} AND has reference name
@@ -120,16 +120,15 @@ public class LegacyComplianceIT implements CtkLogs {
     public void searchVariants() throws AvroRemoteException {
         final String referenceName = "22";
 
-        final GASearchVariantsRequest req =
-                GASearchVariantsRequest.newBuilder().
-//                        XXX the next line won't compile: setDatasetIds is missing
-//                        setDatasetIds(oneSingle(DATASET_ID)).
-                                               build();
-        final GASearchVariantsResponse resp = client.searchVariants(req);
+        final GASearchVariantSetsRequest req =
+                GASearchVariantSetsRequest.newBuilder().
+                        setDatasetIds(oneSingle(DATASET_ID)).
+                                                  build();
+        final GASearchVariantSetsResponse resp = client.searchVariantSets(req);
 
-        final List<GAVariant> variants = resp.getVariants();
-        assertThat(variants).isNotEmpty();
-        final String id = variants.get(0).getId();
+        final List<GAVariantSet> variantSets = resp.getVariantSets();
+        assertThat(variantSets).isNotEmpty();
+        final String id = variantSets.get(0).getId();
 
         final GASearchVariantsRequest vReq = GASearchVariantsRequest.newBuilder().
                 setVariantSetIds(oneSingle(id)).setReferenceName(referenceName).
@@ -334,11 +333,11 @@ public class LegacyComplianceIT implements CtkLogs {
 
         // query 2
         final String readGroupSetId = readGroupSet.getId();
-        final GASearchReadsRequest srReq = GASearchReadsRequest.newBuilder().
-                // XXX next line won't compile
-                // setDatasetIds(oneSingle(readGroupSetId)).
-                setReferenceName(referenceName).
-                setStart(start).setEnd(end).build();
+        final GASearchReadsRequest srReq =
+                GASearchReadsRequest.newBuilder().
+                        setReadGroupIds(oneSingle(readGroupSetId)).
+                                            setReferenceName(referenceName).
+                                            setStart(start).setEnd(end).build();
         final GASearchReadsResponse srResp = client.searchReads(srReq);
 
         // test 2

@@ -60,7 +60,7 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1).
 
     *Test 2*: assert that we received a GAReference object with fields `offset == 15000 AND sequence == "ATCCGACATC"`
 
-6. Search reads (28 tests) [converted partially - missing fields]
+6. Search reads (28 tests) [converted]
     - Looks up a read group set for NA12878 from the specified dataset, then fetches reads.
 
     *Query 1*: `/readgroupsets/search datasetIds: 1 `(passed in)` name: 'NA12878', pageSize: 1`
@@ -75,8 +75,6 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1).
     *Test 3*: assert that each of the GAReadAlignment objects contains a nextMatePosition of type GAPosition with
         reference name == "22" AND alignment of type GALinearAlignment with field cigar holding a GACigarUnit.
 
-    **Problems:** `GASearchReadsRequest` is missing `datasetIds` field, `setDatasetIds` method.
-
 7. Search call sets (8 tests) [converted]
     - Fetches call sets from the specified dataset.
 
@@ -90,12 +88,13 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1).
     *Test 2*: assert that the returned object is a GASearchCallSetsResponse, and that it contains > 0 GACallSet objects. We can check that the
         cal sets have distinct ID values.
 
-8. Search variants (21 tests) [converted partially - missing fields]
+8. Search variants (21 tests) [converted]
     - Fetches variants from the specified dataset.
 
     *Query 1*: `/variantsets/search datasetIds: 1 `(passed in)
 
-    *Test 1*: assert that we received a GASearchVariantsResponse containing (how many? > 0) GAVariant objects.  Get the ID of the first one.
+    *Test 1*: assert that we received a GASearchVariantSetsResponse containing (how many? > 0) GAVariantSet
+              objects.  Get the ID of the first one.
 
     *Query 2*: `/variants/search variantSetIds: [variantSetId] referenceName: '22' start: 51005353 end: 51015354 pageSize: 1`
 
@@ -104,8 +103,6 @@ The schema is detailed [here](http://ga4gh.org/#/api/v0.5.1).
     *Test 3*: assert that the calls field (a GACall) of that GAVariant is not null.
 
     *Test 4*: assert that the genotype field of that GACall is an array of integers.
-
-    **Problems:** `GASearchVariantsRequest` is missing `datasetIds` field, `setDatasetIds` method.
 
 ### Comments
 
