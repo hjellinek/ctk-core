@@ -2,6 +2,7 @@ package org.ga4gh.cts.api;
 
 import junitparams.JUnitParamsRunner;
 import org.apache.avro.AvroRemoteException;
+import org.assertj.core.api.Condition;
 import org.ga4gh.*;
 import org.ga4gh.ctk.CtkLogs;
 import org.ga4gh.ctk.transport.URLMAPPING;
@@ -14,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,8 +33,103 @@ public class LegacyComplianceIT implements CtkLogs {
 
     private static Client client;
 
-    private List<String> oneSingle(String s) {
+    /**
+     * Make it easy to create lists of a single String element, which we do a lot.
+     * @param s the String
+     * @return the resulting List&lt;String&gt;
+     */
+    private List<String> aSingle(String s) {
         return Collections.singletonList(s);
+    }
+
+    /**
+     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * as AssertJ {@link Condition}s on {@link GAReference} objects.
+     * @param p the {@link Predicate} to wrap
+     * @return the {@link Predicate} in {@link Condition}'s clothing
+     */
+    private Condition<GAReference> refCond(final Predicate<GAReference> p) {
+        return new Condition<GAReference>() {
+            @Override
+            public boolean matches(GAReference value) {
+                return p.test(value);
+            }
+        };
+    }
+
+    /**
+     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * as AssertJ {@link Condition}s on {@link GAReadGroupSet} objects.
+     * @param p the {@link Predicate} to wrap
+     * @return the {@link Predicate} in {@link Condition}'s clothing
+     */
+    private Condition<GAReadGroupSet> rgsCond(final Predicate<GAReadGroupSet> p) {
+        return new Condition<GAReadGroupSet>() {
+            @Override
+            public boolean matches(GAReadGroupSet value) {
+                return p.test(value);
+            }
+        };
+    }
+
+    /**
+     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * as AssertJ {@link Condition}s on {@link GAReadGroup} objects.
+     * @param p the {@link Predicate} to wrap
+     * @return the {@link Predicate} in {@link Condition}'s clothing
+     */
+    private Condition<GAReadGroup> rgCond(final Predicate<GAReadGroup> p) {
+        return new Condition<GAReadGroup>() {
+            @Override
+            public boolean matches(GAReadGroup value) {
+                return p.test(value);
+            }
+        };
+    }
+
+    /**
+     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * as AssertJ {@link Condition}s on {@link GAReferenceSet} objects.
+     * @param p the {@link Predicate} to wrap
+     * @return the {@link Predicate} in {@link Condition}'s clothing
+     */
+    private Condition<GAReferenceSet> rsCond(final Predicate<GAReferenceSet> p) {
+        return new Condition<GAReferenceSet>() {
+            @Override
+            public boolean matches(GAReferenceSet value) {
+                return p.test(value);
+            }
+        };
+    }
+
+    /**
+     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * as AssertJ {@link Condition}s on {@link GAReadAlignment} objects.
+     * @param p the {@link Predicate} to wrap
+     * @return the {@link Predicate} in {@link Condition}'s clothing
+     */
+    private Condition<GAReadAlignment> readCond(final Predicate<GAReadAlignment> p) {
+        return new Condition<GAReadAlignment>() {
+            @Override
+            public boolean matches(GAReadAlignment value) {
+                return p.test(value);
+            }
+        };
+    }
+
+    /**
+     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * as AssertJ {@link Condition}s on {@link GAVariantSet} objects.
+     * @param p the {@link Predicate} to wrap
+     * @return the {@link Predicate} in {@link Condition}'s clothing
+     */
+    private Condition<GAVariantSet> vsCond(final Predicate<GAVariantSet> p) {
+        return new Condition<GAVariantSet>() {
+            @Override
+            public boolean matches(GAVariantSet value) {
+                return p.test(value);
+            }
+        };
     }
 
     @BeforeClass
@@ -55,12 +152,11 @@ public class LegacyComplianceIT implements CtkLogs {
     @Test
     public void searchReadGroupSets() throws AvroRemoteException {
         final GASearchReadGroupSetsRequest req =
-                GASearchReadGroupSetsRequest.newBuilder().setDatasetIds(oneSingle(DATASET_ID)).
+                GASearchReadGroupSetsRequest.newBuilder().setDatasetIds(aSingle(DATASET_ID)).
                         build();
         final GASearchReadGroupSetsResponse resp = client.searchReadGroupSets(req);
         final List<GAReadGroupSet> readGroupSets = resp.getReadGroupSets();
-        assertThat(readGroupSets.stream().
-                filter(rgs -> !DATASET_ID.equals(rgs.getDatasetId())).count()).isZero();
+        assertThat(readGroupSets).have(rgsCond(rgs -> DATASET_ID.equals(rgs.getDatasetId())));
 
         // use a local var to avoid varargs confusion:
         final GAProgram aNullOfTheRightType = null;
@@ -68,7 +164,6 @@ public class LegacyComplianceIT implements CtkLogs {
             for (GAReadGroup readGroup : readGroupSet.getReadGroups()) {
                 assertThat(readGroup).isNotNull();
                 assertThat(readGroup.getDatasetId()).isEqualTo(DATASET_ID);
-                assertThat(readGroup.getExperiment()).isInstanceOf(GAExperiment.class);
                 assertThat(readGroup.getPrograms()).isNotEmpty();
                 assertThat(readGroup.getPrograms()).doesNotContain(aNullOfTheRightType);
             }
@@ -88,16 +183,12 @@ public class LegacyComplianceIT implements CtkLogs {
     @Test
     public void searchVariantSets() throws AvroRemoteException {
         final GASearchVariantSetsRequest req =
-                GASearchVariantSetsRequest.newBuilder().setDatasetIds(oneSingle(DATASET_ID)).build();
+                GASearchVariantSetsRequest.newBuilder().setDatasetIds(aSingle(DATASET_ID)).build();
         final GASearchVariantSetsResponse resp = client.searchVariantSets(req);
 
         final List<GAVariantSet> sets = resp.getVariantSets();
         assertThat(sets).isNotEmpty();
-        for (GAVariantSet vs : sets) {
-            final List<GAVariantSetMetadata> metadata = vs.getMetadata();
-            assertThat(metadata).isNotEmpty();
-            assertThat(metadata).isInstanceOf(GAVariantSetMetadata.class);
-        }
+        assertThat(sets).have(vsCond(vs -> (vs.getMetadata() != null)));
     }
 
     /**
@@ -122,7 +213,7 @@ public class LegacyComplianceIT implements CtkLogs {
 
         final GASearchVariantSetsRequest req =
                 GASearchVariantSetsRequest.newBuilder().
-                        setDatasetIds(oneSingle(DATASET_ID)).
+                        setDatasetIds(aSingle(DATASET_ID)).
                                                   build();
         final GASearchVariantSetsResponse resp = client.searchVariantSets(req);
 
@@ -131,7 +222,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final String id = variantSets.get(0).getId();
 
         final GASearchVariantsRequest vReq = GASearchVariantsRequest.newBuilder().
-                setVariantSetIds(oneSingle(id)).setReferenceName(referenceName).
+                setVariantSetIds(aSingle(id)).setReferenceName(referenceName).
                     setStart(51005353).setEnd(51015354).
                     setPageSize(1).build();
         final GASearchVariantsResponse vResp = client.searchVariants(vReq);
@@ -163,7 +254,7 @@ public class LegacyComplianceIT implements CtkLogs {
     public void searchCallSets() throws AvroRemoteException {
         final GASearchVariantSetsRequest vReq =
                 GASearchVariantSetsRequest.newBuilder()
-                                          .setDatasetIds(oneSingle(DATASET_ID)).
+                                          .setDatasetIds(aSingle(DATASET_ID)).
                                                   build();
         final GASearchVariantSetsResponse vResp = client.searchVariantSets(vReq);
 
@@ -173,7 +264,7 @@ public class LegacyComplianceIT implements CtkLogs {
 
             final GASearchCallSetsRequest csReq =
                     GASearchCallSetsRequest.newBuilder()
-                                           .setVariantSetIds(oneSingle(id)).build();
+                                           .setVariantSetIds(aSingle(id)).build();
             final GASearchCallSetsResponse csResp = client.searchCallSets(csReq);
 
             assertThat(csResp.getCallSets()).isNotEmpty();
@@ -199,12 +290,12 @@ public class LegacyComplianceIT implements CtkLogs {
         final String assemblyId = "GRCh38";
 
         final GASearchReferenceSetsRequest req = GASearchReferenceSetsRequest.newBuilder().
-                setAccessions(oneSingle(accessionNumber)).setPageSize(1).build();
+                setAccessions(aSingle(accessionNumber)).setPageSize(1).build();
         final GASearchReferenceSetsResponse resp = client.searchReferenceSets(req);
         final List<GAReferenceSet> refSets = resp.getReferenceSets();
 
-        assertThat(refSets.stream().filter(rs -> (rs.getNcbiTaxonId() != ncbiTaxonId)).count()).isZero();
-        assertThat(refSets.stream().filter(rs -> (!assemblyId.equals(rs.getAssemblyId()))).count()).isZero();
+        assertThat(refSets).have(rsCond(rs -> (rs.getNcbiTaxonId() == ncbiTaxonId) &&
+                                              assemblyId.equals(rs.getAssemblyId())));
 
         // do query 2 and test 2
         for (GAReferenceSet refSet : refSets) {
@@ -237,16 +328,17 @@ public class LegacyComplianceIT implements CtkLogs {
 
         final GASearchReferencesRequest req =
                 GASearchReferencesRequest.newBuilder().
-                        setMd5checksums(oneSingle(expectedMd5)).setPageSize(1).build();
+                        setMd5checksums(aSingle(expectedMd5)).setPageSize(1).build();
         final GASearchReferencesResponse resp = client.searchReferences(req);
 
         final List<GAReference> refs = resp.getReferences();
         assertThat(refs).hasSize(expectedRefs);
-        assertThat(refs.stream().filter(ref -> ref.getLength() != expectedLength).count()).isZero();
-        assertThat(refs.stream().filter(ref -> !expectedMd5.equals(ref.getMd5checksum())).count()).isZero();
-        assertThat(refs.stream().filter(ref -> ref.getNcbiTaxonId() == expectedTaxonId).count()).isZero();
+        assertThat(refs).have(refCond(ref -> ref.getLength() != expectedLength &&
+                                                expectedMd5.equals(ref.getMd5checksum()) &&
+                                                ref.getNcbiTaxonId() == expectedTaxonId));
 
         // do query 2 and test 2
+        // open-coded loop because it's awkward to deal with possible exceptions using filter syntax
         for (GAReference ref : refs) {
             final String id = ref.getId();
             final GAReference fetchedRef = client.getReference(id);
@@ -277,7 +369,7 @@ public class LegacyComplianceIT implements CtkLogs {
 
         final GASearchReferencesRequest req =
                 GASearchReferencesRequest.newBuilder().
-                        setMd5checksums(oneSingle(expectedMd5)).
+                        setMd5checksums(aSingle(expectedMd5)).
                                                  setPageSize(1).build();
         final GASearchReferencesResponse resp = client.searchReferences(req);
 
@@ -324,7 +416,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final long end = 51005354;
 
         final GASearchReadGroupSetsRequest req = GASearchReadGroupSetsRequest.newBuilder().
-                setDatasetIds(oneSingle(DATASET_ID)).setName(datasetName).
+                setDatasetIds(aSingle(DATASET_ID)).setName(datasetName).
                 setPageSize(1).build();
         final GASearchReadGroupSetsResponse resp = client.searchReadGroupSets(req);
 
@@ -332,14 +424,14 @@ public class LegacyComplianceIT implements CtkLogs {
 
         // test 1
         assertThat(readGroupSets).hasSize(1);
-        final GAReadGroupSet readGroupSet = readGroupSets.get(0);
-        assertThat(readGroupSet.getName()).isEqualTo(expectedReadGroupSetName);
+        final GAReadGroupSet readGroupSet = readGroupSets.get(0); // need this below
+        assertThat(readGroupSets).have(rgsCond(rgs -> expectedReadGroupSetName.equals(rgs.getName())));
 
         // query 2
         final String readGroupSetId = readGroupSet.getId();
         final GASearchReadsRequest srReq =
                 GASearchReadsRequest.newBuilder().
-                        setReadGroupIds(oneSingle(readGroupSetId)).
+                        setReadGroupIds(aSingle(readGroupSetId)).
                                             setReferenceName(referenceName).
                                             setStart(start).setEnd(end).build();
         final GASearchReadsResponse srResp = client.searchReads(srReq);
@@ -348,18 +440,17 @@ public class LegacyComplianceIT implements CtkLogs {
         final List<GAReadAlignment> alignments = srResp.getAlignments();
         assertThat(alignments).isNotEmpty();
 
-        // use a local var to avoid varargs confusion:
-        final GAReadAlignment aNullOfTheRightType = null;
-        assertThat(alignments).doesNotContain(aNullOfTheRightType);
+        // use a local var to avoid varargs confusion in the doesNotContain call:
+        final GAReadAlignment nullRead = null;
+        assertThat(alignments).doesNotContain(nullRead);
 
         // test 3
-        for (GAReadAlignment alignment : alignments) {
-            final GAPosition pos = alignment.getNextMatePosition();
-            assertThat(pos).isNotNull();
-            assertThat(pos.getReferenceName()).isEqualTo(referenceName);
-            assertThat(alignment.getAlignment()).isInstanceOf(GALinearAlignment.class);
-            assertThat(alignment.getAlignment().getCigar()).isInstanceOf(GACigarUnit.class);
-        }
+        assertThat(alignments).have(readCond(read -> {
+            final GAPosition pos = read.getNextMatePosition();
+            return (pos != null) &&
+                    (referenceName.equals(pos.getReferenceName())) &&
+                    ((read.getAlignment() == null) || (read.getAlignment().getCigar() != null));
+        }));
     }
 
 }
