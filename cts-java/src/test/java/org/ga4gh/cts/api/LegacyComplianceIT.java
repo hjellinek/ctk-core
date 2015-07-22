@@ -235,8 +235,9 @@ public class LegacyComplianceIT implements CtkLogs {
         final int expectedTaxonId = 9606;
         final int expectedRefs = 5; // XXX made up number -- fix this
 
-        final GASearchReferencesRequest req = GASearchReferencesRequest.newBuilder().
-                setMd5checksums(oneSingle(expectedMd5)).setPageSize(1).build();
+        final GASearchReferencesRequest req =
+                GASearchReferencesRequest.newBuilder().
+                        setMd5checksums(oneSingle(expectedMd5)).setPageSize(1).build();
         final GASearchReferencesResponse resp = client.searchReferences(req);
 
         final List<GAReference> refs = resp.getReferences();
@@ -274,9 +275,12 @@ public class LegacyComplianceIT implements CtkLogs {
         final long expectedOffset = 15000;
         final String expectedSequence = "ATCCGACATC";
 
-        final GASearchReferencesRequest req = GASearchReferencesRequest.newBuilder().
-                setMd5checksums(oneSingle(expectedMd5)).setPageSize(1).build();
+        final GASearchReferencesRequest req =
+                GASearchReferencesRequest.newBuilder().
+                        setMd5checksums(oneSingle(expectedMd5)).
+                                                 setPageSize(1).build();
         final GASearchReferencesResponse resp = client.searchReferences(req);
+
         assertThat(resp).isNotNull();
         final List<GAReference> refs = resp.getReferences();
         assertThat(refs).isNotEmpty();
