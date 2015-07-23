@@ -53,25 +53,16 @@ public class URLMAPPING {
         defaultendpoints.put("ctk.tgt.urlRoot", "http://localhost:8000/v0.5.1");
         defaultendpoints.put("ctk.tgt.searchReadGroupSets", "readgroupsets/search");
         defaultendpoints.put("ctk.tgt.searchReads", "reads/search");
-        defaultendpoints.put("ctk.tgt.getReadGroupSet", "readgroupsets/{id}");
         defaultendpoints.put("ctk.tgt.getReferences", "references/{id}");
         defaultendpoints.put("ctk.tgt.searchReferencesets", "referencesets/search");
         defaultendpoints.put("ctk.tgt.getReferencesBases", "references/{id}/bases");
         defaultendpoints.put("ctk.tgt.searchReferences", "references/search");
         defaultendpoints.put("ctk.tgt.getReferencesets", "referencesets/{id}");
-        defaultendpoints.put("ctk.tgt.getReadGroup", "readgroups/{id}");
-        defaultendpoints.put("ctk.tgt.searchDatasets", "datasets/search");
-        defaultendpoints.put("ctk.tgt.getDataset", "datasets/{id}");
         defaultendpoints.put("ctk.tgt.searchVariantSets", "variantsets/search");
-        defaultendpoints.put("ctk.tgt.getVariantSet", "variantsets/{id}");
         defaultendpoints.put("ctk.tgt.searchVariants", "variants/search");
-        defaultendpoints.put("ctk.tgt.getVariant", "variants/{id}");
-        defaultendpoints.put("ctk.tgt.searchAlleles", "alleles/search");
-        defaultendpoints.put("ctk.tgt.getAllele", "alleles/{id}");
         defaultendpoints.put("ctk.tgt.getCallSet", "callsets/{id}");
         defaultendpoints.put("ctk.tgt.searchCallsets", "callsets/search");
         defaultendpoints.put("ctk.tgt.searchCalls", "calls/search");
-        defaultendpoints.put("ctk.tgt.searchAlleleCalls", "allelecalls/search");
 
         dumpToStdOut = Boolean.getBoolean("ctk.tgt.urlmapper.dump"); // so, -Dctk.urlmapper.dump= true
 
@@ -165,7 +156,6 @@ public class URLMAPPING {
             if (dumpToStdOut) {
                 System.out.println("Did not find resource " + resName);
             }
-            ;
         }
 
         // then we try the same name on the file system
@@ -221,6 +211,7 @@ public class URLMAPPING {
         if (map != null && props != null) {
             for (Enumeration en = props.propertyNames(); en.hasMoreElements(); ) {
                 String key = (String)en.nextElement();
+                //noinspection unchecked
                 map.put(key, props.getProperty(key));
                 if (dumpToStdOut) {
                     System.out.println("merging " + key + " => " + props.getProperty(key));

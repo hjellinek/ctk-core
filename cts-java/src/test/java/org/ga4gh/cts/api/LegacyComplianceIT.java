@@ -20,8 +20,9 @@ import java.util.function.Predicate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * These tests are equivalents of the ones in <a href="https://github.com/ga4gh/compliance">the ga4gh compliance repo</a>.
- * Those were written in JavaScript and were meant to execute against a predefined set of servers, user-selectable at runtime.
+ * These tests are equivalents of the ones in <a href="https://github.com/ga4gh/compliance">the
+ * GA4GH compliance repo</a>.  Those were written in JavaScript and were meant to execute against
+ * a predefined set of servers, user-selectable at runtime.
  *
  * @author Herb Jellinek
  */
