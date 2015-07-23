@@ -20,21 +20,20 @@ public class URLMAPPING {
 
     /**
      * <p>Map IDL message name to target server endpoint.</p>
-     * <p>This Map,is initialized inn code with defaults from the
+     * <p>This Map is initialized in code with defaults from the
      * IDL (hand-copied, might not be up to date). On startup of the
      * URLMAPPING class, an initializer reads in an UrlMapping.properties
      * file and merges it with this Map, which allows for extension or
      * overwrite.</p>
      * <p>The Map is public and mutable so it can be easily examined or
-     * replaced in test code</p>
+     * replaced in test code.</p>
      * <p>Design note - why not an Enum? For extensibility-without-compiling.
      * This lets a test writer/API developer add or change URLs without having
      * to repackage the transport module.</p>
      */
     public static Map<String, String> endpoints;
-    private static Map<String, String> defaultendpoints;
+    private static Map<String, String> defaultEndpoints;
 
-    private static Properties tempProps;
     /**
      * <p>dumpToStdOut is a property set at the java System level '-Dctk.tgt.urlmapper.dump=true`</p>
      * <p>When this property is set, the URLMAPPER dumps directly to the stdout what actions it
@@ -49,20 +48,18 @@ public class URLMAPPING {
     static {
         log = getLogger(URLMAPPING.class);
 
-        defaultendpoints = new HashMap<>();
-        defaultendpoints.put("ctk.tgt.urlRoot", "http://localhost:8000/v0.5.1");
-        defaultendpoints.put("ctk.tgt.searchReadGroupSets", "readgroupsets/search");
-        defaultendpoints.put("ctk.tgt.searchReads", "reads/search");
-        defaultendpoints.put("ctk.tgt.getReferences", "references/{id}");
-        defaultendpoints.put("ctk.tgt.searchReferencesets", "referencesets/search");
-        defaultendpoints.put("ctk.tgt.getReferencesBases", "references/{id}/bases");
-        defaultendpoints.put("ctk.tgt.searchReferences", "references/search");
-        defaultendpoints.put("ctk.tgt.getReferencesets", "referencesets/{id}");
-        defaultendpoints.put("ctk.tgt.searchVariantSets", "variantsets/search");
-        defaultendpoints.put("ctk.tgt.searchVariants", "variants/search");
-        defaultendpoints.put("ctk.tgt.getCallSet", "callsets/{id}");
-        defaultendpoints.put("ctk.tgt.searchCallsets", "callsets/search");
-        defaultendpoints.put("ctk.tgt.searchCalls", "calls/search");
+        defaultEndpoints = new HashMap<>();
+        defaultEndpoints.put("ctk.tgt.urlRoot", "http://localhost:8000/v0.5.1");
+        defaultEndpoints.put("ctk.tgt.searchReads", "reads/search");
+        defaultEndpoints.put("ctk.tgt.searchReadGroupSets", "readgroupsets/search");
+        defaultEndpoints.put("ctk.tgt.searchReferences", "references/search");
+        defaultEndpoints.put("ctk.tgt.searchReferencesets", "referencesets/search");
+        defaultEndpoints.put("ctk.tgt.searchVariantSets", "variantsets/search");
+        defaultEndpoints.put("ctk.tgt.searchVariants", "variants/search");
+        defaultEndpoints.put("ctk.tgt.searchCallsets", "callsets/search");
+        defaultEndpoints.put("ctk.tgt.getReferences", "references/{id}");
+        defaultEndpoints.put("ctk.tgt.getReferencesets", "referencesets/{id}");
+        defaultEndpoints.put("ctk.tgt.getReferencesBases", "references/{id}/bases");
 
         dumpToStdOut = Boolean.getBoolean("ctk.tgt.urlmapper.dump"); // so, -Dctk.urlmapper.dump= true
 
@@ -70,7 +67,6 @@ public class URLMAPPING {
 
         log.info("set URLMAPPING urlRoot to " + URLMAPPING.getUrlRoot());
     }
-
 
     /**
      * <p>Initialize URLMAPPING.</p>
@@ -88,7 +84,7 @@ public class URLMAPPING {
      */
     public static void doInit(String resName) {
 
-        endpoints = new HashMap<>(defaultendpoints); // start fresh using baked-in defaults
+        endpoints = new HashMap<>(defaultEndpoints); // start fresh using baked-in defaults
 
         if (resName == null || resName.isEmpty()) {
             resName = "defaulttransport.properties";
@@ -97,7 +93,8 @@ public class URLMAPPING {
         if (dumpToStdOut) {
             System.out.println("\nprocess resource/file " + resName);
         }
-        tempProps = loadPropsName(resName);
+
+        Properties tempProps = loadPropsName(resName);
         if (!tempProps.isEmpty()) {
             mergePropertiesIntoMap(tempProps, endpoints);
         }
@@ -219,7 +216,6 @@ public class URLMAPPING {
             }
         }
     }
-
 
     public static String getUrlRoot() {
         return endpoints.get("ctk.tgt.urlRoot");
