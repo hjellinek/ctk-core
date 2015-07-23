@@ -32,6 +32,11 @@ public class LegacyComplianceIT implements CtkLogs {
 
     private static final String DATASET_ID = "1";
 
+    /**
+     * We want our results one at a time.
+     */
+    private static final int PAGE_COUNT = 1;
+
     private static Client client;
 
     /**
@@ -195,7 +200,7 @@ public class LegacyComplianceIT implements CtkLogs {
     /**
      * Search variants.  Fetches variants from the specified dataset.
      * <ul>
-     * <li>Query 1: `/variantsets/search datasetIds: 1 `(passed in)</li>
+     * <li>Query 1: <pre>/variantsets/search datasetIds: 1 </pre>(passed in)</li>
      * <li>Test 1: assert that we received a {@link GASearchVariantSetsResponse} containing (how many? > 0)
      * {@link GAVariantSet} objects.  Get the ID of the first one.</li>
      * <li>Query 2: <pre>/variants/search variantSetIds: [variantSetId] referenceName: '22' start:
@@ -211,6 +216,8 @@ public class LegacyComplianceIT implements CtkLogs {
     @Test
     public void searchVariants() throws AvroRemoteException {
         final String referenceName = "22";
+        final long start = 51005353;
+        final long end = 51015354;
 
         final GASearchVariantSetsRequest req =
                 GASearchVariantSetsRequest.newBuilder().
@@ -224,8 +231,8 @@ public class LegacyComplianceIT implements CtkLogs {
 
         final GASearchVariantsRequest vReq = GASearchVariantsRequest.newBuilder().
                 setVariantSetIds(aSingle(id)).setReferenceName(referenceName).
-                    setStart(51005353).setEnd(51015354).
-                    setPageSize(1).build();
+                    setStart(start).setEnd(end).
+                    setPageSize(PAGE_COUNT).build();
         final GASearchVariantsResponse vResp = client.searchVariants(vReq);
         final List<GAVariant> searchVariants = vResp.getVariants();
         final GAVariant firstVariant = searchVariants.get(0);
@@ -244,7 +251,7 @@ public class LegacyComplianceIT implements CtkLogs {
      * <li>Query 1: <pre>/variantsets/search datasetIds: (passed in)</pre></li>
      * <li>Test 1: assert that we received a {@link GASearchVariantSetsResponse} containing an
      * array of {@link GAVariantSet} objects.  For each of the GAVariantSet objects, grab the
-     * `id` and pass it to....</li>
+     * <pre>id</pre> and pass it to....</li>
      * <li>Query 2: <pre>/callsets/search variantSetIds: id</pre></li>
      * <li>Test 2: assert that the returned object is a {@link GASearchCallSetsResponse}, and
      * that it contains > 0 {@link GACallSet} objects. We can check that the call sets have
@@ -278,8 +285,8 @@ public class LegacyComplianceIT implements CtkLogs {
      * <ul>
      * <li>Query 1: <pre>/referencesets/search accessions: ["GCA_000001405.15"] pageSize: 1</pre></li>
      * <li>Test 1: assert that we received a {@link GASearchReferenceSetsResponse} object containing an array of
-     * {@link GAReferenceSet} objects.  For each one, assert that `ncbiTaxonId == 9606 AND assemblyId == GRCh38`.
-     * And do this for each ID in referenceIds:</li>
+     * {@link GAReferenceSet} objects.  For each one, assert that <pre>ncbiTaxonId == 9606 AND
+     * assemblyId == GRCh38</pre>.  And do this for each ID in referenceIds:</li>
      * <li>Query 2: <pre>/referencesets/<ref set ID></pre></li>
      * <li>Test 2: assert that the ID of the returned object == ref set ID above.</li>
      * </ul>
@@ -291,7 +298,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final String assemblyId = "GRCh38";
 
         final GASearchReferenceSetsRequest req = GASearchReferenceSetsRequest.newBuilder().
-                setAccessions(aSingle(accessionNumber)).setPageSize(1).build();
+                setAccessions(aSingle(accessionNumber)).setPageSize(PAGE_COUNT).build();
         final GASearchReferenceSetsResponse resp = client.searchReferenceSets(req);
         final List<GAReferenceSet> refSets = resp.getReferenceSets();
 
@@ -329,7 +336,7 @@ public class LegacyComplianceIT implements CtkLogs {
 
         final GASearchReferencesRequest req =
                 GASearchReferencesRequest.newBuilder().
-                        setMd5checksums(aSingle(expectedMd5)).setPageSize(1).build();
+                        setMd5checksums(aSingle(expectedMd5)).setPageSize(PAGE_COUNT).build();
         final GASearchReferencesResponse resp = client.searchReferences(req);
 
         final List<GAReference> refs = resp.getReferences();
@@ -371,7 +378,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final GASearchReferencesRequest req =
                 GASearchReferencesRequest.newBuilder().
                         setMd5checksums(aSingle(expectedMd5)).
-                                                 setPageSize(1).build();
+                                                 setPageSize(PAGE_COUNT).build();
         final GASearchReferencesResponse resp = client.searchReferences(req);
 
         assertThat(resp).isNotNull();
@@ -418,7 +425,7 @@ public class LegacyComplianceIT implements CtkLogs {
 
         final GASearchReadGroupSetsRequest req = GASearchReadGroupSetsRequest.newBuilder().
                 setDatasetIds(aSingle(DATASET_ID)).setName(datasetName).
-                setPageSize(1).build();
+                setPageSize(PAGE_COUNT).build();
         final GASearchReadGroupSetsResponse resp = client.searchReadGroupSets(req);
 
         final List<GAReadGroupSet> readGroupSets = resp.getReadGroupSets();
