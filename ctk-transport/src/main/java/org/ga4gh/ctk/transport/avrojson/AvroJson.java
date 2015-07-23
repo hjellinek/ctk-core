@@ -108,7 +108,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     public AvroJson(Q req, P resp, String urlRoot, String path) {
         this.theAvroReq = req;
         this.theResp = resp;
-        this.dw = new SpecificDatumWriter<Q>();
+        this.dw = new SpecificDatumWriter<>();
         this.wireTracker = null;
 
         // neither urlRoot nor path should have spaces,
@@ -131,7 +131,7 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
     public AvroJson(P resp, String urlRoot, String path) {
         this.theAvroReq = null;
         this.theResp = resp;
-        this.dw = new SpecificDatumWriter<Q>();
+        this.dw = new SpecificDatumWriter<>();
         this.wireTracker = null;
 
         // neither urlRoot nor path should have spaces,
@@ -236,8 +236,15 @@ public class AvroJson<Q extends SpecificRecordBase, P extends SpecificRecordBase
         }
         // track all message types sent/received for simple "test coverage" indication
         String respName = theResp != null ? theResp.getClass().getSimpleName()  : "null";
-        messages.put(theAvroReq.getClass().getSimpleName() + postOrGet + " <" + jsonStr + ">", respName,
-                     httpResp != null ? httpResp.getStatus() : 0);
+        if (theAvroReq == null) {
+            // it's a GET request, so no request object
+            messages.put(postOrGet + " <" + jsonStr + ">", respName,
+                         httpResp != null ? httpResp.getStatus() : 0);
+        } else {
+            messages.put(theAvroReq.getClass()
+                                   .getSimpleName() + postOrGet + " <" + jsonStr + ">", respName,
+                         httpResp != null ? httpResp.getStatus() : 0);
+        }
     }
 
     /**

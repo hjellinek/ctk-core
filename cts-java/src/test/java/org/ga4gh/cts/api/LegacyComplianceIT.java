@@ -302,8 +302,9 @@ public class LegacyComplianceIT implements CtkLogs {
         final GASearchReferenceSetsResponse resp = client.searchReferenceSets(req);
         final List<GAReferenceSet> refSets = resp.getReferenceSets();
 
-        assertThat(refSets).have(rsCond(rs -> (rs.getNcbiTaxonId() == ncbiTaxonId) &&
-                                              assemblyId.equals(rs.getAssemblyId())));
+        assertThat(refSets).have(rsCond(rs -> (rs.getNcbiTaxonId() != null &&
+                                               rs.getNcbiTaxonId() == ncbiTaxonId) &&
+                                               assemblyId.equals(rs.getAssemblyId())));
 
         // do query 2 and test 2
         for (GAReferenceSet refSet : refSets) {
@@ -332,7 +333,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final String expectedMd5 = "1b22b98cdeb4a9304cb5d48026a85128";
         final int expectedLength = 249250621;
         final int expectedTaxonId = 9606;
-        final int expectedRefs = 5; // XXX made up number -- fix this
+        final int expectedRefs = 1;
 
         final GASearchReferencesRequest req =
                 GASearchReferencesRequest.newBuilder().
@@ -343,6 +344,7 @@ public class LegacyComplianceIT implements CtkLogs {
         assertThat(refs).hasSize(expectedRefs);
         assertThat(refs).have(refCond(ref -> ref.getLength() != expectedLength &&
                                                 expectedMd5.equals(ref.getMd5checksum()) &&
+                                                ref.getNcbiTaxonId() != null &&
                                                 ref.getNcbiTaxonId() == expectedTaxonId));
 
         // do query 2 and test 2
