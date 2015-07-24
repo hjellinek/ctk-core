@@ -20,30 +20,39 @@ public interface URLMAPPING {
     void setUrlRoot(String urlRoot);
 
     String getSearchReads();
+
     void setSearchReads(String searchReads);
 
     String getSearchReadGroupSets();
+
     void setSearchReadGroupSets(String searchReadGroupSets);
 
     String getReference();
+
     void setReference(String reference);
 
     String getSearchReferences();
+
     void setSearchReferences(String searchReferences);
 
     String getSearchReferenceBases();
+
     void setSearchReferenceBases(String searchReferenceBases);
 
     String getReferenceSets();
+
     void setReferenceSets(String referenceSets);
 
     String getSearchReferencesets();
+
     void setSearchReferencesets(String searchReferencesets);
 
     String getSearchVariantSets();
+
     void setSearchVariantSets(String searchVariantSets);
 
     String getSearchVariants();
+
     void setSearchVariants(String searchVariants);
 
     String getSearchCallsets();
@@ -51,6 +60,7 @@ public interface URLMAPPING {
     void setSearchCallsets(String searchCallsets);
 
     Map<String, String> getEndpoints();
+
     void setEndpoints(Map<String, String> endpoints);
 
     /**

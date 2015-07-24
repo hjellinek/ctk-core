@@ -40,7 +40,7 @@ public class LegacyComplianceIT implements CtkLogs {
     private static Client client;
 
     /**
-     * Make it easy to create lists of a single String element, which we do a lot.
+     * Make it easy to create lists of a single {@link String} element, which we do a lot.
      * @param s the String
      * @return the resulting List&lt;String&gt;
      */
@@ -49,7 +49,7 @@ public class LegacyComplianceIT implements CtkLogs {
     }
 
     /**
-     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * Utility wrapper method allowing us to use Java 8-style lambdas (specifically, {@link Predicate}s)
      * as AssertJ {@link Condition}s on {@link GAReference} objects.
      * @param p the {@link Predicate} to wrap
      * @return the {@link Predicate} in {@link Condition}'s clothing
@@ -64,7 +64,7 @@ public class LegacyComplianceIT implements CtkLogs {
     }
 
     /**
-     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * Utility wrapper method allowing us to use Java 8-style lambdas (specifically, {@link Predicate}s)
      * as AssertJ {@link Condition}s on {@link GAReadGroupSet} objects.
      * @param p the {@link Predicate} to wrap
      * @return the {@link Predicate} in {@link Condition}'s clothing
@@ -79,7 +79,7 @@ public class LegacyComplianceIT implements CtkLogs {
     }
 
     /**
-     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * Utility wrapper method allowing us to use Java 8-style lambdas (specifically, {@link Predicate}s)
      * as AssertJ {@link Condition}s on {@link GAReadGroup} objects.
      * @param p the {@link Predicate} to wrap
      * @return the {@link Predicate} in {@link Condition}'s clothing
@@ -94,7 +94,7 @@ public class LegacyComplianceIT implements CtkLogs {
     }
 
     /**
-     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * Utility wrapper method allowing us to use Java 8-style lambdas (specifically, {@link Predicate}s)
      * as AssertJ {@link Condition}s on {@link GAReferenceSet} objects.
      * @param p the {@link Predicate} to wrap
      * @return the {@link Predicate} in {@link Condition}'s clothing
@@ -109,7 +109,7 @@ public class LegacyComplianceIT implements CtkLogs {
     }
 
     /**
-     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * Utility wrapper method allowing us to use Java 8-style lambdas (specifically, {@link Predicate}s)
      * as AssertJ {@link Condition}s on {@link GAReadAlignment} objects.
      * @param p the {@link Predicate} to wrap
      * @return the {@link Predicate} in {@link Condition}'s clothing
@@ -124,7 +124,7 @@ public class LegacyComplianceIT implements CtkLogs {
     }
 
     /**
-     * Wrapper method to allow us to use Java 8-style lambdas (specifically, {@link Predicate}s)
+     * Utility wrapper method allowing us to use Java 8-style lambdas (specifically, {@link Predicate}s)
      * as AssertJ {@link Condition}s on {@link GAVariantSet} objects.
      * @param p the {@link Predicate} to wrap
      * @return the {@link Predicate} in {@link Condition}'s clothing
@@ -140,8 +140,7 @@ public class LegacyComplianceIT implements CtkLogs {
 
     @BeforeClass
     public static void setupTransport() throws Exception {
-        URLMAPPING.doInit(); // reload defaults
-        client = new Client();
+        client = new Client(URLMAPPING.getInstance());
     }
 
     /**
