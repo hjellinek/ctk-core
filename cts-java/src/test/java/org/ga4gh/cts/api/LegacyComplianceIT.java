@@ -69,7 +69,7 @@ public class LegacyComplianceIT implements CtkLogs {
                 GASearchReadGroupSetsRequest.newBuilder().
                         setDatasetIds(aSingle(DATASET_ID)).
                                                     build();
-        final GASearchReadGroupSetsResponse resp = client.searchReadGroupSets(req);
+        final GASearchReadGroupSetsResponse resp = client.reads.searchReadGroupSets(req);
         final List<GAReadGroupSet> readGroupSets = resp.getReadGroupSets();
         readGroupSets.stream().forEach(rgs -> assertThat(rgs.getDatasetId()).isEqualTo(DATASET_ID));
 
@@ -100,7 +100,7 @@ public class LegacyComplianceIT implements CtkLogs {
     public void searchVariantSets() throws AvroRemoteException {
         final GASearchVariantSetsRequest req =
                 GASearchVariantSetsRequest.newBuilder().setDatasetIds(aSingle(DATASET_ID)).build();
-        final GASearchVariantSetsResponse resp = client.searchVariantSets(req);
+        final GASearchVariantSetsResponse resp = client.variants.searchVariantSets(req);
 
         final List<GAVariantSet> sets = resp.getVariantSets();
         assertThat(sets).isNotEmpty();
@@ -134,7 +134,7 @@ public class LegacyComplianceIT implements CtkLogs {
                 GASearchVariantSetsRequest.newBuilder().
                         setDatasetIds(aSingle(DATASET_ID)).
                                                   build();
-        final GASearchVariantSetsResponse resp = client.searchVariantSets(req);
+        final GASearchVariantSetsResponse resp = client.variants.searchVariantSets(req);
 
         final List<GAVariantSet> variantSets = resp.getVariantSets();
         assertThat(variantSets).isNotEmpty();
@@ -146,7 +146,7 @@ public class LegacyComplianceIT implements CtkLogs {
                         setReferenceName(referenceName).
                                                setStart(start).setEnd(end).
                                                build();
-        final GASearchVariantsResponse vResp = client.searchVariants(vReq);
+        final GASearchVariantsResponse vResp = client.variants.searchVariants(vReq);
         final List<GAVariant> searchVariants = vResp.getVariants();
         final GAVariant firstVariant = searchVariants.get(0);
         assertThat(firstVariant).isNotNull();
@@ -178,7 +178,7 @@ public class LegacyComplianceIT implements CtkLogs {
                 GASearchVariantSetsRequest.newBuilder()
                                           .setDatasetIds(aSingle(DATASET_ID)).
                                                   build();
-        final GASearchVariantSetsResponse vResp = client.searchVariantSets(vReq);
+        final GASearchVariantSetsResponse vResp = client.variants.searchVariantSets(vReq);
 
         assertThat(vResp.getVariantSets()).isNotEmpty();
         for (GAVariantSet set : vResp.getVariantSets()) {
@@ -187,7 +187,7 @@ public class LegacyComplianceIT implements CtkLogs {
             final GASearchCallSetsRequest csReq =
                     GASearchCallSetsRequest.newBuilder()
                                            .setVariantSetIds(aSingle(id)).build();
-            final GASearchCallSetsResponse csResp = client.searchCallSets(csReq);
+            final GASearchCallSetsResponse csResp = client.variants.searchCallSets(csReq);
 
             assertThat(csResp.getCallSets()).isNotEmpty();
         }
@@ -214,7 +214,7 @@ public class LegacyComplianceIT implements CtkLogs {
 
         final GASearchReferenceSetsRequest req = GASearchReferenceSetsRequest.newBuilder().
                 setAccessions(aSingle(accessionNumber)).setPageSize(PAGE_COUNT).build();
-        final GASearchReferenceSetsResponse resp = client.searchReferenceSets(req);
+        final GASearchReferenceSetsResponse resp = client.references.searchReferenceSets(req);
         final List<GAReferenceSet> refSets = resp.getReferenceSets();
 
         refSets.stream().forEach(rs -> assertThat(rs.getNcbiTaxonId()).isEqualTo(ncbiTaxonId));
@@ -223,7 +223,7 @@ public class LegacyComplianceIT implements CtkLogs {
         // do query 2 and test 2
         for (GAReferenceSet refSet : refSets) {
             final String id = refSet.getId();
-            final GAReferenceSet fetchedRefSet = client.getReferenceSet(id);
+            final GAReferenceSet fetchedRefSet = client.references.getReferenceSet(id);
             assertThat(fetchedRefSet.getId()).isEqualTo(id);
         }
     }
@@ -256,7 +256,7 @@ public class LegacyComplianceIT implements CtkLogs {
                 GASearchReferencesRequest.newBuilder().
                         setMd5checksums(aSingle(expectedMd5)).
                                                  setPageSize(PAGE_COUNT).build();
-        final GASearchReferencesResponse resp = client.searchReferences(req);
+        final GASearchReferencesResponse resp = client.references.searchReferences(req);
 
         final List<GAReference> refs = resp.getReferences();
         assertThat(refs).hasSize(expectedRefs);
@@ -269,7 +269,7 @@ public class LegacyComplianceIT implements CtkLogs {
         // open-coded loop because it's awkward to deal with possible exceptions using filter syntax
         for (GAReference ref : refs) {
             final String id = ref.getId();
-            final GAReference fetchedRef = client.getReference(id);
+            final GAReference fetchedRef = client.references.getReference(id);
             assertThat(fetchedRef.getId()).isEqualTo(id);
         }
     }
@@ -301,7 +301,7 @@ public class LegacyComplianceIT implements CtkLogs {
                 GASearchReferencesRequest.newBuilder().
                         setMd5checksums(aSingle(expectedMd5)).
                                                  setPageSize(PAGE_COUNT).build();
-        final GASearchReferencesResponse resp = client.searchReferences(req);
+        final GASearchReferencesResponse resp = client.references.searchReferences(req);
 
         assertThat(resp).isNotNull();
         final List<GAReference> refs = resp.getReferences();
@@ -312,7 +312,7 @@ public class LegacyComplianceIT implements CtkLogs {
             final GAListReferenceBasesRequest basesReq = GAListReferenceBasesRequest.newBuilder().
                     setStart(start).setEnd(end).build();
             GAListReferenceBasesResponse basesResp =
-                    client.getReferenceBases(ref.getId(), basesReq);
+                    client.references.getReferenceBases(ref.getId(), basesReq);
             assertThat(basesResp.getOffset()).isEqualTo(expectedOffset);
             assertThat(basesResp.getSequence()).isEqualTo(expectedSequence);
         }
@@ -349,7 +349,7 @@ public class LegacyComplianceIT implements CtkLogs {
         final GASearchReadGroupSetsRequest req = GASearchReadGroupSetsRequest.newBuilder().
                 setDatasetIds(aSingle(DATASET_ID)).setName(datasetName).
                 setPageSize(PAGE_COUNT).build();
-        final GASearchReadGroupSetsResponse resp = client.searchReadGroupSets(req);
+        final GASearchReadGroupSetsResponse resp = client.reads.searchReadGroupSets(req);
 
         final List<GAReadGroupSet> readGroupSets = resp.getReadGroupSets();
 
@@ -366,7 +366,7 @@ public class LegacyComplianceIT implements CtkLogs {
                         setReadGroupIds(aSingle(readGroupSetId)).
                                             setReferenceName(referenceName).
                                             setStart(start).setEnd(end).build();
-        final GASearchReadsResponse srResp = client.searchReads(srReq);
+        final GASearchReadsResponse srResp = client.reads.searchReads(srReq);
 
         // test 2
         final List<GAReadAlignment> alignments = srResp.getAlignments();

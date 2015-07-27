@@ -61,7 +61,7 @@ public class VariantsMethodsEndpointAliveIT implements CtkLogs {
         GASearchVariantSetsRequest svsr = GASearchVariantSetsRequest.newBuilder()
                 .build();
 
-        GASearchVariantSetsResponse response = client.searchVariantSets(svsr);
+        GASearchVariantSetsResponse response = client.variants.searchVariantSets(svsr);
         assertThat(response).isNotNull();
     }
 
@@ -85,7 +85,7 @@ public class VariantsMethodsEndpointAliveIT implements CtkLogs {
                 .setEnd(1L)
                 .build();
 
-        GASearchVariantsResponse response = client.searchVariants(request);
+        GASearchVariantsResponse response = client.variants.searchVariants(request);
 
         assertThat(response).isNotNull();
     }
@@ -103,7 +103,7 @@ public class VariantsMethodsEndpointAliveIT implements CtkLogs {
                 .build();
 
         WireTracker mywt = new WireTracker();
-        GASearchVariantsResponse response = client.searchVariants(request, mywt);
+        GASearchVariantsResponse response = client.variants.searchVariants(request, mywt);
 
         // the JUnit4 Rule creates a SoftAssertion and we can do multiple asserts cleanly!
         assertThat(mywt.getResponseStatus()).isEqualTo(RespCode.NOT_IMPLEMENTED);
@@ -118,7 +118,7 @@ public class VariantsMethodsEndpointAliveIT implements CtkLogs {
         GASearchCallSetsRequest scsr = GASearchCallSetsRequest.newBuilder()
                 .build();
 
-        GASearchCallSetsResponse response = client.searchCallSets(scsr);
+        GASearchCallSetsResponse response = client.variants.searchCallSets(scsr);
 
         assertThat(response).isNotNull();
     }
@@ -132,7 +132,7 @@ public class VariantsMethodsEndpointAliveIT implements CtkLogs {
                 .build();
 
         WireTracker mywt = new WireTracker();
-        GASearchCallSetsResponse response = client.searchCallSets(scsr, mywt);
+        GASearchCallSetsResponse response = client.variants.searchCallSets(scsr, mywt);
 
         assertThat(response).isNotNull();
         assertThat(mywt.getResponseStatus()).isEqualTo(RespCode.NOT_IMPLEMENTED);

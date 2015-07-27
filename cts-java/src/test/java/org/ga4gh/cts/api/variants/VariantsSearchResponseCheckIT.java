@@ -55,7 +55,7 @@ public class VariantsSearchResponseCheckIT implements CtkLogs {
                 .setEnd(end)
                 .build();
 
-        GASearchVariantsResponse response = client.searchVariants(request);
+        GASearchVariantsResponse response = client.variants.searchVariants(request);
 
         assertThat(response.getVariants()).hasSize(expLength);
     }

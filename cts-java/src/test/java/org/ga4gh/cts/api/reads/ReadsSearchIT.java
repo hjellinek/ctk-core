@@ -60,7 +60,7 @@ public class ReadsSearchIT implements CtkLogs {
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
                 .setReadGroupIds(Collections.singletonList(replacedRgid))
                 .build();
-        GASearchReadsResponse grtn = client.searchReads(gsrr);
+        GASearchReadsResponse grtn = client.reads.searchReads(gsrr);
 
         // the readmethods idl says:
         // record GASearchReadsResponse { array<GAReadAlignment> alignments = []; ...

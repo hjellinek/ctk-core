@@ -64,7 +64,7 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
                 .build();
 
         log.debug("SearchReadGroupSetsRequest: " + reqb.toString());
-        GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
+        GASearchReadGroupSetsResponse rtnVal = client.reads.searchReadGroupSets(reqb);
         log.debug("searchReadGroupSets " + rgName + " returned: " + String.valueOf(rtnVal));
 
         for (GAReadGroupSet rgs : rtnVal.getReadGroupSets()) {
@@ -91,7 +91,7 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
                 .setName(null)
                 .setDatasetIds(Collections.singletonList("realyUnlikelyQQQ"))
                 .build();
-        GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
+        GASearchReadGroupSetsResponse rtnVal = client.reads.searchReadGroupSets(reqb);
         // avro says always get a 200
         GASearchReadGroupSetsResponseAssert.assertThat(rtnVal)
                 .isNotNull()
@@ -130,7 +130,7 @@ public class ReadGroupSetsSearchIT implements CtkLogs {
                                                                         .build();
 
         log.debug("SearchReadGroupSetsRequest: " + reqb.toString());
-        GASearchReadGroupSetsResponse rtnVal = client.searchReadGroupSets(reqb);
+        GASearchReadGroupSetsResponse rtnVal = client.reads.searchReadGroupSets(reqb);
         log.debug("searchReadGroupSets " + datasetid + " returned: " + String.valueOf(rtnVal));
         GASearchReadGroupSetsResponseAssert.assertThat(rtnVal)
                                            .isNotNull();

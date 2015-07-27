@@ -54,7 +54,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
         // do a readsearch
         GASearchReadsRequest gsrr = GASearchReadsRequest.newBuilder()
                 .build();
-        GASearchReadsResponse grtn = client.searchReads(gsrr);
+        GASearchReadsResponse grtn = client.reads.searchReads(gsrr);
         assertThat(grtn.getAlignments()).isNullOrEmpty();
     }
 
@@ -69,7 +69,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
     public void defaultReadgroupsetsRequestGetsResponse() throws Exception {
         GASearchReadGroupSetsRequest gsrgs = GASearchReadGroupSetsRequest.newBuilder()
                 .build();
-        GASearchReadGroupSetsResponse grtn = client.searchReadGroupSets(gsrgs);
+        GASearchReadGroupSetsResponse grtn = client.reads.searchReadGroupSets(gsrgs);
 
         assertThat(grtn).isNotNull();
     }
@@ -89,7 +89,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
                 .setReadGroupIds(Collections.singletonList(rgid))
                 .build();
         WireTracker mywt = new WireTracker();
-        GASearchReadsResponse grtn = client.searchReads(gsrr, mywt);
+        GASearchReadsResponse grtn = client.reads.searchReads(gsrr, mywt);
 
         WireTrackerAssert.assertThat(mywt)
                 .hasResponseStatus(RespCode.NOT_FOUND);
@@ -128,7 +128,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
                 .setReadGroupIds(Arrays.asList(replacedRgid.split(";")))
                 .build();
         WireTracker mywt = new WireTracker();
-        GASearchReadsResponse grtn = client.searchReads(gsrr, mywt);
+        GASearchReadsResponse grtn = client.reads.searchReads(gsrr, mywt);
         WireTrackerAssert.assertThat(mywt)
                 .hasResponseStatus(expStatus);
         assertThat(mywt.gotParseableGAE()).isTrue();
@@ -158,7 +158,7 @@ public class ReadMethodsEndpointAliveIT implements CtkLogs {
                 .setReadGroupIds(Collections.singletonList(""))
                 .build();
         WireTracker mywt = new WireTracker();
-        GASearchReadsResponse grtn = client.searchReads(gsrr, mywt);
+        GASearchReadsResponse grtn = client.reads.searchReads(gsrr, mywt);
         WireTrackerAssert.assertThat(mywt)
                 .hasResponseStatus(RespCode.NOT_FOUND);
     }
