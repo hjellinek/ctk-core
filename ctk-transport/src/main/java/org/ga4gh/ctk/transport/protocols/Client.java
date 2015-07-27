@@ -7,6 +7,14 @@ import org.ga4gh.ctk.transport.WireTracker;
 import org.ga4gh.ctk.transport.avrojson.AvroJson;
 
 /**
+ * This class provides an interface to/facade for the GA4GH server we're testing.
+ * <p>
+ *     Methods are categorized by functional area:
+ *     <ul>
+ *         <li>{@link #reads reads}</li>
+ *         <li>{@link #variants variants}</li>
+ *         <li>{@link #references references}</li>
+ *     </ul>
  * @author Herb Jellinek
  */
 public class Client {
@@ -15,10 +23,28 @@ public class Client {
 
     public WireTracker wireTracker = null;
 
+    /**
+     * Provides access to variants-related methods.  For example,
+     * <pre>
+     *     myClient.variants.searchVariantSets(...);
+     * </pre>
+     */
     public final Variants variants = new Variants();
 
+    /**
+     * Provides access to reads-related methods.  For example,
+     * <pre>
+     *     myClient.reads.searchReads(...);
+     * </pre>
+     */
     public final Reads reads = new Reads();
 
+    /**
+     * Provides access to variants-related methods.  For example,
+     * <pre>
+     *     myClient.references.searchReferenceSets(...);
+     * </pre>
+     */
     public final References references = new References();
 
     /**
