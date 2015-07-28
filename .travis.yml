@@ -1,0 +1,13 @@
+language: java
+jdk:
+- oraclejdk8
+deploy:
+  provider: releases
+  api_key:
+    secure: Ka9tjZOLzRK5hkAp2atJpULsjz+Fsgpmsq4ksIMsPAlxpoEnlTs3qCm469V4fc1s1FTmIb/Ll1n0coGBrnNhzWuPVcqAgPrcmnjV2xmfFKhmJKxxwry8QNc6gsQRleKPsJ+6G50infnRusBAL+RRGaIrc2CZcp1nka8s6NXftqcuHebX5WQdPDXnQ0prkVPa3LMHIsg9q2amwar8PBywIegy37o9OICnM89QXJ6lv73g82dlZ1Ris4LTKAZ95mP7vG+ma/42Xzzp3wkeGCDhpIJ3oYtmPoylbL3R5QxWNHRXPJ4xutHwXg1ejDGCrL3c1UdT5bPbOWJ96pPQv7KsQ/5WOOkHV3vokCTDW00gquSUZrfkefFPk6SGBbq6HXTlhsYQlhbmeQrIZushs5C8LahFLDy4vLzTQDqfmppqviI2RSAXY311ToDX4y2G6W79sE2jY6biXCvAnrNK1qoyja34FM/siQP6a3irL0N8RaAK1Ko7MW1QksE/o9/XYP9p+wPZcIgr2QAVASrDWZWRylR59fthW8bHDZ1qvUL8ZLL/rWf6Mo15cy8DVTTeFHT3DczH9HyJ/b9nJ62mdxC0C8qIApodzG3pEsp61xGiGyVFWJrxitE3tI4SHxIvnYRhaK7kfrssU3k1J37CJ0O4S5Cx/jZD3HP4sdT5oWoNUI8=
+  file: dist/target/ga4gh-ctk-cli.zip
+  skip_cleanup: true
+  on:
+    repo: hjellinek/ctk-core
+    tags: true
+
